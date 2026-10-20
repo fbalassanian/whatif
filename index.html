@@ -190,6 +190,7 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .chip.me { padding-right: 12px; border-color: rgba(63,224,255,.4); }
 .chip.lead { box-shadow: 0 0 0 1px currentColor inset; }
 .chip.na { color: var(--muted); }
+.chip .since { color: var(--muted); font-size: .8em; }
 .suggest { border-style: dashed; color: var(--muted); cursor: pointer; padding-right: 12px; }
 .suggest:hover { color: var(--text); border-color: var(--violet); }
 .addsel { border: 1px dashed var(--line); background: transparent; border-radius: 999px; padding: 5px 10px; font-size: 13px; color: var(--muted); cursor: pointer; max-width: 100%; }
@@ -667,12 +668,13 @@ function compute() {
   }
   d.base = d.timeline.map(t => ({ time: t.time, value: t.invested }));
 
-  // carrera: mismos parámetros para cada activo que tenga datos en todo el período
+  // carrera: mismos parámetros para cada activo; si todavía no existía, arranca en su primer dato
   d.race = race.map((r, i) => {
     const a = r.asset, color = RACE_COLORS[i];
-    if (!a.price.has(start) || !a.price.has(histEnd)) return { id: r.id, a, color, na: true };
-    const sim = simulate(a, start, histEnd, amount, reinvestOn && a.hasDiv, dca);
-    return { id: r.id, a, color, sim };
+    const rs = mIdx(start) < mIdx(a.first) ? a.first : start;
+    if (mIdx(rs) >= mIdx(histEnd) || !a.price.has(rs) || !a.price.has(histEnd)) return { id: r.id, a, color, na: true };
+    const sim = simulate(a, rs, histEnd, amount, reinvestOn && a.hasDiv, dca);
+    return { id: r.id, a, color, sim, start: rs, late: rs !== start };
   });
   return d;
 }
@@ -738,7 +740,7 @@ function render() {
   const vals = D.timeline.flatMap(t => [t.value, t.invested]);
   D.race.forEach(r => r.sim && r.sim.pts.forEach(p => vals.push(p.value)));
   D.min = Math.min(...vals); D.max = Math.max(...vals);
-  chart.priceScale("right").applyOptions({ mode: D.max / Math.max(D.min, 1e-9) > 20 ? 1 : 0 });
+  D.min = Math.min(0, D.min);                 // escala lineal desde cero: lo que ves es proporcional
 
   sGhost.setData(D.timeline.map(t => ({ time: t.time, value: t.value })));
   sBase.setData(D.base);
@@ -919,8 +921,8 @@ function renderRace() {
   D.race.forEach((r, i) => {
     const col = cssVar(r.color);
     parts.push(r.na
-      ? `<span class="chip na"><i style="background:${col}"></i>${r.a.short}: sin datos desde ${mLabel(D.start)}<button type="button" class="x" data-remove="${i}" aria-label="Quitar ${r.a.short}">×</button></span>`
-      : `<span class="chip" style="color:${col}"><i style="background:${col}"></i><span style="color:var(--text)">${r.a.short}</span> <b data-race="${i}"></b><button type="button" class="x" data-remove="${i}" aria-label="Quitar ${r.a.short}">×</button></span>`);
+      ? `<span class="chip na"><i style="background:${col}"></i>${r.a.short}: sin datos hasta ${mLabel(D.histEnd)}<button type="button" class="x" data-remove="${i}" aria-label="Quitar ${r.a.short}">×</button></span>`
+      : `<span class="chip" style="color:${col}"><i style="background:${col}"></i><span style="color:var(--text)">${r.a.short}</span>${r.late ? ` <small class="since">desde ${mLabel(r.start)}</small>` : ""} <b data-race="${i}"></b><button type="button" class="x" data-remove="${i}" aria-label="Quitar ${r.a.short}">×</button></span>`);
   });
   if (race.length < MAX_RACE) {
     const used = new Set([asset.id, ...race.map(r => r.id)]);
@@ -940,8 +942,9 @@ function updateRaceValues(key) {
   const entries = [{ name: asset.short, v: D.h.val.get(at), inv: D.h.inv.get(at) }];
   D.race.forEach((r, i) => {
     if (!r.sim) return;
-    const v = r.sim.val.get(at) ?? 0;
-    const el = document.querySelector(`[data-race="${i}"]`); if (el) el.textContent = short(v);
+    const v = r.sim.val.get(at);
+    const el = document.querySelector(`[data-race="${i}"]`); if (el) el.textContent = v == null ? "—" : short(v);
+    if (v == null) return;                      // todavía no existía en ese mes
     entries.push({ name: r.a.short, v, inv: r.sim.inv.get(at) });
   });
   const valid = entries.filter(e => e.v != null);
