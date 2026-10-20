@@ -127,25 +127,12 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .facts b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
 .facts .gain { color: var(--mint); } .facts .loss { color: var(--coral); }
 
-/* ---------- visor (gráfico) con esquinas */
+/* ---------- visor (gráfico) */
 .scope {
   position: relative; border: 1px solid var(--line); border-radius: 16px; padding: 14px 14px 10px;
   background: linear-gradient(180deg, rgba(18,15,46,.82), rgba(10,8,32,.82));
   box-shadow: inset 0 1px 0 rgba(255,255,255,.03), 0 30px 80px -40px rgba(63,224,255,.25);
   display: grid; gap: 10px; min-width: 0;
-}
-.scope::before {   /* esquinas del visor */
-  content: ""; position: absolute; inset: -1px; border-radius: 16px; pointer-events: none;
-  --k: 18px; --c: rgba(63,224,255,.75);
-  background:
-    linear-gradient(var(--c),var(--c)) top left / var(--k) 1.5px no-repeat,
-    linear-gradient(var(--c),var(--c)) top left / 1.5px var(--k) no-repeat,
-    linear-gradient(var(--c),var(--c)) top right / var(--k) 1.5px no-repeat,
-    linear-gradient(var(--c),var(--c)) top right / 1.5px var(--k) no-repeat,
-    linear-gradient(var(--c),var(--c)) bottom left / var(--k) 1.5px no-repeat,
-    linear-gradient(var(--c),var(--c)) bottom left / 1.5px var(--k) no-repeat,
-    linear-gradient(var(--c),var(--c)) bottom right / var(--k) 1.5px no-repeat,
-    linear-gradient(var(--c),var(--c)) bottom right / 1.5px var(--k) no-repeat;
 }
 .scope-top { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; }
 .switch { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; cursor: pointer; user-select: none; }
@@ -233,6 +220,20 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .field .row { display: flex; align-items: center; gap: 12px; }
 .field output { font-family: var(--digits); font-weight: 600; font-size: 16px; min-width: 4.5ch; text-align: right; color: var(--violet); }
 #rate { flex: 1; accent-color: var(--violet); min-width: 0; }
+.rate-field { grid-column: 1 / -1; }
+.rate-head { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: space-between; }
+.ratemode { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; }
+.ratemode button { border: 0; background: transparent; color: var(--muted); font-size: 12px; padding: 5px 12px; border-radius: 999px; cursor: pointer; }
+.ratemode button[aria-pressed="true"] { background: rgba(155,123,255,.22); color: var(--text); }
+.years { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 8px; }
+.yr { display: grid; gap: 3px; min-width: 0; }
+.yr label { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.yr .in { display: flex; align-items: center; gap: 4px; border: 1px solid var(--line); border-radius: 8px; background: rgba(18,15,46,.8); padding: 0 8px; }
+.yr .in:focus-within { border-color: var(--violet); }
+.yr input { width: 100%; min-width: 0; border: 0; background: transparent; font-family: var(--digits); font-size: 15px; font-weight: 600; padding: 6px 0; color: var(--text); }
+.yr input:focus-visible { outline: none; }
+.yr .in span { color: var(--muted); font-size: 13px; }
+.yr input.neg { color: var(--coral); }
 #contrib { width: 100%; padding: 7px 10px; border: 1px solid var(--line); border-radius: 10px; background: rgba(18,15,46,.8); font-family: var(--digits); font-size: 15px; }
 
 footer { font-size: 12px; color: var(--muted); display: grid; gap: 6px; max-width: 80ch; }
@@ -311,9 +312,16 @@ footer a { color: var(--cyan); }
       <p id="future-hint"></p>
     </div>
     <fieldset class="knobs" id="knobs">
-      <div class="field">
-        <label for="rate">Rendimiento anual que suponés</label>
-        <div class="row"><input id="rate" type="range" min="0" max="30" step="0.5" value="8"><output id="rate-o" for="rate"></output></div>
+      <div class="field rate-field">
+        <div class="rate-head">
+          <label for="rate" id="rate-label">Rendimiento anual que suponés</label>
+          <div class="ratemode" role="group" aria-label="Cómo suponer el rendimiento">
+            <button type="button" data-mode="same" aria-pressed="true">Igual todos los años</button>
+            <button type="button" data-mode="year" aria-pressed="false">Año por año</button>
+          </div>
+        </div>
+        <div class="row" id="rate-row"><input id="rate" type="range" min="0" max="30" step="0.5" value="8"><output id="rate-o" for="rate"></output></div>
+        <div class="years" id="years" hidden></div>
       </div>
       <div class="field" id="contrib-field">
         <label for="contrib">Aporte mensual desde hoy, en USD</label>
@@ -511,17 +519,28 @@ function irrAnnual(flows, amount, T, value) {
   for (let i = 0; i < 200; i++) { const mid = (lo + hi) / 2; if (f(mid) > 0) lo = mid; else hi = mid; }
   return Math.pow(1 + (lo + hi) / 2, 12) - 1;
 }
-function project(from, value, toIdx, annual, monthly) {
-  const series = r => {
-    const rm = Math.pow(1 + r, 1 / 12) - 1, out = [];
+// Proyección mensual desde el último dato. rateAt(i) da el rendimiento anual supuesto para el mes i
+// (igual todos los años, o el que elegiste para ese año calendario); la banda es ±4 puntos.
+function project(from, value, toIdx, rateAt, monthly) {
+  const series = shift => {
+    const out = [];
     let v = value;
     for (let i = mIdx(from); i <= toIdx; i++) {
-      if (i > mIdx(from)) v = v * (1 + rm) + monthly;
+      if (i > mIdx(from)) v = v * Math.pow(1 + Math.max(rateAt(i) + shift, -0.99), 1 / 12) + monthly;
       out.push({ time: mKey(i) + "-01", value: v });
     }
     return out;
   };
-  return { mid: series(annual), lo: series(Math.max(annual - 0.04, -0.5)), hi: series(annual + 0.04) };
+  return { mid: series(0), lo: series(-0.04), hi: series(0.04) };
+}
+// rendimiento supuesto: "same" = el del control deslizante; "year" = uno por año calendario (en %)
+let rateMode = "same";
+const yearRates = new Map();
+function rateAtMonth(i) {
+  const base = Number($("rate").value) / 100;
+  if (rateMode !== "year") return base;
+  const y = Math.floor(i / 12);
+  return yearRates.has(y) ? yearRates.get(y) / 100 : base;
 }
 
 function compute() {
@@ -540,9 +559,8 @@ function compute() {
   // línea de tiempo: un punto por mes, con valor y lo puesto hasta ahí
   d.timeline = h.pts.map(p => { const k = p.time.slice(0, 7); return { key: k, time: p.time, value: p.value, invested: h.inv.get(k), proj: false }; });
   if (future) {
-    const r = Number($("rate").value) / 100;
     const monthly = dca ? amount : Math.max(0, Number($("contrib").value) || 0);
-    const p = project(L, h.value, mIdx(end), r, monthly);
+    const p = project(L, h.value, mIdx(end), rateAtMonth, monthly);
     const months = mIdx(end) - mIdx(L);
     Object.assign(d, { proj: p, monthly, months, contribTotal: monthly * months, invested: h.invested + monthly * months,
                        final: p.mid.at(-1).value, lo: p.lo.at(-1).value, hi: p.hi.at(-1).value });
@@ -774,6 +792,33 @@ function renderFuture() {
     ? `De hoy (${lastLabel()}) a ${mLabel(D.end)}: ${fmtNum(D.months / 12, D.months % 12 ? 1 : 0)} años${D.dca ? `, sumando ${usd(D.amount)} por mes` : ""}.`
     : `Elegí un mes posterior a ${mLabel(asset.last)} como fecha final, o <button type="button" class="linkbtn" id="go10">mirá 10 años para adelante</button>.`;
   $("go10")?.addEventListener("click", () => { fillEnd(mKey(mIdx(asset.last) + 120)); render(); });
+  renderRates();
+}
+// casilleros año por año: se rehacen solo si cambia el rango de años, así no se pierde el foco al escribir
+let yearsKey = "", yearRange = null;
+function renderRates() {
+  document.querySelectorAll(".ratemode button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === rateMode)));
+  $("rate-row").hidden = rateMode === "year";
+  const box = $("years");
+  box.hidden = rateMode !== "year";
+  if (box.hidden) return;
+  // sin fecha futura todavía: un año de ejemplo para que se vea cómo funciona (queda deshabilitado)
+  const fromI = mIdx(asset.last) + 1, toI = D.future ? mIdx(D.end) : fromI + 11;
+  const first = Math.floor(fromI / 12), last = Math.floor(toI / 12), fm = fromI % 12, lm = toI % 12;
+  yearRange = D.future ? [first, last] : null;
+  const key = [first, last, fm, lm].join("-");
+  if (key === yearsKey) return;
+  yearsKey = key;
+  const base = Number($("rate").value);
+  let html = "";
+  for (let y = first; y <= last; y++) {
+    if (!yearRates.has(y)) yearRates.set(y, base);
+    const a = y === first ? fm : 0, b = y === last ? lm : 11;
+    const label = a === 0 && b === 11 ? `${y}` : `${y} (${MESES[a]}${a === b ? "" : "–" + MESES[b]})`;
+    const v = yearRates.get(y);
+    html += `<div class="yr"><label for="yr-${y}">${label}</label><div class="in"><input id="yr-${y}" data-year="${y}" type="number" inputmode="decimal" step="0.5" min="-90" max="300" value="${v}" class="${v < 0 ? "neg" : ""}"><span>%</span></div></div>`;
+  }
+  box.innerHTML = html;
 }
 function renderRace() {
   const box = $("race");
@@ -820,18 +865,32 @@ function updateRaceValues(key) {
 }
 
 // ================================================================ compartir (estado en el #)
-// Formato: #ticker~inicio~monto~frecuencia~final~dividendos~carrera   (solo letras, números, . - ~ _)
+// Formato: #ticker~inicio~monto~frecuencia~final~dividendos~carrera~rendimiento   (solo letras, números, . - ~ _)
+// rendimiento: "r8" (igual todos los años) o "y2027_8_-10_12.5" (desde ese año, uno por año)
+function rateToken() {
+  const base = Number($("rate").value);
+  if (rateMode !== "year" || !yearRange) return "r" + base;
+  const vals = [];
+  for (let y = yearRange[0]; y <= yearRange[1]; y++) vals.push(yearRates.has(y) ? yearRates.get(y) : base);
+  return "y" + yearRange[0] + "_" + vals.join("_");
+}
 function writeHash() {
   const tok = [asset.id, startKey(), parseAmount(), $("freq").value === "monthly" ? "m" : "u", endKey(),
-               $("reinvest").checked ? "1" : "0", race.map(r => r.id).join("_")].join("~");
+               $("reinvest").checked ? "1" : "0", race.map(r => r.id).join("_"), rateToken()].join("~");
   try { history.replaceState(null, "", "#" + tok); } catch (e) { /* algunos visores no lo permiten */ }
 }
 function readHash() {
   const raw = (location.hash || "").slice(1);
   if (!raw) return null;
-  const [id, start, amount, freq, end, rein, raceIds] = raw.split("~");
+  const [id, start, amount, freq, end, rein, raceIds, rate] = raw.split("~");
   if (!metaOf(id)) return null;
-  return { id, start, amount: Number(amount) || 0, freq: freq === "m" ? "monthly" : "once", end,
+  let rateSt = null;
+  if (rate && rate[0] === "r" && isFinite(Number(rate.slice(1)))) rateSt = { mode: "same", base: Number(rate.slice(1)) };
+  if (rate && rate[0] === "y") {
+    const [y0, ...vals] = rate.slice(1).split("_").map(Number);
+    if (isFinite(y0) && vals.length && vals.every(isFinite)) rateSt = { mode: "year", years: vals.map((v, i) => [y0 + i, v]) };
+  }
+  return { id, start, amount: Number(amount) || 0, freq: freq === "m" ? "monthly" : "once", end, rate: rateSt,
            reinvest: rein !== "0", race: (raceIds || "").split("_").filter(x => x && metaOf(x)).slice(0, MAX_RACE) };
 }
 function toast(msg) {
@@ -877,6 +936,16 @@ $("s-year").addEventListener("input", () => { fillStartMonth($("s-month").value)
 $("s-month").addEventListener("input", () => { fillEnd(endKey()); render(); });
 $("e-year").addEventListener("input", () => { fillEndMonth($("e-month").value); render(); });
 ["e-month", "rate", "contrib", "reinvest", "freq"].forEach(id => $(id).addEventListener("input", render));
+document.querySelectorAll(".ratemode button").forEach(b => b.addEventListener("click", () => {
+  rateMode = b.dataset.mode; yearsKey = ""; render();
+}));
+$("years").addEventListener("input", e => {
+  const el = e.target, y = Number(el.dataset.year), v = Number(el.value);
+  if (!y || el.value === "" || !isFinite(v)) return;          // a mitad de escribir ("-", vacío): esperar
+  yearRates.set(y, Math.max(-90, Math.min(300, v)));
+  el.classList.toggle("neg", v < 0);
+  render();
+});
 $("amount").addEventListener("input", render);
 $("amount").addEventListener("blur", () => { const n = parseAmount(); if (n) $("amount").value = fmtNum(n); sizeControls(); });
 $("scrub").addEventListener("input", () => { stopPlay(); cursor = Number($("scrub").value); drawToCursor(false); });
@@ -915,6 +984,8 @@ $("dice").addEventListener("click", async () => {
     $("freq").value = st.freq;
     $("reinvest").checked = st.reinvest;
     if (st.amount) $("amount").value = fmtNum(st.amount);
+    if (st.rate?.mode === "same") $("rate").value = String(Math.min(30, Math.max(0, st.rate.base)));
+    if (st.rate?.mode === "year") { rateMode = "year"; st.rate.years.forEach(([y, v]) => yearRates.set(y, v)); }
     for (const id of st.race) { try { race.push({ id, asset: await getAsset(id) }); } catch (e) { /* se omite */ } }
     await selectAsset(st.start, st.end);
   } else {
