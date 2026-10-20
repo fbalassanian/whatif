@@ -126,6 +126,7 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .facts { display: grid; gap: 4px; font-size: 14px; color: var(--muted); padding-bottom: 6px; min-width: 0; }
 .facts b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
 .facts .gain { color: var(--mint); } .facts .loss { color: var(--coral); }
+.facts .off { opacity: .6; }
 
 /* ---------- visor (gráfico) con esquinas */
 .scope {
@@ -700,21 +701,20 @@ function showReadout(i, animate) {
   const m = $("mult"); m.className = "mult " + (mult >= 1 ? "up" : "down"); m.textContent = multTxt(mult);
   const facts = [
     `Pusiste <b>${usd(t.invested)}</b>${D.dca ? ` en ${D.timeline.slice(0, i + 1).filter((p, j, arr) => j === 0 || p.invested !== arr[j - 1].invested).length} aportes` : ""}`,
-    `${gain >= 0 ? "Ganancia" : "Pérdida"} <b class="${gain >= 0 ? "gain" : "loss"}">${usd(Math.abs(gain))}</b>`,
   ];
-  if (t.proj) facts.push(`Rango estimado <b>${usd(t.lo)}</b> a <b>${usd(t.hi)}</b>`);
-  else if (D.alt) {
-    // sin reinvertir, el valor ya incluye el efectivo cobrado: se muestra el desglose para no sumarlo dos veces
-    const cash = D.h.cashAt.get(t.key) || 0;
-    if (!D.reinvest && cash > 0) facts.push(`Acciones <b>${usd(t.value - cash)}</b> + efectivo <b>${usd(cash)}</b>`);
-    const other = D.alt.val.get(t.key), diff = t.value - other;
-    if (other != null && Math.abs(diff) >= 0.5) {
-      const better = D.reinvest ? diff >= 0 : diff < 0;   // ¿reinvertir rinde más acá?
-      facts.push(D.reinvest
-        ? `Sin reinvertir tendrías <b>${usd(other)}</b>, ${usd(Math.abs(diff))} ${diff >= 0 ? "menos" : "más"}`
-        : `Reinvirtiendo tendrías <b class="${better ? "gain" : ""}">${usd(other)}</b>, ${usd(Math.abs(diff))} ${diff < 0 ? "más" : "menos"}`);
-    }
+  const gainTxt = (label, g, on) =>
+    `<span class="${on ? "" : "off"}">${label} ${g >= 0 ? "" : "(pérdida) "}<b class="${on ? (g >= 0 ? "gain" : "loss") : ""}">${usd(Math.abs(g))}</b></span>`;
+  const other = !t.proj && D.alt ? D.alt.val.get(t.key) : null;
+  if (other != null) {
+    // con dividendos: ganancia total en los dos casos; la opción elegida va resaltada
+    const gOther = other - t.invested;
+    const [gRe, gNo] = D.reinvest ? [gain, gOther] : [gOther, gain];
+    facts.push(gainTxt("Ganancia reinvirtiendo dividendos", gRe, D.reinvest));
+    facts.push(gainTxt("Ganancia sin reinvertirlos", gNo, !D.reinvest));
+  } else {
+    facts.push(`${gain >= 0 ? "Ganancia" : "Pérdida"} <b class="${gain >= 0 ? "gain" : "loss"}">${usd(Math.abs(gain))}</b>`);
   }
+  if (t.proj) facts.push(`Rango estimado <b>${usd(t.lo)}</b> a <b>${usd(t.hi)}</b>`);
   $("facts").innerHTML = facts.map(f => `<span>${f}</span>`).join("");
   setNumber(t.value, animate && !reduceMotion);
 }
@@ -777,7 +777,6 @@ function renderStrip() {
     ["Rendimiento anual", d.years >= 1 && isFinite(d.annual) ? pct(d.annual) : "—",
       d.years < 1 ? "menos de un año de datos" : d.dca ? "TIR de tus aportes" : `compuesto desde ${mLabel(d.start)}`, d.annual >= 0 ? "gain" : "loss"],
   ];
-  if (asset.hasDiv) cells.push(["Dividendos", usd(h.divTotal), d.reinvest ? "cobrados y reinvertidos en más acciones" : "cobrados en efectivo, ya incluidos en el valor", ""]);
   $("strip").innerHTML = cells.map(([k, v, s, c]) => `<div class="cell"><span class="k">${k}</span><span class="v ${v === "—" ? "" : c}">${v}</span><span class="s">${s}</span></div>`).join("");
 }
 function renderFuture() {
