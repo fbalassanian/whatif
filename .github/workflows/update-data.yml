@@ -1,0 +1,68 @@
+name: Actualizar datos
+
+# Baja los datos y los publica en la rama "data" (no en main).
+# Así cada actualización NO dispara un deploy de producción en Netlify,
+# que en el plan gratis cuesta 15 de los 300 créditos mensuales.
+# La página lee esa rama a través de jsDelivr (cdn.jsdelivr.net/gh/USUARIO/REPO@data/).
+
+on:
+  schedule:
+    # Lunes a viernes 22:17 UTC (19:17 en Argentina), después del cierre de Wall Street.
+    - cron: "17 22 * * 1-5"
+    # Sábados también, para que cripto no quede más de un día atrasado el fin de semana.
+    - cron: "17 22 * * 6"
+  workflow_dispatch: {}   # botón "Run workflow" para correrlo a mano
+  # También cuando cambia el script, la lista de activos o este workflow (incluye la primera subida).
+  push:
+    branches: [main]
+    paths: ["scripts/**", "requirements.txt", ".github/workflows/update-data.yml"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Traer los datos anteriores
+        # Si Yahoo falla con un activo, el script conserva el archivo que ya había.
+        run: |
+          mkdir -p data
+          if git fetch --depth=1 origin data; then
+            git --work-tree=data checkout FETCH_HEAD -- .
+            git reset -q
+          else
+            echo "Todavía no existe la rama data: primera corrida."
+          fi
+
+      - name: Bajar datos
+        run: python scripts/fetch_data.py
+
+      - name: Publicar en la rama data
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd data
+          # Si el sitio está en Vercel, que la rama de datos no dispare deploys.
+          echo '{"git":{"deploymentEnabled":false}}' > vercel.json
+          git init -q -b data
+          git add -A
+          git -c user.name="whatif-bot" -c user.email="whatif-bot@users.noreply.github.com" \
+              commit -qm "Datos $(date -u +%Y-%m-%d)"
+          # Se reemplaza la rama entera: no guarda historial, así el repo no crece todos los días.
+          git push -qf "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" data
+          echo "Publicados $(ls assets | wc -l) activos."

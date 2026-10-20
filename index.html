@@ -1,0 +1,929 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>What if?</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<!-- De dónde lee los datos: la rama "data" del repo público fbalassanian/whatif, vía jsDelivr. -->
+<meta name="whatif-data" content="https://cdn.jsdelivr.net/gh/fbalassanian/whatif@data/">
+<meta name="description" content="Una máquina del tiempo para tu plata: ¿cuánto tendrías si hubieras invertido en una acción, ETF o cripto? En dólares, con dividendos, aportes mensuales y proyección.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Chakra+Petch:wght@500;600;700&family=Sora:wght@400;500;600&display=swap">
+<style>
+/* Layout: consola de máquina del tiempo, alineada a la izquierda.
+   Pregunta grande → lectura gigante (la única pieza audaz) → gráfico con esquinas de visor →
+   barra de tiempo con reproducir → carrera de activos → franja de datos → controles del futuro.
+   Diseño solo oscuro, a propósito. */
+:root {
+  --void: #0a0820;        /* fondo: tinta violeta */
+  --panel: #120f2e;
+  --line: #2a2655;
+  --text: #ece9ff;
+  --muted: #9a94c7;
+  --cyan: #3fe0ff;        /* tu inversión */
+  --violet: #9b7bff;      /* proyección */
+  --coral: #ff7a8a;       /* carrera 1 / peor caída */
+  --amber: #ffc35c;       /* carrera 2 */
+  --mint: #7ee0b0;        /* carrera 3 / ganancia */
+  --warn: #2b2140;
+  --display: "Unbounded", "Segoe UI", system-ui, sans-serif;
+  --digits: "Chakra Petch", "Segoe UI", system-ui, sans-serif;
+  --body: "Sora", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  min-height: 100%;
+  color: var(--text); font-family: var(--body); font-size: 15px; line-height: 1.55;
+  background:
+    radial-gradient(1100px 520px at 85% -8%, rgba(155,123,255,.20), transparent 62%),
+    radial-gradient(900px 480px at -12% 18%, rgba(63,224,255,.10), transparent 60%),
+    var(--void);
+  background-attachment: fixed;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 48px;
+}
+body::before {   /* grilla tenue que se desvanece hacia abajo */
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(155,123,255,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(155,123,255,.07) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+          mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+}
+[hidden] { display: none !important; }
+.wrap { position: relative; z-index: 1; max-width: 1040px; margin: 0 auto; display: grid; gap: 22px; }
+button, select, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+/* ---------- encabezado */
+header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.mark { font-family: var(--display); font-weight: 800; font-size: 20px; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
+.mark svg { width: 26px; height: 26px; }
+.mark small { font: 400 12px var(--body); color: var(--muted); letter-spacing: 0; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+  border: 1px solid var(--line); background: rgba(18,15,46,.7); border-radius: 999px;
+  padding: 7px 14px; font-size: 13px; font-weight: 500; transition: border-color .15s, background .15s;
+}
+.btn:hover { border-color: var(--violet); background: rgba(155,123,255,.12); }
+.btn svg { width: 15px; height: 15px; }
+.note { background: var(--warn); border: 1px solid #4a3a6a; color: #e2d6ff; border-radius: 10px; padding: 10px 14px; font-size: 13px; }
+
+/* ---------- la pregunta */
+.question {
+  font-family: var(--display); font-weight: 600; letter-spacing: -0.02em;
+  font-size: clamp(1.25rem, 3.4vw, 2.05rem); line-height: 1.75; margin: 0; text-wrap: pretty; max-width: 30em;
+}
+.question select, .question input {
+  font: inherit; font-weight: 600; color: var(--cyan);
+  background-color: rgba(63,224,255,.07); border: 1px solid rgba(63,224,255,.32); border-radius: 10px;
+  padding: 0 .3em; margin: 2px 0; cursor: pointer; max-width: 100%;
+  transition: border-color .15s, box-shadow .15s, background-color .15s;
+}
+.question select {   /* flecha propia; el ancho lo ajusta el script a la opción elegida */
+  appearance: none; -webkit-appearance: none; padding-right: 1.05em;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%233fe0ff' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right .32em center; background-size: .42em auto;
+}
+.question .nw { white-space: nowrap; }
+.question select:hover, .question input:hover { border-color: var(--cyan); background-color: rgba(63,224,255,.12); }
+.question select:focus-visible, .question input:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(63,224,255,.35); border-color: var(--cyan); }
+.question input { width: 6.2ch; min-width: 2.5ch; text-align: right; cursor: text; }
+.question option, .question optgroup { color: var(--text); background: var(--panel); }
+.question .soft { color: var(--muted); }
+
+/* ---------- la lectura gigante */
+.readout { display: grid; grid-template-columns: minmax(0, auto) minmax(0, 1fr); gap: 8px 32px; align-items: end; }
+@media (max-width: 720px) { .readout { grid-template-columns: minmax(0, 1fr); } }
+.figure { min-width: 0; }
+.when { font-size: 14px; color: var(--muted); margin: 0 0 2px; }
+.when b { color: var(--text); font-weight: 600; }
+.big {
+  font-family: var(--digits); font-weight: 700; line-height: .95; margin: 0;
+  font-size: clamp(2.8rem, 11vw, 6.4rem); letter-spacing: -0.01em; font-variant-numeric: tabular-nums;
+  display: flex; align-items: baseline; gap: .18em; flex-wrap: wrap;
+}
+.big .cur { font-size: .34em; color: var(--muted); font-weight: 600; letter-spacing: .04em; }
+.big .num {
+  background: linear-gradient(100deg, var(--cyan) 10%, #b9a6ff 70%, var(--violet));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 0 24px rgba(63,224,255,.25));
+  white-space: nowrap;
+}
+.big .est { font-size: .45em; color: var(--violet); }
+.mult {
+  font-family: var(--digits); font-weight: 600; font-size: clamp(1rem, 2.6vw, 1.4rem);
+  padding: 2px 12px; border-radius: 999px; border: 1px solid currentColor; align-self: center; white-space: nowrap;
+}
+.mult.up { color: var(--mint); } .mult.down { color: var(--coral); }
+.facts { display: grid; gap: 4px; font-size: 14px; color: var(--muted); padding-bottom: 6px; min-width: 0; }
+.facts b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.facts .gain { color: var(--mint); } .facts .loss { color: var(--coral); }
+
+/* ---------- visor (gráfico) con esquinas */
+.scope {
+  position: relative; border: 1px solid var(--line); border-radius: 16px; padding: 14px 14px 10px;
+  background: linear-gradient(180deg, rgba(18,15,46,.82), rgba(10,8,32,.82));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03), 0 30px 80px -40px rgba(63,224,255,.25);
+  display: grid; gap: 10px; min-width: 0;
+}
+.scope::before {   /* esquinas del visor */
+  content: ""; position: absolute; inset: -1px; border-radius: 16px; pointer-events: none;
+  --k: 18px; --c: rgba(63,224,255,.75);
+  background:
+    linear-gradient(var(--c),var(--c)) top left / var(--k) 1.5px no-repeat,
+    linear-gradient(var(--c),var(--c)) top left / 1.5px var(--k) no-repeat,
+    linear-gradient(var(--c),var(--c)) top right / var(--k) 1.5px no-repeat,
+    linear-gradient(var(--c),var(--c)) top right / 1.5px var(--k) no-repeat,
+    linear-gradient(var(--c),var(--c)) bottom left / var(--k) 1.5px no-repeat,
+    linear-gradient(var(--c),var(--c)) bottom left / 1.5px var(--k) no-repeat,
+    linear-gradient(var(--c),var(--c)) bottom right / var(--k) 1.5px no-repeat,
+    linear-gradient(var(--c),var(--c)) bottom right / 1.5px var(--k) no-repeat;
+}
+.scope-top { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; }
+.switch { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; cursor: pointer; user-select: none; }
+.switch input { appearance: none; width: 34px; height: 19px; border-radius: 999px; background: var(--line); position: relative; cursor: pointer; margin: 0; transition: background .15s; flex: none; }
+.switch input::after { content: ""; position: absolute; top: 2px; left: 2px; width: 15px; height: 15px; border-radius: 50%; background: var(--text); transition: transform .15s; }
+.switch input:checked { background: var(--cyan); }
+.switch input:checked::after { transform: translateX(15px); background: var(--void); }
+.switch.off { color: var(--muted); cursor: not-allowed; }
+.switch.off input { cursor: not-allowed; opacity: .5; }
+.switch small { color: var(--muted); }
+.keys { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--muted); }
+.keys span { display: inline-flex; align-items: center; gap: 6px; }
+.keys i { width: 16px; height: 2px; display: inline-block; border-radius: 2px; }
+#chart { width: 100%; height: 400px; }
+@media (max-width: 560px) { #chart { height: 300px; } }
+
+/* ---------- barra de tiempo */
+.time { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 2px 4px 4px; }
+.play {
+  width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--cyan); cursor: pointer;
+  background: radial-gradient(circle at 35% 30%, rgba(63,224,255,.35), rgba(63,224,255,.08));
+  display: grid; place-items: center; color: var(--cyan); transition: box-shadow .15s, transform .1s;
+}
+.play:hover { box-shadow: 0 0 0 6px rgba(63,224,255,.12), 0 0 24px rgba(63,224,255,.35); }
+.play:active { transform: scale(.95); }
+.play svg { width: 16px; height: 16px; }
+#scrub {
+  appearance: none; width: 100%; height: 26px; background: transparent; cursor: pointer; margin: 0; min-width: 0;
+  --p: 100%;
+}
+#scrub::-webkit-slider-runnable-track {
+  height: 4px; border-radius: 4px;
+  background: linear-gradient(90deg, var(--cyan), var(--violet)) 0 0 / var(--p) 100% no-repeat, var(--line);
+}
+#scrub::-moz-range-track { height: 4px; border-radius: 4px; background: var(--line); }
+#scrub::-moz-range-progress { height: 4px; border-radius: 4px; background: linear-gradient(90deg, var(--cyan), var(--violet)); }
+#scrub::-webkit-slider-thumb {
+  appearance: none; width: 18px; height: 18px; border-radius: 50%; margin-top: -7px;
+  background: var(--text); border: 3px solid var(--cyan); box-shadow: 0 0 14px rgba(63,224,255,.8);
+}
+#scrub::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--text); border: 3px solid var(--cyan); box-shadow: 0 0 14px rgba(63,224,255,.8); }
+.stamp { font-family: var(--digits); font-weight: 600; font-size: 15px; min-width: 7.5ch; text-align: right; color: var(--cyan); font-variant-numeric: tabular-nums; }
+
+/* ---------- carrera */
+.race { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.race > span { font-size: 13px; color: var(--muted); margin-right: 4px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 5px 6px 5px 12px;
+  border: 1px solid var(--line); background: rgba(18,15,46,.8); font-size: 13px; max-width: 100%;
+}
+.chip i { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.chip b { font-family: var(--digits); font-weight: 600; font-variant-numeric: tabular-nums; }
+.chip .x { border: 0; background: none; color: var(--muted); cursor: pointer; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; }
+.chip .x:hover { background: var(--line); color: var(--text); }
+.chip.me { padding-right: 12px; border-color: rgba(63,224,255,.4); }
+.chip.lead { box-shadow: 0 0 0 1px currentColor inset; }
+.chip.na { color: var(--muted); }
+.suggest { border-style: dashed; color: var(--muted); cursor: pointer; padding-right: 12px; }
+.suggest:hover { color: var(--text); border-color: var(--violet); }
+.addsel { border: 1px dashed var(--line); background: transparent; border-radius: 999px; padding: 5px 10px; font-size: 13px; color: var(--muted); cursor: pointer; max-width: 100%; }
+.addsel option, .addsel optgroup { background: var(--panel); color: var(--text); }
+.verdict { font-size: 14px; color: var(--muted); margin: 0; }
+.verdict b { color: var(--text); }
+
+/* ---------- franja de datos */
+.strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.cell { padding: 14px 16px 14px 0; display: grid; gap: 2px; align-content: start; min-width: 0; }
+.cell + .cell { padding-left: 16px; border-left: 1px solid var(--line); }
+@media (max-width: 520px) { .cell + .cell { border-left: 0; padding-left: 0; } .cell { border-bottom: 1px solid var(--line); } .cell:last-child { border-bottom: 0; } }
+.cell .k { font-size: 12px; color: var(--muted); }
+.cell .v { font-family: var(--digits); font-weight: 600; font-size: 22px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.cell .s { font-size: 12px; color: var(--muted); }
+.cell .v.loss { color: var(--coral); } .cell .v.gain { color: var(--mint); }
+
+/* ---------- futuro */
+.future { display: grid; gap: 12px; }
+.future-head { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: baseline; justify-content: space-between; }
+.future-head h2 { font-family: var(--display); font-weight: 600; font-size: 16px; margin: 0; letter-spacing: -0.01em; }
+.future-head p { margin: 0; font-size: 13px; color: var(--muted); }
+.linkbtn { border: 0; background: none; padding: 0; color: var(--violet); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; font-size: 13px; }
+.knobs { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; border: 0; margin: 0; padding: 0; min-width: 0; }
+.knobs:disabled { opacity: .4; }
+.field { display: grid; gap: 4px; }
+.field label { font-size: 12px; color: var(--muted); }
+.field .row { display: flex; align-items: center; gap: 12px; }
+.field output { font-family: var(--digits); font-weight: 600; font-size: 16px; min-width: 4.5ch; text-align: right; color: var(--violet); }
+#rate { flex: 1; accent-color: var(--violet); min-width: 0; }
+#contrib { width: 100%; padding: 7px 10px; border: 1px solid var(--line); border-radius: 10px; background: rgba(18,15,46,.8); font-family: var(--digits); font-size: 15px; }
+
+footer { font-size: 12px; color: var(--muted); display: grid; gap: 6px; max-width: 80ch; }
+footer a { color: var(--cyan); }
+.toast {
+  position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
+  background: var(--panel); border: 1px solid var(--cyan); color: var(--text); padding: 8px 16px; border-radius: 999px; font-size: 13px; z-index: 5;
+}
+#share-box { width: 100%; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); font-size: 12px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="mark">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13" fill="none" stroke="#3fe0ff" stroke-width="2"/><path d="M16 8v8l6 4" fill="none" stroke="#9b7bff" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="16" r="2" fill="#ece9ff"/></svg>
+      <span>What if?</span>
+      <small id="status">Máquina del tiempo para tu plata</small>
+    </div>
+    <div class="actions">
+      <button type="button" class="btn" id="dice"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="3" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="5" cy="5" r="1.2" fill="currentColor"/><circle cx="11" cy="11" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/></svg>Sorpréndeme</button>
+      <button type="button" class="btn" id="share"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 9.5l3-3M5 11a2.5 2.5 0 0 1 0-3.5l1.5-1.5M11 5a2.5 2.5 0 0 1 0 3.5L9.5 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Copiar link</button>
+    </div>
+  </header>
+
+  <input id="share-box" type="text" readonly hidden aria-label="Link para compartir">
+
+  <p class="question">
+    Si <span id="s-prep">en</span>
+    <select id="s-month" aria-label="Mes en que invertís"></select>
+    <select id="s-year" aria-label="Año en que invertís"></select>
+    hubieras puesto USD
+    <input id="amount" type="text" inputmode="numeric" value="1.000" aria-label="Monto en dólares">
+    <select id="freq" aria-label="Frecuencia"><option value="once">una vez</option><option value="monthly">todos los meses</option></select>
+    en <span class="nw"><select id="ticker" aria-label="Acción, ETF o cripto"></select><span class="soft">,</span></span>
+    <span class="soft">¿cuánto tendrías en</span>
+    <select id="e-month" aria-label="Mes del resultado"></select>
+    <span class="nw"><select id="e-year" aria-label="Año del resultado"></select><span class="soft">?</span></span>
+  </p>
+
+  <section class="readout" aria-live="polite">
+    <div class="figure">
+      <p class="when" id="when"></p>
+      <p class="big"><span class="cur">USD</span><span class="est" id="est" hidden>~</span><span class="num" id="num">0</span><span class="mult" id="mult"></span></p>
+    </div>
+    <div class="facts" id="facts"></div>
+  </section>
+
+  <section class="scope" aria-label="Recorrido en el tiempo">
+    <div class="scope-top">
+      <label class="switch" id="reinvest-wrap">
+        <input type="checkbox" id="reinvest" checked>
+        <span>Reinvertir dividendos <small id="reinvest-note"></small></span>
+      </label>
+      <div class="keys" id="keys"></div>
+    </div>
+    <div id="chart"></div>
+    <div class="time">
+      <button type="button" class="play" id="play" aria-label="Reproducir el recorrido">
+        <svg viewBox="0 0 16 16" id="play-icon" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg>
+      </button>
+      <input type="range" id="scrub" min="0" max="1" value="1" aria-label="Viajar en el tiempo">
+      <span class="stamp" id="stamp"></span>
+    </div>
+  </section>
+
+  <section class="race" id="race" aria-label="Carrera contra otros activos"></section>
+  <p class="verdict" id="verdict" hidden></p>
+
+  <section class="strip" id="strip" aria-label="Resumen"></section>
+
+  <section class="future" aria-labelledby="future-title">
+    <div class="future-head">
+      <h2 id="future-title">Hacia el futuro</h2>
+      <p id="future-hint"></p>
+    </div>
+    <fieldset class="knobs" id="knobs">
+      <div class="field">
+        <label for="rate">Rendimiento anual que suponés</label>
+        <div class="row"><input id="rate" type="range" min="0" max="30" step="0.5" value="8"><output id="rate-o" for="rate"></output></div>
+      </div>
+      <div class="field" id="contrib-field">
+        <label for="contrib">Aporte mensual desde hoy, en USD</label>
+        <input id="contrib" type="number" min="0" step="50" value="0">
+      </div>
+    </fieldset>
+  </section>
+
+  <footer>
+    <span>Cada compra se hace al cierre del mes; con aportes mensuales, cada aporte entra al cierre de su mes, incluido el mes final, y el rendimiento anual es la TIR. Los dividendos se reinvierten al cierre del mes en que se pagan. No hay impuestos ni comisiones. La proyección usa el rendimiento que elegís, con un margen de 4 puntos por año para arriba y para abajo. Nada de esto es una recomendación de inversión.</span>
+    <span>Precios y dividendos de Yahoo Finance. Gráfico hecho con <a href="https://www.tradingview.com/lightweight-charts/" target="_blank" rel="noopener">TradingView Lightweight Charts</a>.</span>
+  </footer>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
+<script>
+// ================================================================ datos de ejemplo (fallback)
+// Se usan solo si no hay datos publicados (por ejemplo, en la vista previa).
+// Cierre de cada diciembre aproximado; los meses del medio se completan con crecimiento parejo,
+// y el dividendo de cada año se reparte en 4 pagos trimestrales.
+const SAMPLE = (() => {
+  const Y = [2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
+  const rows = {
+    SPY:  ["S&P 500 (SPY)", "Índices y ETFs", [203.87,223.53,266.86,249.92,321.86,373.88,474.96,382.43,475.31,586.08,681], [4.21,4.55,4.78,5.38,5.69,5.73,5.71,6.33,6.51,6.96,7.2]],
+    QQQ:  ["Nasdaq 100 (QQQ)", "Índices y ETFs", [112.1,119.1,154.6,154.3,213.1,313.7,397.9,266.3,408.5,511.2,615], [1.05,1.21,1.36,1.62,1.71,1.68,1.67,2.30,2.10,2.80,3.0]],
+    GLD:  ["Oro (GLD)", "Índices y ETFs", [101.5,109.6,123.7,121.3,142.9,178.4,171.0,171.4,191.2,242.1,395], null],
+    AAPL: ["Apple (AAPL)", "Acciones EE.UU. / CEDEARs", [26.32,28.95,42.31,39.44,73.41,132.69,177.57,129.93,192.53,250.42,271], [0.48,0.55,0.60,0.71,0.76,0.80,0.87,0.90,0.94,0.98,1.02]],
+    MSFT: ["Microsoft (MSFT)", "Acciones EE.UU. / CEDEARs", [55.48,62.14,85.54,101.57,157.70,222.42,336.32,239.82,376.04,421.50,483], [1.29,1.44,1.56,1.72,1.89,2.04,2.24,2.48,2.72,3.00,3.32]],
+    NVDA: ["NVIDIA (NVDA)", "Acciones EE.UU. / CEDEARs", [0.82,2.67,4.84,3.34,5.88,13.06,29.41,14.61,49.52,134.29,186.5], null],
+    AMZN: ["Amazon (AMZN)", "Acciones EE.UU. / CEDEARs", [33.79,37.49,58.47,75.10,92.39,162.85,166.72,84.00,151.94,219.39,231], null],
+    TSLA: ["Tesla (TSLA)", "Acciones EE.UU. / CEDEARs", [16.00,14.25,20.76,22.19,27.89,235.22,352.26,123.18,248.48,403.84,450], null],
+    KO:   ["Coca-Cola (KO)", "Acciones EE.UU. / CEDEARs", [42.96,41.46,45.88,47.35,55.35,54.84,59.21,63.61,58.93,62.26,70], [1.32,1.40,1.48,1.56,1.60,1.64,1.68,1.76,1.84,1.94,2.04]],
+    MELI: ["MercadoLibre (MELI)", "Argentina y Latam (ADRs)", [114.4,156.1,314.7,292.9,571.9,1675.2,1348.4,846.2,1571.5,1700.4,2000], null],
+    BTC:  ["Bitcoin (BTC)", "Cripto", [430,964,14156,3742,7194,29002,46306,16548,42265,93429,87500], null],
+    ETH:  ["Ethereum (ETH)", "Cripto", [0.93,7.97,756,133,129,737,3683,1196,2282,3332,2970], null]
+  };
+  const mm = (y, m) => `${y}-${String(m).padStart(2, "0")}`;
+  const assets = {};
+  const list = Object.entries(rows).map(([id, [name, group, p, d]]) => {
+    const m = [[mm(Y[0], 12), p[0]]], divs = [];
+    for (let i = 1; i < Y.length; i++) {
+      for (let mo = 1; mo <= 12; mo++) {
+        m.push([mm(Y[i], mo), p[i - 1] * Math.pow(p[i] / p[i - 1], mo / 12)]);
+        if (d && mo % 3 === 0) divs.push([mm(Y[i], mo), d[i] / 4]);
+      }
+    }
+    assets[id] = { id, name, group, m, d: divs };
+    return { id, name, group, div: !!d };
+  });
+  return { manifest: { updated: null, assets: list }, assets };
+})();
+
+// ================================================================ utilidades
+const $ = id => document.getElementById(id);
+const MESES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+const mIdx = k => { const [y, m] = k.split("-").map(Number); return y * 12 + m - 1; };
+const mKey = i => `${Math.floor(i / 12)}-${String(i % 12 + 1).padStart(2, "0")}`;
+const mLabel = k => `${MESES[Number(k.slice(5)) - 1]} ${k.slice(0, 4)}`;
+const fmtNum = (n, d = 0) => n.toLocaleString("es-AR", { maximumFractionDigits: d, minimumFractionDigits: d });
+function short(n) {   // número para la lectura y los chips, sin "USD"
+  const a = Math.abs(n);
+  return a >= 1e9 ? fmtNum(n / 1e9, 2) + " mil M" : a >= 1e6 ? fmtNum(n / 1e6, a >= 1e8 ? 0 : 2) + " M" : fmtNum(n, a < 100 ? 2 : 0);
+}
+const usd = n => "USD " + short(n);
+const pct = r => (r * 100).toLocaleString("es-AR", { maximumFractionDigits: 1, signDisplay: "exceptZero" }) + "%";
+const multTxt = m => (m >= 1 ? "×" : "÷") + fmtNum(m >= 1 ? m : 1 / m, m >= 10 || m <= 0.1 ? 0 : 1);
+const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function hexA(hex, a) { const n = parseInt(hex.replace("#", ""), 16); return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${a})`; }
+const reduceMotion = (() => { try { return matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; } })();
+const PROJ_MAX_YEARS = 30, MAX_RACE = 3;
+const RACE_COLORS = ["--coral", "--amber", "--mint"];
+const SUGGEST = ["SPY", "BTC", "NVDA", "GLD", "QQQ", "AAPL"];
+
+// ================================================================ carga de datos
+// Primero la rama "data" del repo vía jsDelivr (ver <meta name="whatif-data">), si no la carpeta data/.
+const store = { sample: true, base: "data/", manifest: null, cache: new Map() };
+function dataBases() {
+  const remote = (document.querySelector('meta[name="whatif-data"]')?.content || "").trim();
+  if (!remote || remote.includes("USUARIO")) return ["data/"];   // todavía sin configurar
+  const local = ["localhost", "127.0.0.1", ""].includes(location.hostname);
+  return local ? ["data/", remote] : [remote, "data/"];
+}
+async function getJSON(url) {
+  const r = await fetch(url, { cache: "no-cache" });
+  if (!r.ok) throw new Error(`${r.status} ${url}`);
+  return r.json();
+}
+async function loadData() {
+  for (const base of dataBases()) {
+    try {
+      const manifest = await getJSON(base + "manifest.json");
+      if (!manifest.assets?.length) throw new Error("vacío");
+      Object.assign(store, { sample: false, base, manifest });
+      return;
+    } catch (e) { /* probar la siguiente fuente */ }
+  }
+  Object.assign(store, { sample: true, manifest: SAMPLE.manifest });
+}
+async function getAsset(id) {
+  if (store.cache.has(id)) return store.cache.get(id);
+  const raw = store.sample ? SAMPLE.assets[id] : await getJSON(`${store.base}assets/${encodeURIComponent(id)}.json`);
+  const a = { ...raw, keys: raw.m.map(p => p[0]), price: new Map(raw.m), divs: new Map(raw.d || []) };
+  a.first = a.keys[0]; a.last = a.keys[a.keys.length - 1]; a.hasDiv = a.divs.size > 0;
+  a.short = a.name.split(" (")[0];
+  a.asof = raw.asof || null;   // fecha del último cierre (el mes en curso usa ese precio)
+  store.cache.set(id, a);
+  return a;
+}
+const metaOf = id => store.manifest.assets.find(a => a.id === id);
+
+// ================================================================ selectores
+let asset = null;
+const race = [];   // [{id, asset}]
+function fillTickers() {
+  const sel = $("ticker"); sel.innerHTML = "";
+  const groups = new Map();
+  for (const a of store.manifest.assets) {
+    if (!groups.has(a.group)) { const g = document.createElement("optgroup"); g.label = a.group; groups.set(a.group, g); sel.append(g); }
+    groups.get(a.group).append(new Option(a.name, a.id));
+  }
+}
+function setOptions(sel, items, keep, fallback) {
+  sel.innerHTML = "";
+  items.forEach(([v, label]) => sel.add(new Option(label, v)));
+  const vals = items.map(i => i[0]);
+  sel.value = vals.includes(keep) ? keep : vals.includes(fallback) ? fallback : vals[0];
+}
+const startKey = () => `${$("s-year").value}-${$("s-month").value}`;
+const endKey = () => `${$("e-year").value}-${$("e-month").value}`;
+const startMonths = () => asset.keys.slice(0, -1);
+function endMonths() {
+  const s = mIdx(startKey()), L = mIdx(asset.last);
+  const hist = asset.keys.filter(k => mIdx(k) > s);
+  const fut = []; for (let i = L + 1; i <= L + 12 * PROJ_MAX_YEARS; i++) fut.push(mKey(i));
+  return hist.concat(fut);
+}
+function fillStart(keepKey) {
+  const ms = startMonths();
+  const years = [...new Set(ms.map(k => k.slice(0, 4)))];
+  const tenBack = mKey(mIdx(asset.last) - 120);
+  const want = ms.includes(keepKey) ? keepKey : ms.includes(tenBack) ? tenBack : ms[0];
+  setOptions($("s-year"), years.map(y => [y, y]), want.slice(0, 4));
+  fillStartMonth(want.slice(5));
+}
+function fillStartMonth(keepMonth) {
+  const y = $("s-year").value;
+  setOptions($("s-month"), startMonths().filter(k => k.startsWith(y + "-")).map(k => [k.slice(5), MESES[Number(k.slice(5)) - 1]]), keepMonth);
+}
+function fillEnd(keepKey) {
+  const ms = endMonths();
+  const years = [...new Set(ms.map(k => k.slice(0, 4)))];
+  const want = ms.includes(keepKey) ? keepKey : asset.last;
+  setOptions($("e-year"), years.map(y => [y, y]), want.slice(0, 4));
+  fillEndMonth(want.slice(5));
+}
+function fillEndMonth(keepMonth) {
+  const y = $("e-year").value;
+  setOptions($("e-month"), endMonths().filter(k => k.startsWith(y + "-")).map(k => [k.slice(5), MESES[Number(k.slice(5)) - 1]]), keepMonth);
+}
+function parseAmount() {
+  const n = Number(String($("amount").value).replace(/\./g, "").replace(",", "."));
+  return isFinite(n) && n > 0 ? n : 0;
+}
+
+// ================================================================ cálculo
+// Compra al cierre del mes de inicio y, con aportes mensuales, al cierre de cada mes siguiente
+// hasta el final (incluido). En cada mes con dividendo, lo que pagan las acciones que ya tenías
+// se reinvierte al cierre o se acumula como efectivo; el aporte de ese mes se compra después.
+function simulate(a, start, end, amount, reinvest, monthly) {
+  let units = 0, cash = 0, divTotal = 0, invested = 0;
+  const pts = [], flows = [], inv = new Map(), val = new Map();
+  const s = mIdx(start), e = mIdx(end);
+  for (const k of a.keys) {
+    const i = mIdx(k);
+    if (i < s || i > e) continue;
+    const p = a.price.get(k), d = a.divs.get(k) || 0;
+    if (i > s && d > 0 && units > 0) {
+      const paid = units * d; divTotal += paid;
+      if (reinvest) units += paid / p; else cash += paid;
+    }
+    if (i === s || monthly) { units += amount / p; invested += amount; flows.push(i - s); }
+    const v = units * p + cash;
+    pts.push({ time: k + "-01", value: v });
+    inv.set(k, invested); val.set(k, v);
+  }
+  return { pts, inv, val, units, cash, divTotal, invested, flows, n: flows.length,
+           value: units * a.price.get(end) + cash };
+}
+// TIR anual por bisección: tasa mensual que iguala los aportes capitalizados al valor final.
+function irrAnnual(flows, amount, T, value) {
+  const f = r => value - flows.reduce((sum, t) => sum + amount * Math.pow(1 + r, T - t), 0);
+  let lo = -0.99, hi = 1;
+  if (!(f(lo) > 0 && f(hi) < 0)) return NaN;
+  for (let i = 0; i < 200; i++) { const mid = (lo + hi) / 2; if (f(mid) > 0) lo = mid; else hi = mid; }
+  return Math.pow(1 + (lo + hi) / 2, 12) - 1;
+}
+function project(from, value, toIdx, annual, monthly) {
+  const series = r => {
+    const rm = Math.pow(1 + r, 1 / 12) - 1, out = [];
+    let v = value;
+    for (let i = mIdx(from); i <= toIdx; i++) {
+      if (i > mIdx(from)) v = v * (1 + rm) + monthly;
+      out.push({ time: mKey(i) + "-01", value: v });
+    }
+    return out;
+  };
+  return { mid: series(annual), lo: series(Math.max(annual - 0.04, -0.5)), hi: series(annual + 0.04) };
+}
+
+function compute() {
+  const start = startKey(), end = endKey(), amount = parseAmount();
+  const dca = $("freq").value === "monthly";
+  const reinvestOn = $("reinvest").checked;
+  const reinvest = reinvestOn && asset.hasDiv;
+  const L = asset.last, future = mIdx(end) > mIdx(L);
+  const histEnd = future ? L : end;
+  const h = simulate(asset, start, histEnd, amount, reinvest, dca);
+  const T = mIdx(histEnd) - mIdx(start), years = T / 12;
+  const annual = dca ? irrAnnual(h.flows, amount, T, h.value) : Math.pow(h.value / amount, 1 / years) - 1;
+  const d = { start, end, histEnd, future, amount, dca, reinvest, h, annual, years,
+              final: h.value, invested: h.invested, contribTotal: 0, months: 0 };
+
+  // línea de tiempo: un punto por mes, con valor y lo puesto hasta ahí
+  d.timeline = h.pts.map(p => { const k = p.time.slice(0, 7); return { key: k, time: p.time, value: p.value, invested: h.inv.get(k), proj: false }; });
+  if (future) {
+    const r = Number($("rate").value) / 100;
+    const monthly = dca ? amount : Math.max(0, Number($("contrib").value) || 0);
+    const p = project(L, h.value, mIdx(end), r, monthly);
+    const months = mIdx(end) - mIdx(L);
+    Object.assign(d, { proj: p, monthly, months, contribTotal: monthly * months, invested: h.invested + monthly * months,
+                       final: p.mid.at(-1).value, lo: p.lo.at(-1).value, hi: p.hi.at(-1).value });
+    p.mid.slice(1).forEach((pt, j) => d.timeline.push({ key: pt.time.slice(0, 7), time: pt.time, value: pt.value,
+      invested: h.invested + monthly * (j + 1), proj: true, lo: p.lo[j + 1].value, hi: p.hi[j + 1].value }));
+  }
+  d.base = d.timeline.map(t => ({ time: t.time, value: t.invested }));
+
+  // carrera: mismos parámetros para cada activo que tenga datos en todo el período
+  d.race = race.map((r, i) => {
+    const a = r.asset, color = RACE_COLORS[i];
+    if (!a.price.has(start) || !a.price.has(histEnd)) return { id: r.id, a, color, na: true };
+    const sim = simulate(a, start, histEnd, amount, reinvestOn && a.hasDiv, dca);
+    return { id: r.id, a, color, sim };
+  });
+  return d;
+}
+
+// ================================================================ gráfico
+let chart, sGhost, sMain, sBase, sProj, sLo, sHi, sRace = [];
+let D = null, cursor = 0;
+function initChart() {
+  chart = LightweightCharts.createChart($("chart"), {
+    autoSize: true,
+    layout: { background: { type: "solid", color: "rgba(0,0,0,0)" }, textColor: cssVar("--muted"), fontFamily: "Sora, system-ui, sans-serif", fontSize: 11 },
+    grid: { vertLines: { color: "rgba(0,0,0,0)" }, horzLines: { color: "rgba(155,123,255,.08)" } },
+    rightPriceScale: { borderColor: "rgba(0,0,0,0)" },
+    crosshair: {
+      mode: 0,
+      vertLine: { color: hexA(cssVar("--cyan"), .5), width: 1, style: 0, labelBackgroundColor: cssVar("--violet") },
+      horzLine: { color: hexA(cssVar("--cyan"), .25), width: 1, style: 2, labelBackgroundColor: cssVar("--panel") }
+    },
+    handleScroll: false, handleScale: false,
+    localization: { locale: "es-AR",
+      priceFormatter: v => { const a = Math.abs(v); return a >= 1e9 ? fmtNum(v / 1e9, 1) + " mil M" : a >= 1e6 ? fmtNum(v / 1e6, 1) + " M" : a >= 1e4 ? fmtNum(v / 1e3, 0) + " k" : fmtNum(v, a < 100 ? 2 : 0); },
+      timeFormatter: t => mLabel(keyFromTime(t)) },
+    timeScale: { borderColor: "rgba(0,0,0,0)", fixLeftEdge: true, fixRightEdge: true,
+      tickMarkFormatter: (time, type) => { const k = keyFromTime(time); return type === 0 ? k.slice(0, 4) : `${MESES[Number(k.slice(5)) - 1]} ${k.slice(2, 4)}`; } }
+  });
+  const quiet = { priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false };
+  // el fantasma lleva el recorrido completo y fija la escala, así el gráfico no salta al reproducir
+  sGhost = chart.addLineSeries({ ...quiet, lineWidth: 1, color: hexA(cssVar("--cyan"), .22),
+    autoscaleInfoProvider: () => D ? { priceRange: { minValue: D.min, maxValue: D.max } } : null });
+  sHi = chart.addLineSeries({ ...quiet, lineWidth: 1, lineStyle: 2, color: hexA(cssVar("--violet"), .45) });
+  sLo = chart.addLineSeries({ ...quiet, lineWidth: 1, lineStyle: 2, color: hexA(cssVar("--violet"), .45) });
+  sBase = chart.addLineSeries({ ...quiet, lineWidth: 1, lineStyle: 1, lineType: 1, color: hexA(cssVar("--muted"), .7) });
+  sRace = RACE_COLORS.map(c => chart.addLineSeries({ ...quiet, lineWidth: 2, color: cssVar(c), crosshairMarkerVisible: true }));
+  sProj = chart.addLineSeries({ priceLineVisible: false, lastValueVisible: false, lineWidth: 3, lineStyle: 2, color: cssVar("--violet") });
+  sMain = chart.addAreaSeries({ priceLineVisible: false, lastValueVisible: false, lineWidth: 3,
+    lineColor: cssVar("--cyan"), topColor: hexA(cssVar("--cyan"), .32), bottomColor: hexA(cssVar("--violet"), 0),
+    crosshairMarkerBorderColor: cssVar("--void"), crosshairMarkerBackgroundColor: cssVar("--cyan") });
+
+  // pasar el mouse por el gráfico muestra ese mes en la lectura, sin mover la barra
+  chart.subscribeCrosshairMove(param => {
+    if (!D || playing) return;
+    const k = param.time ? keyFromTime(param.time) : null;
+    const i = k ? D.index.get(k) : undefined;
+    showReadout(i ?? cursor, false);
+    updateRaceValues(D.timeline[i ?? cursor].key);
+  });
+  // ajustar al ancho real cuando el gráfico lo obtiene (si se ajusta antes, queda apretado a la derecha)
+  let lastW = 0;
+  new ResizeObserver(en => { const w = Math.round(en[0].contentRect.width); if (w > 0 && w !== lastW) { lastW = w; fitChart(); } }).observe($("chart"));
+}
+function keyFromTime(t) {
+  if (typeof t === "string") return t.slice(0, 7);
+  if (t && typeof t === "object") return `${t.year}-${String(t.month).padStart(2, "0")}`;
+  const dt = new Date(t * 1000); return `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, "0")}`;
+}
+function fitChart() { if (!chart) return; chart.timeScale().fitContent(); requestAnimationFrame(() => chart.timeScale().fitContent()); }
+
+// ================================================================ render completo (cuando cambia el escenario)
+function render() {
+  if (!asset) return;
+  stopPlay();
+  if (!parseAmount()) { $("when").textContent = "Escribí un monto mayor a cero."; return; }
+  D = compute();
+  D.index = new Map(D.timeline.map((t, i) => [t.key, i]));
+  const vals = D.timeline.flatMap(t => t.proj ? [t.lo, t.hi] : [t.value, t.invested]);
+  D.race.forEach(r => r.sim && r.sim.pts.forEach(p => vals.push(p.value)));
+  D.min = Math.min(...vals); D.max = Math.max(...vals);
+  chart.priceScale("right").applyOptions({ mode: D.max / Math.max(D.min, 1e-9) > 20 ? 1 : 0 });
+
+  sGhost.setData(D.timeline.map(t => ({ time: t.time, value: t.value })));
+  sBase.setData(D.base);
+  sLo.setData(D.future ? D.proj.lo : []);
+  sHi.setData(D.future ? D.proj.hi : []);
+
+  const scrub = $("scrub");
+  scrub.max = String(D.timeline.length - 1);
+  cursor = D.index.get(D.histEnd);           // por defecto: el último mes con datos reales (o el final, si es pasado)
+  if (D.future) cursor = D.timeline.length - 1;
+  scrub.value = String(cursor);
+  drawToCursor(true);
+  fitChart();
+
+  renderSwitch(); renderKeys(); renderStrip(); renderFuture(); renderRace(); writeHash(); sizeControls();
+}
+
+// los selectores de la pregunta toman el ancho de la opción elegida, no de la más larga
+const measurer = Object.assign(document.createElement("span"), { ariaHidden: "true" });
+measurer.style.cssText = "position:absolute;left:-9999px;top:0;visibility:hidden;white-space:pre";
+document.body.append(measurer);
+function textWidth(el, text) {
+  const cs = getComputedStyle(el);
+  measurer.style.font = cs.font; measurer.style.letterSpacing = cs.letterSpacing;
+  measurer.textContent = text;
+  return measurer.getBoundingClientRect().width;
+}
+function sizeControls() {
+  document.querySelectorAll(".question select").forEach(s => {
+    const txt = s.options[s.selectedIndex]?.text || "";
+    s.style.width = `calc(${Math.ceil(textWidth(s, txt))}px + 1.45em)`;
+  });
+  const a = $("amount");
+  a.style.width = `calc(${Math.ceil(textWidth(a, a.value || "0"))}px + .75em)`;
+}
+try { document.fonts.ready.then(sizeControls); } catch (e) { /* sin API de fuentes */ }
+
+// dibuja el recorrido hasta el mes del cursor (barra de tiempo / reproducción)
+function drawToCursor(animateNumber) {
+  const t = D.timeline[cursor], ck = mIdx(t.key);
+  const hist = D.timeline.filter((p, i) => !p.proj && i <= cursor).map(p => ({ time: p.time, value: p.value }));
+  sMain.setData(hist);
+  const projPts = D.timeline.filter((p, i) => p.proj && i <= cursor).map(p => ({ time: p.time, value: p.value }));
+  sProj.setData(projPts.length ? [hist.at(-1), ...projPts] : []);
+  D.race.forEach((r, i) => sRace[i].setData(r.sim ? r.sim.pts.filter(p => mIdx(p.time.slice(0, 7)) <= ck) : []));
+  for (let i = D.race.length; i < sRace.length; i++) sRace[i].setData([]);
+  const scrub = $("scrub");
+  scrub.style.setProperty("--p", (Number(scrub.max) ? cursor / Number(scrub.max) * 100 : 100) + "%");
+  $("stamp").textContent = t.key === asset.last ? lastLabel() : mLabel(t.key);
+  showReadout(cursor, animateNumber);
+  updateRaceValues(t.key);
+}
+
+// la lectura gigante: valor en el mes i
+let shown = 0, tween = null;
+// "20 oct 2026" si hay fecha exacta del último cierre; si no, el mes
+function lastLabel() {
+  if (!asset.asof) return mLabel(asset.last);
+  const [y, m, d] = asset.asof.split("-").map(Number);
+  return `${d} ${MESES[m - 1]} ${y}`;
+}
+function showReadout(i, animate) {
+  const t = D.timeline[i];
+  const mult = t.value / t.invested, gain = t.value - t.invested;
+  const when = `<b>${mLabel(t.key)}</b>`;
+  $("when").innerHTML = t.proj ? `En ${when} podrías tener`
+    : t.key === asset.last ? `Hoy tendrías <span class="asof">(cierre del <b>${lastLabel()}</b>)</span>`
+    : t.key === D.end ? `En ${when} hubieras tenido`
+    : `En ${when} tenías`;
+  $("est").hidden = !t.proj;
+  const m = $("mult"); m.className = "mult " + (mult >= 1 ? "up" : "down"); m.textContent = multTxt(mult);
+  const facts = [
+    `Pusiste <b>${usd(t.invested)}</b>${D.dca ? ` en ${D.timeline.slice(0, i + 1).filter((p, j, arr) => j === 0 || p.invested !== arr[j - 1].invested).length} aportes` : ""}`,
+    `${gain >= 0 ? "Ganancia" : "Pérdida"} <b class="${gain >= 0 ? "gain" : "loss"}">${usd(Math.abs(gain))}</b>`,
+  ];
+  if (t.proj) facts.push(`Rango estimado <b>${usd(t.lo)}</b> a <b>${usd(t.hi)}</b>`);
+  else if (asset.hasDiv) facts.push(D.reinvest ? "Con dividendos reinvertidos" : `Con ${usd(D.h.cash)} de dividendos en efectivo`);
+  $("facts").innerHTML = facts.map(f => `<span>${f}</span>`).join("");
+  setNumber(t.value, animate && !reduceMotion);
+}
+function setNumber(v, animate) {
+  cancelAnimationFrame(tween);
+  if (!animate) { shown = v; $("num").textContent = short(v); return; }
+  const from = shown, t0 = performance.now(), dur = 550;
+  const step = now => {
+    const f = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - f, 3);
+    shown = from + (v - from) * e; $("num").textContent = short(shown);
+    if (f < 1) tween = requestAnimationFrame(step);
+  };
+  tween = requestAnimationFrame(step);
+}
+
+// ================================================================ reproducir
+let playing = false, playRaf = null;
+function setPlayIcon() {
+  $("play-icon").innerHTML = playing ? '<rect x="3.5" y="2.5" width="3" height="11" fill="currentColor"/><rect x="9.5" y="2.5" width="3" height="11" fill="currentColor"/>'
+                                     : '<path d="M4 2.5v11l9-5.5z" fill="currentColor"/>';
+  $("play").setAttribute("aria-label", playing ? "Pausar" : "Reproducir el recorrido");
+}
+function stopPlay() { playing = false; cancelAnimationFrame(playRaf); setPlayIcon(); }
+function play() {
+  if (playing) { stopPlay(); return; }
+  const max = D.timeline.length - 1;
+  if (reduceMotion) { cursor = max; $("scrub").value = String(max); drawToCursor(false); return; }
+  const from = cursor >= max ? 0 : cursor;
+  const dur = Math.min(9000, Math.max(3000, (max - from) * 28));
+  const t0 = performance.now();
+  playing = true; setPlayIcon();
+  const step = now => {
+    if (!playing) return;
+    const f = Math.min(1, (now - t0) / dur);
+    const c = Math.round(from + (max - from) * f);
+    if (c !== cursor || f === 1) { cursor = c; $("scrub").value = String(c); drawToCursor(false); }
+    if (f < 1) playRaf = requestAnimationFrame(step); else stopPlay();
+  };
+  playRaf = requestAnimationFrame(step);
+}
+
+// ================================================================ piezas de la interfaz
+function renderSwitch() {
+  const rw = $("reinvest-wrap");
+  const any = asset.hasDiv || race.some(r => r.asset.hasDiv);
+  $("reinvest").disabled = !any;
+  rw.classList.toggle("off", !any);
+  $("reinvest-note").textContent = asset.hasDiv ? "" : asset.group === "Cripto" ? "(las cripto no pagan)" : "(este activo no paga)";
+}
+function renderKeys() {
+  const k = [[cssVar("--cyan"), asset.short], [cssVar("--muted"), "Lo que pusiste"]];
+  if (D.future) k.push([cssVar("--violet"), "Proyección"]);
+  $("keys").innerHTML = k.map(([c, l]) => `<span><i style="background:${c}"></i>${l}</span>`).join("");
+}
+function renderStrip() {
+  const d = D, h = d.h;
+  const cells = [
+    ["Pusiste", usd(h.invested), d.dca ? `${h.n} aportes de ${usd(d.amount)} desde ${mLabel(d.start)}` : `en ${mLabel(d.start)}`, ""],
+    [`Valor en ${mLabel(d.histEnd)}`, usd(h.value), `${fmtNum(h.units, h.units < 1 ? 6 : h.units < 10 ? 3 : 1)} ${asset.group === "Cripto" ? "unidades" : "acciones"}`, ""],
+    ["Rendimiento anual", d.years >= 1 && isFinite(d.annual) ? pct(d.annual) : "—",
+      d.years < 1 ? "menos de un año de datos" : d.dca ? "TIR de tus aportes" : `compuesto desde ${mLabel(d.start)}`, d.annual >= 0 ? "gain" : "loss"],
+  ];
+  if (asset.hasDiv) cells.push(["Dividendos", usd(h.divTotal), d.reinvest ? "cobrados y reinvertidos" : "cobrados en efectivo", ""]);
+  $("strip").innerHTML = cells.map(([k, v, s, c]) => `<div class="cell"><span class="k">${k}</span><span class="v ${v === "—" ? "" : c}">${v}</span><span class="s">${s}</span></div>`).join("");
+}
+function renderFuture() {
+  $("knobs").disabled = !D.future;
+  $("contrib-field").hidden = D.dca;
+  $("rate-o").textContent = fmtNum(Number($("rate").value), 1) + "%";
+  $("future-hint").innerHTML = D.future
+    ? `De hoy (${lastLabel()}) a ${mLabel(D.end)}: ${fmtNum(D.months / 12, D.months % 12 ? 1 : 0)} años${D.dca ? `, sumando ${usd(D.amount)} por mes` : ""}.`
+    : `Elegí un mes posterior a ${mLabel(asset.last)} como fecha final, o <button type="button" class="linkbtn" id="go10">mirá 10 años para adelante</button>.`;
+  $("go10")?.addEventListener("click", () => { fillEnd(mKey(mIdx(asset.last) + 120)); render(); });
+}
+function renderRace() {
+  const box = $("race");
+  const parts = [`<span>Carrera</span>`, `<span class="chip me" style="color:${cssVar("--cyan")}"><i style="background:${cssVar("--cyan")}"></i>${asset.short} <b data-race="me"></b></span>`];
+  D.race.forEach((r, i) => {
+    const col = cssVar(r.color);
+    parts.push(r.na
+      ? `<span class="chip na"><i style="background:${col}"></i>${r.a.short}: sin datos desde ${mLabel(D.start)}<button type="button" class="x" data-remove="${i}" aria-label="Quitar ${r.a.short}">×</button></span>`
+      : `<span class="chip" style="color:${col}"><i style="background:${col}"></i><span style="color:var(--text)">${r.a.short}</span> <b data-race="${i}"></b><button type="button" class="x" data-remove="${i}" aria-label="Quitar ${r.a.short}">×</button></span>`);
+  });
+  if (race.length < MAX_RACE) {
+    const used = new Set([asset.id, ...race.map(r => r.id)]);
+    SUGGEST.filter(id => !used.has(id) && metaOf(id)).slice(0, 3)
+      .forEach(id => parts.push(`<button type="button" class="chip suggest" data-add="${id}">+ ${metaOf(id).name.split(" (")[0]}</button>`));
+    const opts = store.manifest.assets.filter(a => !used.has(a.id));
+    const groups = [...new Set(opts.map(a => a.group))];
+    parts.push(`<select class="addsel" id="addsel" aria-label="Sumar otro activo a la carrera"><option value="">Otro…</option>${
+      groups.map(g => `<optgroup label="${g}">${opts.filter(a => a.group === g).map(a => `<option value="${a.id}">${a.name}</option>`).join("")}</optgroup>`).join("")}</select>`);
+  }
+  box.innerHTML = parts.join("");
+  updateRaceValues(D.timeline[cursor].key);
+}
+function updateRaceValues(key) {
+  if (!D) return;
+  const ck = mIdx(key), last = mIdx(D.histEnd);
+  const at = mKey(Math.min(ck, last));          // en la proyección, la carrera queda en el último dato real
+  const me = document.querySelector('[data-race="me"]');
+  if (me) me.textContent = short(D.h.val.get(at) ?? D.h.value);
+  const entries = [{ name: asset.short, v: D.h.val.get(at), inv: D.h.inv.get(at) }];
+  D.race.forEach((r, i) => {
+    if (!r.sim) return;
+    const v = r.sim.val.get(at) ?? 0;
+    const el = document.querySelector(`[data-race="${i}"]`); if (el) el.textContent = short(v);
+    entries.push({ name: r.a.short, v, inv: r.sim.inv.get(at) });
+  });
+  const valid = entries.filter(e => e.v != null);
+  document.querySelectorAll("#race .chip").forEach(c => c.classList.remove("lead"));
+  const vd = $("verdict");
+  if (valid.length < 2) { vd.hidden = true; return; }
+  valid.sort((a, b) => b.v - a.v);
+  const [w, second] = valid;
+  vd.hidden = false;
+  vd.innerHTML = `En ${mLabel(at)} va primero <b>${w.name}</b>, con ${usd(w.v)} (${multTxt(w.v / w.inv)}). Le saca ${usd(w.v - second.v)} a ${second.name}.`;
+}
+
+// ================================================================ compartir (estado en el #)
+// Formato: #ticker~inicio~monto~frecuencia~final~dividendos~carrera   (solo letras, números, . - ~ _)
+function writeHash() {
+  const tok = [asset.id, startKey(), parseAmount(), $("freq").value === "monthly" ? "m" : "u", endKey(),
+               $("reinvest").checked ? "1" : "0", race.map(r => r.id).join("_")].join("~");
+  try { history.replaceState(null, "", "#" + tok); } catch (e) { /* algunos visores no lo permiten */ }
+}
+function readHash() {
+  const raw = (location.hash || "").slice(1);
+  if (!raw) return null;
+  const [id, start, amount, freq, end, rein, raceIds] = raw.split("~");
+  if (!metaOf(id)) return null;
+  return { id, start, amount: Number(amount) || 0, freq: freq === "m" ? "monthly" : "once", end,
+           reinvest: rein !== "0", race: (raceIds || "").split("_").filter(x => x && metaOf(x)).slice(0, MAX_RACE) };
+}
+function toast(msg) {
+  const t = $("toast"); t.textContent = msg; t.hidden = false;
+  clearTimeout(toast.h); toast.h = setTimeout(() => { t.hidden = true; }, 2200);
+}
+$("share").addEventListener("click", () => {
+  writeHash();
+  const url = location.href;
+  const fallback = () => { const b = $("share-box"); b.hidden = false; b.value = url; b.focus(); b.select(); toast("Copiá el link de la caja"); };
+  try { navigator.clipboard.writeText(url).then(() => toast("Link copiado"), fallback); } catch (e) { fallback(); }
+});
+
+// ================================================================ cambios de escenario
+async function selectAsset(keepS, keepE) {
+  try { asset = await getAsset($("ticker").value); }
+  catch (e) { $("when").textContent = "No pude cargar ese activo. Probá con otro."; return; }
+  fillStart(keepS);
+  fillEnd(keepE);
+  render();
+}
+async function addRace(id) {
+  if (!id || race.length >= MAX_RACE || race.some(r => r.id === id) || id === asset.id) return;
+  try { race.push({ id, asset: await getAsset(id) }); } catch (e) { toast("No pude cargar ese activo"); return; }
+  render();
+  if (!reduceMotion) { cursor = 0; play(); }     // arranca la carrera
+}
+$("race").addEventListener("click", e => {
+  const add = e.target.closest("[data-add]"), rm = e.target.closest("[data-remove]");
+  if (add) addRace(add.dataset.add);
+  if (rm) { race.splice(Number(rm.dataset.remove), 1); render(); }
+});
+$("race").addEventListener("change", e => { if (e.target.id === "addsel") addRace(e.target.value); });
+
+$("ticker").addEventListener("input", () => {
+  const wasNow = asset && endKey() === asset.last;
+  const s = startKey(), e = endKey();
+  const i = race.findIndex(r => r.id === $("ticker").value);   // si estaba en la carrera, sale de ahí
+  if (i >= 0) race.splice(i, 1);
+  selectAsset(s, wasNow ? null : e);
+});
+$("s-year").addEventListener("input", () => { fillStartMonth($("s-month").value); fillEnd(endKey()); render(); });
+$("s-month").addEventListener("input", () => { fillEnd(endKey()); render(); });
+$("e-year").addEventListener("input", () => { fillEndMonth($("e-month").value); render(); });
+["e-month", "rate", "contrib", "reinvest", "freq"].forEach(id => $(id).addEventListener("input", render));
+$("amount").addEventListener("input", render);
+$("amount").addEventListener("blur", () => { const n = parseAmount(); if (n) $("amount").value = fmtNum(n); sizeControls(); });
+$("scrub").addEventListener("input", () => { stopPlay(); cursor = Number($("scrub").value); drawToCursor(false); });
+$("play").addEventListener("click", play);
+
+$("dice").addEventListener("click", async () => {
+  const pool = store.manifest.assets;
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+  $("ticker").value = pick.id;
+  const i = race.findIndex(r => r.id === pick.id); if (i >= 0) race.splice(i, 1);
+  try { asset = await getAsset(pick.id); } catch (e) { return; }
+  const ms = startMonths().filter(k => mIdx(asset.last) - mIdx(k) >= 12);
+  const s = (ms.length ? ms : startMonths())[Math.floor(Math.random() * (ms.length || startMonths().length))];
+  const amounts = [100, 250, 500, 1000, 2000, 5000, 10000];
+  const monthly = Math.random() < 0.35;
+  $("freq").value = monthly ? "monthly" : "once";
+  $("amount").value = fmtNum(monthly ? amounts[Math.floor(Math.random() * 4)] : amounts[2 + Math.floor(Math.random() * 5)]);
+  fillStart(s); fillEnd(asset.last);
+  render();
+  if (!reduceMotion) { cursor = 0; play(); }
+});
+
+// ================================================================ arranque
+(async () => {
+  initChart();
+  await loadData();
+  // encabezado: fecha del último cierre con datos (o de la última actualización, si no hay)
+  const asofs = store.manifest.assets.map(a => a.asof).filter(Boolean).sort();
+  if (store.manifest.fake) $("status").textContent = "Datos simulados de prueba";
+  else if (asofs.length) { const [y, m, d] = asofs.at(-1).split("-"); $("status").textContent = `Datos al cierre del ${Number(d)}/${Number(m)}/${y}`; }
+  else if (store.manifest.updated) $("status").textContent = `Datos al ${new Date(store.manifest.updated).toLocaleDateString("es-AR")}`;
+  fillTickers();
+  const st = readHash();
+  if (st) {
+    $("ticker").value = st.id;
+    $("freq").value = st.freq;
+    $("reinvest").checked = st.reinvest;
+    if (st.amount) $("amount").value = fmtNum(st.amount);
+    for (const id of st.race) { try { race.push({ id, asset: await getAsset(id) }); } catch (e) { /* se omite */ } }
+    await selectAsset(st.start, st.end);
+  } else {
+    $("ticker").value = metaOf("SPY") ? "SPY" : store.manifest.assets[0].id;
+    try { race.push({ id: "NVDA", asset: await getAsset("NVDA") }); } catch (e) { /* sin carrera inicial */ }
+    await selectAsset(null, null);
+  }
+})();
+</script>
+</body>
+</html>

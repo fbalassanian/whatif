@@ -1,0 +1,11 @@
+# Sitio estático: no hay build, Netlify publica la carpeta tal cual.
+# Los datos NO viven acá: se leen de la rama "data" vía jsDelivr (ver README).
+[build]
+  publish = "."
+  command = ""
+
+# Que el navegador revalide la página para ver cambios de diseño enseguida.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

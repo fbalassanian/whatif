@@ -1,0 +1,6 @@
+__pycache__/
+.venv/
+*.tmp
+# Los datos se publican en la rama "data", no en main
+data/*.json
+data/assets/*.json
