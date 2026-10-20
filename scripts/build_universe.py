@@ -6,9 +6,12 @@ Arma scripts/config.json: la lista de activos que baja fetch_data.py.
   - Acciones EE.UU.: las del S&P 500 y el Nasdaq-100, desde las tablas de Wikipedia.
   - Argentina (ADRs): una lista fija de empresas argentinas que cotizan en EE.UU.
   - Cripto: las 100 más grandes por capitalización según CoinGecko, sin stablecoins
-    ni versiones "envueltas" o "en staking" de otras monedas.
+    ni versiones "envueltas" o "en staking" de otras monedas. Los precios salen de
+    Coin Metrics (historia larga: Bitcoin desde 2010); si Coin Metrics no la tiene, de Yahoo.
+    Cada moneda se confirma comparando su precio de hoy con el de CoinGecko, así no se
+    cuela otra moneda con el mismo símbolo.
 
-Cada símbolo se valida contra Yahoo Finance; los que no tienen precios se descartan.
+Acciones y ETFs se validan contra Yahoo Finance; los que no tienen precios se descartan.
 Corre una vez por mes en GitHub Actions (workflow "Actualizar lista de activos").
 
 Uso:
@@ -28,6 +31,9 @@ import urllib.request
 CONFIG = pathlib.Path(__file__).resolve().parent / "config.json"
 UA = "Mozilla/5.0 (compatible; portfolito-universe/1.0; +https://github.com/fbalassanian/whatif)"
 N_CRYPTO = 100
+CG = "https://api.coingecko.com/api/v3"
+CM = "https://community-api.coinmetrics.io/v4"
+PRICE_TOL = 0.15        # el precio de la fuente tiene que estar a ±15% del de CoinGecko
 
 ETFS = [
     # índices de EE.UU.
@@ -79,7 +85,7 @@ ADRS = [
     ("DESP", "Despegar"), ("BIOX", "Bioceres"), ("CAAP", "Corporación América"), ("AGRO", "Adecoagro"),
 ]
 # monedas atadas al dólar u otros activos, y versiones envueltas / en staking: no tienen sentido acá
-SKIP_CRYPTO = re.compile(r"usd|eur|wrapped|staked|bridged|restak|liquid|tether gold|pax gold|\bbuidl\b|binance-peg", re.I)
+SKIP_CRYPTO = re.compile(r"usd|eur|wrapped|staked|bridged|restak|liquid[ -]stak|tether gold|pax gold|\bbuidl\b|binance-peg", re.I)
 # stablecoins sin "usd" en el nombre y monedas respaldadas por oro o plata
 SKIP_SYMBOLS = {"DAI", "USDS", "GHO", "FRAX", "LUSD", "CRVUSD", "EURC", "XAUT", "PAXG", "KAU", "KAG", "BUIDL", "USDTB", "USYC", "STABLE"}
 NAME_SUFFIX = re.compile(r",?\s+(Inc\.?|Incorporated|Corporation|Corp\.?|Company|Co\.?|plc|N\.V\.|S\.A\.|Ltd\.?|Limited|Holdings?|Group)$", re.I)
@@ -156,6 +162,94 @@ def crypto_symbol(sym: str, name: str) -> str | None:
     return None
 
 
+def cg_ids(category: str) -> set[str]:
+    """Ids de CoinGecko de una categoría (stablecoins, oro tokenizado…). Vacío si falla."""
+    out: set[str] = set()
+    try:
+        for page in (1, 2):
+            rows = json.loads(get(f"{CG}/coins/markets?vs_currency=usd&category={category}&per_page=250&page={page}"))
+            out |= {r["id"] for r in rows}
+            if len(rows) < 250:
+                break
+            time.sleep(3)
+    except Exception as e:  # noqa: BLE001
+        log(f"⚠ CoinGecko categoría {category}: {e}")
+    return out
+
+
+def cm_prices(assets: list[str]) -> dict[str, float]:
+    """Último PriceUSD de Coin Metrics para cada asset (de los últimos días)."""
+    out: dict[str, float] = {}
+    start = (dt.date.today() - dt.timedelta(days=6)).isoformat()
+    for i in range(0, len(assets), 50):
+        chunk = ",".join(assets[i:i + 50])
+        url = f"{CM}/timeseries/asset-metrics?assets={chunk}&metrics=PriceUSD&frequency=1d&start_time={start}&page_size=10000"
+        while url:
+            d = json.loads(get(url))
+            for r in d.get("data", []):
+                if r.get("PriceUSD"):
+                    out[r["asset"]] = float(r["PriceUSD"])      # filas en orden de fecha: queda la última
+            url = d.get("next_page_url")
+            time.sleep(1)
+    return out
+
+
+def yahoo_last(symbol: str) -> float | None:
+    import yfinance as yf
+    try:
+        h = yf.Ticker(symbol).history(period="5d")
+        return None if h.empty else float(h["Close"].dropna().iloc[-1])
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def close_to(a: float | None, b: float) -> bool:
+    return bool(a) and b > 0 and abs(a / b - 1) <= PRICE_TOL
+
+
+def add_crypto(assets: list[dict], seen: set[str]) -> None:
+    cg = []
+    for page in (1, 2):
+        cg += json.loads(get(f"{CG}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=125&page={page}"))
+        time.sleep(3)
+    stable = cg_ids("stablecoins") | cg_ids("tokenized-gold") | cg_ids("tokenized-silver")
+    def skipped(c: dict) -> bool:
+        return (c["id"] in stable or c["symbol"].upper() in SKIP_SYMBOLS
+                or bool(SKIP_CRYPTO.search(f"{c['id']} {c['name']} {c['symbol']}")))
+    coins = [c for c in cg if not skipped(c) and c.get("current_price")]
+    log(f"CoinGecko: {len(cg)} monedas, {len(coins)} después de sacar stablecoins, oro y envueltas")
+
+    catalog = json.loads(get(f"{CM}/catalog-v2/asset-metrics?metrics=PriceUSD&page_size=10000")).get("data", [])
+    cm_assets = {r["asset"] for r in catalog}
+    cands = [c["symbol"].lower() for c in coins if c["symbol"].lower() in cm_assets]
+    cm_now = cm_prices(cands)
+    log(f"Coin Metrics: {len(cm_assets)} monedas con precio; {len(cm_now)} de las candidatas")
+
+    n_c = 0
+    for c in coins:
+        if n_c >= N_CRYPTO:
+            break
+        sym, price = c["symbol"].upper(), c["current_price"]
+        src = None
+        if close_to(cm_now.get(sym.lower()), price):
+            src = {"cm": sym.lower()}
+        else:
+            for y in (f"{sym}-USD", crypto_symbol(sym, c["name"])):
+                if y and close_to(yahoo_last(y), price):
+                    src = {"yahoo": y}
+                    break
+        if not src:
+            log(f"  cripto sin precios confiables: {c['name']} ({sym})")
+            continue
+        id_ = sym if sym not in seen else f"{sym}-USD"   # si choca con una acción (STX, DASH…), queda STX-USD
+        if id_ in seen:
+            continue
+        seen.add(id_)
+        assets.append({"id": id_, "name": f"{c['name']} ({sym})", "group": "Cripto", **src})
+        n_c += 1
+    log(f"Cripto: {n_c} ({sum('cm' in a for a in assets)} de Coin Metrics)")
+
+
 def main() -> int:
     assets: list[dict] = []
     seen: set[str] = set()
@@ -182,15 +276,6 @@ def main() -> int:
         y = s.replace(".", "-")                         # BRK.B -> BRK-B
         add(y, y, clean_name(n), "Acciones EE.UU.")
 
-    cg = json.loads(get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=200&page=1"))
-    def is_skipped(c: dict) -> bool:
-        if SKIP_CRYPTO.search(f"{c['id']} {c['name']} {c['symbol']}") or c["symbol"].upper() in SKIP_SYMBOLS:
-            return True
-        price = c.get("current_price") or 0
-        return 0.97 <= price <= 1.03                     # vale ~1 dólar: es una stablecoin
-    coins = [c for c in cg if not is_skipped(c)]
-    log(f"CoinGecko: {len(cg)} monedas, {len(coins)} después de sacar stablecoins y envueltas")
-
     # validar acciones y ETFs contra Yahoo
     stocks = list(assets)
     ok = yahoo_ok([a["yahoo"] for a in stocks])
@@ -199,25 +284,7 @@ def main() -> int:
     if dropped:
         log(f"Sin datos en Yahoo, se omiten: {', '.join(dropped)}")
 
-    # cripto: SYM-USD; si no existe, se busca el símbolo que usa Yahoo
-    ok_c = yahoo_ok([f"{c['symbol'].upper()}-USD" for c in coins])
-    n_c = 0
-    for c in coins:
-        if n_c >= N_CRYPTO:
-            break
-        sym = c["symbol"].upper()
-        y = f"{sym}-USD"
-        if y not in ok_c:
-            y = crypto_symbol(sym, c["name"])
-            if not y or not yahoo_ok([y]):
-                log(f"  cripto sin datos en Yahoo: {c['name']} ({sym})")
-                continue
-        id_ = sym if sym not in seen else f"{sym}-USD"   # si choca con una acción (STX, DASH…), queda STX-USD
-        if id_ in seen:
-            continue
-        seen.add(id_)
-        assets.append({"id": id_, "name": f"{c['name']} ({sym})", "group": "Cripto", "yahoo": y})
-        n_c += 1
+    add_crypto(assets, seen)
 
     if len(assets) < 300:
         log(f"✗ Quedaron solo {len(assets)} activos: algo falló, no se toca config.json")

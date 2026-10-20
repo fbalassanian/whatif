@@ -2,7 +2,8 @@
 """
 Baja los datos que usa Portfolito y los deja como JSON estáticos en data/.
 
-Para cada activo de scripts/config.json, desde Yahoo Finance (yfinance):
+Para cada activo de scripts/config.json, desde Yahoo Finance (yfinance), o desde
+Coin Metrics Community (las cripto que tienen "cm" en config.json):
   - "m": precio de cierre del último día de cada mes, en USD, ajustado
          solo por splits (no por dividendos).
   - "d": dividendos por acción pagados en cada mes (fecha ex-dividendo),
@@ -129,6 +130,38 @@ def fetch_yahoo(symbol: str, period: str = "max") -> tuple[list[list], list[list
     return prices, divs, asof
 
 
+def fetch_coinmetrics(asset: str, period: str = "max") -> tuple[list[list], list[list], str]:
+    """Precio diario de referencia (PriceUSD) de Coin Metrics Community, agrupado por mes:
+    el último día de cada mes. Gratis y sin clave; licencia CC BY-NC 4.0 (citar la fuente)."""
+    import urllib.request
+    url = ("https://community-api.coinmetrics.io/v4/timeseries/asset-metrics"
+           f"?assets={asset}&metrics=PriceUSD&frequency=1d&page_size=10000")
+    by_month: dict[str, float] = {}
+    asof = ""
+    last = None
+    while url:
+        for attempt in range(YAHOO_RETRIES):
+            try:
+                req = urllib.request.Request(url, headers={"User-Agent": "portfolito-data/1.0"})
+                with urllib.request.urlopen(req, timeout=60) as r:
+                    d = json.loads(r.read().decode("utf-8"))
+                break
+            except Exception as e:  # noqa: BLE001
+                last = e
+                time.sleep(5 * (attempt + 1))
+        else:
+            raise RuntimeError(f"Coin Metrics no respondió: {last}")
+        for row in d.get("data", []):
+            v = row.get("PriceUSD")
+            if v is None:
+                continue
+            day = row["time"][:10]
+            by_month[day[:7]] = float(v)                # filas en orden: queda el último día del mes
+            asof = day
+        url = d.get("next_page_url")
+    return [[m, by_month[m]] for m in sorted(by_month)], [], asof
+
+
 # ---------------------------------------------------------------- fuente simulada (--fake)
 def fake_yahoo(symbol: str, period: str = "max") -> tuple[list[list], list[list], str]:
     rnd = random.Random(symbol)
@@ -198,7 +231,7 @@ def main() -> int:
     ap.add_argument("--only", nargs="*", help="ids de config.json a actualizar")
     args = ap.parse_args()
 
-    get = fake_yahoo if args.fake else fetch_yahoo
+    get_yahoo = fake_yahoo if args.fake else fetch_yahoo
     cfg = json.loads(CONFIG.read_text(encoding="utf-8"))["assets"]
     wanted = set(args.only or [])
     errors = fulls = 0
@@ -214,23 +247,27 @@ def main() -> int:
                 manifest_assets.append(old)
             continue
         full = True
+        cm = a.get("cm")
+        sym = cm or a["yahoo"]
+        get = (lambda s, p="max": fake_yahoo(s + "-USD", p)) if (cm and args.fake) else fetch_coinmetrics if cm else get_yahoo
         try:
             merged = None
-            if path.exists():                                # incremental
+            if path.exists() and not cm:                     # incremental (Coin Metrics baja todo: es una sola consulta)
                 old = json.loads(path.read_text(encoding="utf-8"))
-                rp, rd, asof = get(a["yahoo"], RECENT_PERIOD)
+                rp, rd, asof = get(sym, RECENT_PERIOD)
                 merged = merge_recent(old, rp, rd)
                 full = merged is None
             if merged is None:                               # nuevo, o no coincidía: historia completa
-                if path.exists():
+                if path.exists() and not cm:
                     log(f"  ↻ {a['id']}: no coincide con lo guardado, bajo la historia completa")
-                rp, rd, asof = get(a["yahoo"])
+                rp, rd, asof = get(sym)
                 merged = (rp, rd)
             fulls += full
             prices = clean_prices(merged[0], a["id"])
             divs = clean_dividends(merged[1], prices, a["id"])
             write_json(path, {**entry,
-                              "source": f"Yahoo Finance ({a['yahoo']}): cierre mensual en USD ajustado por splits; dividendos por acción",
+                              "source": (f"Coin Metrics Community ({cm}): precio de referencia del último día del mes, en USD" if cm else
+                                         f"Yahoo Finance ({a['yahoo']}): cierre mensual en USD ajustado por splits; dividendos por acción"),
                               "asof": asof, "m": prices, "d": divs})
             manifest_assets.append({**entry, "div": bool(divs), "first": prices[0][0], "last": prices[-1][0], "asof": asof})
             log(f"✓ {a['id']:8} {prices[0][0]}→{asof} ({len(prices)} meses, {len(divs)} con dividendos{', completo' if full else ''})")
