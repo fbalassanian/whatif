@@ -1,41 +1,3876 @@
 {
-  "_comment": "Activos que baja fetch_data.py. 'yahoo' es el símbolo en Yahoo Finance. Todos cotizan en USD. Para sumar uno, agregá una línea.",
-  "assets": [
-    {"id": "SPY", "name": "S&P 500 (SPY)", "group": "Índices y ETFs", "yahoo": "SPY"},
-    {"id": "QQQ", "name": "Nasdaq 100 (QQQ)", "group": "Índices y ETFs", "yahoo": "QQQ"},
-    {"id": "DIA", "name": "Dow Jones (DIA)", "group": "Índices y ETFs", "yahoo": "DIA"},
-    {"id": "EEM", "name": "Emergentes (EEM)", "group": "Índices y ETFs", "yahoo": "EEM"},
-    {"id": "EWZ", "name": "Brasil (EWZ)", "group": "Índices y ETFs", "yahoo": "EWZ"},
-    {"id": "GLD", "name": "Oro (GLD)", "group": "Índices y ETFs", "yahoo": "GLD"},
-    {"id": "AAPL", "name": "Apple (AAPL)", "group": "Acciones EE.UU. / CEDEARs", "yahoo": "AAPL"},
-    {"id": "MSFT", "name": "Microsoft (MSFT)", "group": "Acciones EE.UU. / CEDEARs", "yahoo": "MSFT"},
-    {"id": "NVDA", "name": "NVIDIA (NVDA)", "group": "Acciones EE.UU. / CEDEARs", "yahoo": "NVDA"},
-    {"id": "GOOGL", "name": "Alphabet (GOOGL)", "group": "Acciones EE.UU. / CEDEARs", "yahoo": "GOOGL"},
-    {"id": "AMZN", "name": "Amazon (AMZN)", "group": "Acciones EE.UU. / CEDEARs", "yahoo": "AMZN"},
-    {"id": "META", "name": "Meta (META)", "group": "Acciones EE.UU. / CEDEARs", "yahoo": "META"},
-    {"id": "TSLA", "name": "Tesla (TSLA)", "group": "Acciones EE.UU. / CEDEARs", "yahoo": "TSLA"},
-    {"id": "BRKB", "name": "Berkshire Hathaway (BRK.B)", "group": "Acciones EE.UU. / CEDEARs", "yahoo": "BRK-B"},
-    {"id": "JPM", "name": "JPMorgan (JPM)", "group": "Acciones EE.UU. / CEDEARs", "yahoo": "JPM"},
-    {"id": "V", "name": "Visa (V)", "group": "Acciones EE.UU. / CEDEARs", "yahoo": "V"},
-    {"id": "KO", "name": "Coca-Cola (KO)", "group": "Acciones EE.UU. / CEDEARs", "yahoo": "KO"},
-    {"id": "MCD", "name": "McDonald's (MCD)", "group": "Acciones EE.UU. / CEDEARs", "yahoo": "MCD"},
-    {"id": "WMT", "name": "Walmart (WMT)", "group": "Acciones EE.UU. / CEDEARs", "yahoo": "WMT"},
-    {"id": "NFLX", "name": "Netflix (NFLX)", "group": "Acciones EE.UU. / CEDEARs", "yahoo": "NFLX"},
-    {"id": "AMD", "name": "AMD (AMD)", "group": "Acciones EE.UU. / CEDEARs", "yahoo": "AMD"},
-    {"id": "PLTR", "name": "Palantir (PLTR)", "group": "Acciones EE.UU. / CEDEARs", "yahoo": "PLTR"},
-    {"id": "MELI", "name": "MercadoLibre (MELI)", "group": "Argentina y Latam (ADRs)", "yahoo": "MELI"},
-    {"id": "GLOB", "name": "Globant (GLOB)", "group": "Argentina y Latam (ADRs)", "yahoo": "GLOB"},
-    {"id": "GGAL", "name": "Grupo Galicia (GGAL)", "group": "Argentina y Latam (ADRs)", "yahoo": "GGAL"},
-    {"id": "YPF", "name": "YPF (YPF)", "group": "Argentina y Latam (ADRs)", "yahoo": "YPF"},
-    {"id": "PAM", "name": "Pampa Energía (PAM)", "group": "Argentina y Latam (ADRs)", "yahoo": "PAM"},
-    {"id": "VIST", "name": "Vista Energy (VIST)", "group": "Argentina y Latam (ADRs)", "yahoo": "VIST"},
-    {"id": "NU", "name": "Nubank (NU)", "group": "Argentina y Latam (ADRs)", "yahoo": "NU"},
-    {"id": "BTC", "name": "Bitcoin (BTC)", "group": "Cripto", "yahoo": "BTC-USD"},
-    {"id": "ETH", "name": "Ethereum (ETH)", "group": "Cripto", "yahoo": "ETH-USD"},
-    {"id": "SOL", "name": "Solana (SOL)", "group": "Cripto", "yahoo": "SOL-USD"},
-    {"id": "BNB", "name": "BNB (BNB)", "group": "Cripto", "yahoo": "BNB-USD"},
-    {"id": "XRP", "name": "XRP (XRP)", "group": "Cripto", "yahoo": "XRP-USD"},
-    {"id": "ADA", "name": "Cardano (ADA)", "group": "Cripto", "yahoo": "ADA-USD"},
-    {"id": "DOGE", "name": "Dogecoin (DOGE)", "group": "Cripto", "yahoo": "DOGE-USD"}
-  ]
+ "_comment": "Generado por scripts/build_universe.py. No editar a mano: los cambios se pisan en la próxima corrida.",
+ "generated": "2026-10-20",
+ "assets": [
+  {
+   "id": "SPY",
+   "name": "S&P 500 (SPY)",
+   "group": "Índices y ETFs",
+   "yahoo": "SPY"
+  },
+  {
+   "id": "QQQ",
+   "name": "Nasdaq 100 (QQQ)",
+   "group": "Índices y ETFs",
+   "yahoo": "QQQ"
+  },
+  {
+   "id": "DIA",
+   "name": "Dow Jones (DIA)",
+   "group": "Índices y ETFs",
+   "yahoo": "DIA"
+  },
+  {
+   "id": "IWM",
+   "name": "Russell 2000 (IWM)",
+   "group": "Índices y ETFs",
+   "yahoo": "IWM"
+  },
+  {
+   "id": "VTI",
+   "name": "Mercado total EE.UU. (VTI)",
+   "group": "Índices y ETFs",
+   "yahoo": "VTI"
+  },
+  {
+   "id": "EEM",
+   "name": "Emergentes (EEM)",
+   "group": "Índices y ETFs",
+   "yahoo": "EEM"
+  },
+  {
+   "id": "EWZ",
+   "name": "Brasil (EWZ)",
+   "group": "Índices y ETFs",
+   "yahoo": "EWZ"
+  },
+  {
+   "id": "GLD",
+   "name": "Oro (GLD)",
+   "group": "Índices y ETFs",
+   "yahoo": "GLD"
+  },
+  {
+   "id": "SLV",
+   "name": "Plata (SLV)",
+   "group": "Índices y ETFs",
+   "yahoo": "SLV"
+  },
+  {
+   "id": "GGAL",
+   "name": "Grupo Galicia (GGAL)",
+   "group": "Argentina (ADRs)",
+   "yahoo": "GGAL"
+  },
+  {
+   "id": "BMA",
+   "name": "Banco Macro (BMA)",
+   "group": "Argentina (ADRs)",
+   "yahoo": "BMA"
+  },
+  {
+   "id": "BBAR",
+   "name": "BBVA Argentina (BBAR)",
+   "group": "Argentina (ADRs)",
+   "yahoo": "BBAR"
+  },
+  {
+   "id": "SUPV",
+   "name": "Supervielle (SUPV)",
+   "group": "Argentina (ADRs)",
+   "yahoo": "SUPV"
+  },
+  {
+   "id": "YPF",
+   "name": "YPF (YPF)",
+   "group": "Argentina (ADRs)",
+   "yahoo": "YPF"
+  },
+  {
+   "id": "PAM",
+   "name": "Pampa Energía (PAM)",
+   "group": "Argentina (ADRs)",
+   "yahoo": "PAM"
+  },
+  {
+   "id": "CEPU",
+   "name": "Central Puerto (CEPU)",
+   "group": "Argentina (ADRs)",
+   "yahoo": "CEPU"
+  },
+  {
+   "id": "TGS",
+   "name": "Transportadora Gas del Sur (TGS)",
+   "group": "Argentina (ADRs)",
+   "yahoo": "TGS"
+  },
+  {
+   "id": "EDN",
+   "name": "Edenor (EDN)",
+   "group": "Argentina (ADRs)",
+   "yahoo": "EDN"
+  },
+  {
+   "id": "TEO",
+   "name": "Telecom Argentina (TEO)",
+   "group": "Argentina (ADRs)",
+   "yahoo": "TEO"
+  },
+  {
+   "id": "LOMA",
+   "name": "Loma Negra (LOMA)",
+   "group": "Argentina (ADRs)",
+   "yahoo": "LOMA"
+  },
+  {
+   "id": "CRESY",
+   "name": "Cresud (CRESY)",
+   "group": "Argentina (ADRs)",
+   "yahoo": "CRESY"
+  },
+  {
+   "id": "IRS",
+   "name": "IRSA (IRS)",
+   "group": "Argentina (ADRs)",
+   "yahoo": "IRS"
+  },
+  {
+   "id": "VIST",
+   "name": "Vista Energy (VIST)",
+   "group": "Argentina (ADRs)",
+   "yahoo": "VIST"
+  },
+  {
+   "id": "MELI",
+   "name": "MercadoLibre (MELI)",
+   "group": "Argentina (ADRs)",
+   "yahoo": "MELI"
+  },
+  {
+   "id": "GLOB",
+   "name": "Globant (GLOB)",
+   "group": "Argentina (ADRs)",
+   "yahoo": "GLOB"
+  },
+  {
+   "id": "BIOX",
+   "name": "Bioceres (BIOX)",
+   "group": "Argentina (ADRs)",
+   "yahoo": "BIOX"
+  },
+  {
+   "id": "CAAP",
+   "name": "Corporación América (CAAP)",
+   "group": "Argentina (ADRs)",
+   "yahoo": "CAAP"
+  },
+  {
+   "id": "AGRO",
+   "name": "Adecoagro (AGRO)",
+   "group": "Argentina (ADRs)",
+   "yahoo": "AGRO"
+  },
+  {
+   "id": "MMM",
+   "name": "3M (MMM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MMM"
+  },
+  {
+   "id": "AOS",
+   "name": "A. O. Smith (AOS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AOS"
+  },
+  {
+   "id": "ABT",
+   "name": "Abbott Laboratories (ABT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ABT"
+  },
+  {
+   "id": "ABBV",
+   "name": "AbbVie (ABBV)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ABBV"
+  },
+  {
+   "id": "ACN",
+   "name": "Accenture (ACN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ACN"
+  },
+  {
+   "id": "ADBE",
+   "name": "Adobe (ADBE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ADBE"
+  },
+  {
+   "id": "AMD",
+   "name": "Advanced Micro Devices (AMD)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AMD"
+  },
+  {
+   "id": "AES",
+   "name": "AES (AES)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AES"
+  },
+  {
+   "id": "AFL",
+   "name": "Aflac (AFL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AFL"
+  },
+  {
+   "id": "A",
+   "name": "Agilent Technologies (A)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "A"
+  },
+  {
+   "id": "APD",
+   "name": "Air Products (APD)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "APD"
+  },
+  {
+   "id": "ABNB",
+   "name": "Airbnb (ABNB)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ABNB"
+  },
+  {
+   "id": "AKAM",
+   "name": "Akamai Technologies (AKAM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AKAM"
+  },
+  {
+   "id": "ALB",
+   "name": "Albemarle (ALB)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ALB"
+  },
+  {
+   "id": "ARE",
+   "name": "Alexandria Real Estate Equities (ARE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ARE"
+  },
+  {
+   "id": "ALGN",
+   "name": "Align Technology (ALGN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ALGN"
+  },
+  {
+   "id": "ALLE",
+   "name": "Allegion (ALLE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ALLE"
+  },
+  {
+   "id": "LNT",
+   "name": "Alliant Energy (LNT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "LNT"
+  },
+  {
+   "id": "ALL",
+   "name": "Allstate (ALL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ALL"
+  },
+  {
+   "id": "GOOGL",
+   "name": "Alphabet (GOOGL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "GOOGL"
+  },
+  {
+   "id": "GOOG",
+   "name": "Alphabet (GOOG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "GOOG"
+  },
+  {
+   "id": "MO",
+   "name": "Altria (MO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MO"
+  },
+  {
+   "id": "AMZN",
+   "name": "Amazon (AMZN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AMZN"
+  },
+  {
+   "id": "AMCR",
+   "name": "Amcor (AMCR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AMCR"
+  },
+  {
+   "id": "AEE",
+   "name": "Ameren (AEE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AEE"
+  },
+  {
+   "id": "AEP",
+   "name": "American Electric Power (AEP)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AEP"
+  },
+  {
+   "id": "AXP",
+   "name": "American Express (AXP)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AXP"
+  },
+  {
+   "id": "AIG",
+   "name": "American International (AIG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AIG"
+  },
+  {
+   "id": "AMT",
+   "name": "American Tower (AMT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AMT"
+  },
+  {
+   "id": "AWK",
+   "name": "American Water Works (AWK)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AWK"
+  },
+  {
+   "id": "AMP",
+   "name": "Ameriprise Financial (AMP)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AMP"
+  },
+  {
+   "id": "AME",
+   "name": "Ametek (AME)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AME"
+  },
+  {
+   "id": "AMGN",
+   "name": "Amgen (AMGN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AMGN"
+  },
+  {
+   "id": "APH",
+   "name": "Amphenol (APH)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "APH"
+  },
+  {
+   "id": "ADI",
+   "name": "Analog Devices (ADI)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ADI"
+  },
+  {
+   "id": "AON",
+   "name": "Aon (AON)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AON"
+  },
+  {
+   "id": "APA",
+   "name": "APA (APA)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "APA"
+  },
+  {
+   "id": "APO",
+   "name": "Apollo Global Management (APO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "APO"
+  },
+  {
+   "id": "AAPL",
+   "name": "Apple (AAPL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AAPL"
+  },
+  {
+   "id": "AMAT",
+   "name": "Applied Materials (AMAT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AMAT"
+  },
+  {
+   "id": "APP",
+   "name": "AppLovin (APP)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "APP"
+  },
+  {
+   "id": "APTV",
+   "name": "Aptiv (APTV)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "APTV"
+  },
+  {
+   "id": "ACGL",
+   "name": "Arch Capital (ACGL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ACGL"
+  },
+  {
+   "id": "ADM",
+   "name": "Archer Daniels Midland (ADM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ADM"
+  },
+  {
+   "id": "ARES",
+   "name": "Ares Management (ARES)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ARES"
+  },
+  {
+   "id": "ANET",
+   "name": "Arista Networks (ANET)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ANET"
+  },
+  {
+   "id": "AJG",
+   "name": "Arthur J. Gallagher & (AJG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AJG"
+  },
+  {
+   "id": "AIZ",
+   "name": "Assurant (AIZ)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AIZ"
+  },
+  {
+   "id": "T",
+   "name": "AT&T (T)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "T"
+  },
+  {
+   "id": "ATO",
+   "name": "Atmos Energy (ATO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ATO"
+  },
+  {
+   "id": "ADSK",
+   "name": "Autodesk (ADSK)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ADSK"
+  },
+  {
+   "id": "ADP",
+   "name": "Automatic Data Processing (ADP)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ADP"
+  },
+  {
+   "id": "AZO",
+   "name": "AutoZone (AZO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AZO"
+  },
+  {
+   "id": "AVY",
+   "name": "Avery Dennison (AVY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AVY"
+  },
+  {
+   "id": "AXON",
+   "name": "Axon Enterprise (AXON)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AXON"
+  },
+  {
+   "id": "BKR",
+   "name": "Baker Hughes (BKR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BKR"
+  },
+  {
+   "id": "BALL",
+   "name": "Ball (BALL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BALL"
+  },
+  {
+   "id": "BAC",
+   "name": "Bank of America (BAC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BAC"
+  },
+  {
+   "id": "BAX",
+   "name": "Baxter International (BAX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BAX"
+  },
+  {
+   "id": "BDX",
+   "name": "Becton Dickinson (BDX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BDX"
+  },
+  {
+   "id": "BRK-B",
+   "name": "Berkshire Hathaway (BRK-B)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BRK-B"
+  },
+  {
+   "id": "BBY",
+   "name": "Best Buy (BBY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BBY"
+  },
+  {
+   "id": "TECH",
+   "name": "Bio-Techne (TECH)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TECH"
+  },
+  {
+   "id": "BIIB",
+   "name": "Biogen (BIIB)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BIIB"
+  },
+  {
+   "id": "BLK",
+   "name": "BlackRock (BLK)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BLK"
+  },
+  {
+   "id": "BX",
+   "name": "Blackstone (BX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BX"
+  },
+  {
+   "id": "XYZ",
+   "name": "Block (XYZ)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "XYZ"
+  },
+  {
+   "id": "BE",
+   "name": "Bloom Energy (BE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BE"
+  },
+  {
+   "id": "BNY",
+   "name": "BNY Mellon (BNY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BNY"
+  },
+  {
+   "id": "BA",
+   "name": "Boeing (BA)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BA"
+  },
+  {
+   "id": "BKNG",
+   "name": "Booking (BKNG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BKNG"
+  },
+  {
+   "id": "BSX",
+   "name": "Boston Scientific (BSX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BSX"
+  },
+  {
+   "id": "BMY",
+   "name": "Bristol Myers Squibb (BMY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BMY"
+  },
+  {
+   "id": "AVGO",
+   "name": "Broadcom (AVGO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "AVGO"
+  },
+  {
+   "id": "BR",
+   "name": "Broadridge Financial Solutions (BR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BR"
+  },
+  {
+   "id": "BRO",
+   "name": "Brown & Brown (BRO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BRO"
+  },
+  {
+   "id": "BF-B",
+   "name": "Brown–Forman (BF-B)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BF-B"
+  },
+  {
+   "id": "BG",
+   "name": "Bunge Global (BG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BG"
+  },
+  {
+   "id": "BXP",
+   "name": "BXP (BXP)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BXP"
+  },
+  {
+   "id": "CHRW",
+   "name": "C.H. Robinson (CHRW)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CHRW"
+  },
+  {
+   "id": "CDNS",
+   "name": "Cadence Design Systems (CDNS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CDNS"
+  },
+  {
+   "id": "CPT",
+   "name": "Camden Property Trust (CPT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CPT"
+  },
+  {
+   "id": "COF",
+   "name": "Capital One (COF)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "COF"
+  },
+  {
+   "id": "CAH",
+   "name": "Cardinal Health (CAH)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CAH"
+  },
+  {
+   "id": "CCL",
+   "name": "Carnival (CCL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CCL"
+  },
+  {
+   "id": "CARR",
+   "name": "Carrier Global (CARR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CARR"
+  },
+  {
+   "id": "CVNA",
+   "name": "Carvana (CVNA)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CVNA"
+  },
+  {
+   "id": "CASY",
+   "name": "Casey's (CASY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CASY"
+  },
+  {
+   "id": "CAT",
+   "name": "Caterpillar (CAT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CAT"
+  },
+  {
+   "id": "CBOE",
+   "name": "Cboe Global Markets (CBOE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CBOE"
+  },
+  {
+   "id": "CBRE",
+   "name": "CBRE (CBRE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CBRE"
+  },
+  {
+   "id": "CDW",
+   "name": "CDW (CDW)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CDW"
+  },
+  {
+   "id": "COR",
+   "name": "Cencora (COR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "COR"
+  },
+  {
+   "id": "CNC",
+   "name": "Centene (CNC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CNC"
+  },
+  {
+   "id": "CNP",
+   "name": "CenterPoint Energy (CNP)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CNP"
+  },
+  {
+   "id": "CF",
+   "name": "CF Industries (CF)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CF"
+  },
+  {
+   "id": "CRL",
+   "name": "Charles River Laboratories (CRL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CRL"
+  },
+  {
+   "id": "SCHW",
+   "name": "Charles Schwab (SCHW)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SCHW"
+  },
+  {
+   "id": "CHTR",
+   "name": "Charter Communications (CHTR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CHTR"
+  },
+  {
+   "id": "CVX",
+   "name": "Chevron (CVX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CVX"
+  },
+  {
+   "id": "CMG",
+   "name": "Chipotle Mexican Grill (CMG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CMG"
+  },
+  {
+   "id": "CB",
+   "name": "Chubb (CB)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CB"
+  },
+  {
+   "id": "CHD",
+   "name": "Church & Dwight (CHD)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CHD"
+  },
+  {
+   "id": "CIEN",
+   "name": "Ciena (CIEN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CIEN"
+  },
+  {
+   "id": "CI",
+   "name": "Cigna (CI)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CI"
+  },
+  {
+   "id": "CINF",
+   "name": "Cincinnati Financial (CINF)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CINF"
+  },
+  {
+   "id": "CTAS",
+   "name": "Cintas (CTAS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CTAS"
+  },
+  {
+   "id": "CSCO",
+   "name": "Cisco (CSCO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CSCO"
+  },
+  {
+   "id": "C",
+   "name": "Citigroup (C)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "C"
+  },
+  {
+   "id": "CFG",
+   "name": "Citizens Financial (CFG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CFG"
+  },
+  {
+   "id": "CLX",
+   "name": "Clorox (CLX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CLX"
+  },
+  {
+   "id": "CME",
+   "name": "CME (CME)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CME"
+  },
+  {
+   "id": "CMS",
+   "name": "CMS Energy (CMS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CMS"
+  },
+  {
+   "id": "KO",
+   "name": "Coca-Cola (KO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "KO"
+  },
+  {
+   "id": "CTSH",
+   "name": "Cognizant (CTSH)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CTSH"
+  },
+  {
+   "id": "COHR",
+   "name": "Coherent (COHR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "COHR"
+  },
+  {
+   "id": "COIN",
+   "name": "Coinbase (COIN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "COIN"
+  },
+  {
+   "id": "CL",
+   "name": "Colgate-Palmolive (CL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CL"
+  },
+  {
+   "id": "CMCSA",
+   "name": "Comcast (CMCSA)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CMCSA"
+  },
+  {
+   "id": "FIX",
+   "name": "Comfort Systems USA (FIX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FIX"
+  },
+  {
+   "id": "COP",
+   "name": "ConocoPhillips (COP)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "COP"
+  },
+  {
+   "id": "ED",
+   "name": "Consolidated Edison (ED)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ED"
+  },
+  {
+   "id": "STZ",
+   "name": "Constellation Brands (STZ)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "STZ"
+  },
+  {
+   "id": "CEG",
+   "name": "Constellation Energy (CEG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CEG"
+  },
+  {
+   "id": "COO",
+   "name": "Cooper Companies (COO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "COO"
+  },
+  {
+   "id": "CPRT",
+   "name": "Copart (CPRT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CPRT"
+  },
+  {
+   "id": "GLW",
+   "name": "Corning (GLW)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "GLW"
+  },
+  {
+   "id": "CPAY",
+   "name": "Corpay (CPAY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CPAY"
+  },
+  {
+   "id": "CSGP",
+   "name": "CoStar (CSGP)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CSGP"
+  },
+  {
+   "id": "COST",
+   "name": "Costco (COST)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "COST"
+  },
+  {
+   "id": "CRH",
+   "name": "CRH (CRH)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CRH"
+  },
+  {
+   "id": "CRWD",
+   "name": "CrowdStrike (CRWD)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CRWD"
+  },
+  {
+   "id": "CCI",
+   "name": "Crown Castle (CCI)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CCI"
+  },
+  {
+   "id": "CSX",
+   "name": "CSX (CSX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CSX"
+  },
+  {
+   "id": "CMI",
+   "name": "Cummins (CMI)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CMI"
+  },
+  {
+   "id": "CVS",
+   "name": "CVS Health (CVS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CVS"
+  },
+  {
+   "id": "DHR",
+   "name": "Danaher (DHR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DHR"
+  },
+  {
+   "id": "DRI",
+   "name": "Darden Restaurants (DRI)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DRI"
+  },
+  {
+   "id": "DDOG",
+   "name": "Datadog (DDOG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DDOG"
+  },
+  {
+   "id": "DVA",
+   "name": "DaVita (DVA)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DVA"
+  },
+  {
+   "id": "DECK",
+   "name": "Deckers Brands (DECK)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DECK"
+  },
+  {
+   "id": "DE",
+   "name": "Deere & (DE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DE"
+  },
+  {
+   "id": "DELL",
+   "name": "Dell Technologies (DELL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DELL"
+  },
+  {
+   "id": "DAL",
+   "name": "Delta Air Lines (DAL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DAL"
+  },
+  {
+   "id": "DVN",
+   "name": "Devon Energy (DVN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DVN"
+  },
+  {
+   "id": "DXCM",
+   "name": "Dexcom (DXCM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DXCM"
+  },
+  {
+   "id": "FANG",
+   "name": "Diamondback Energy (FANG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FANG"
+  },
+  {
+   "id": "DLR",
+   "name": "Digital Realty (DLR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DLR"
+  },
+  {
+   "id": "DG",
+   "name": "Dollar General (DG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DG"
+  },
+  {
+   "id": "DLTR",
+   "name": "Dollar Tree (DLTR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DLTR"
+  },
+  {
+   "id": "D",
+   "name": "Dominion Energy (D)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "D"
+  },
+  {
+   "id": "DPZ",
+   "name": "Domino's (DPZ)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DPZ"
+  },
+  {
+   "id": "DASH",
+   "name": "DoorDash (DASH)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DASH"
+  },
+  {
+   "id": "DOV",
+   "name": "Dover (DOV)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DOV"
+  },
+  {
+   "id": "DOW",
+   "name": "Dow (DOW)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DOW"
+  },
+  {
+   "id": "DHI",
+   "name": "D. R. Horton (DHI)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DHI"
+  },
+  {
+   "id": "DTE",
+   "name": "DTE Energy (DTE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DTE"
+  },
+  {
+   "id": "DUK",
+   "name": "Duke Energy (DUK)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DUK"
+  },
+  {
+   "id": "DD",
+   "name": "DuPont (DD)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DD"
+  },
+  {
+   "id": "ETN",
+   "name": "Eaton (ETN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ETN"
+  },
+  {
+   "id": "EBAY",
+   "name": "eBay (EBAY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "EBAY"
+  },
+  {
+   "id": "ECHO",
+   "name": "EchoStar (ECHO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ECHO"
+  },
+  {
+   "id": "ECL",
+   "name": "Ecolab (ECL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ECL"
+  },
+  {
+   "id": "EIX",
+   "name": "Edison International (EIX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "EIX"
+  },
+  {
+   "id": "EW",
+   "name": "Edwards Lifesciences (EW)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "EW"
+  },
+  {
+   "id": "ELV",
+   "name": "Elevance Health (ELV)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ELV"
+  },
+  {
+   "id": "EME",
+   "name": "Emcor (EME)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "EME"
+  },
+  {
+   "id": "EMR",
+   "name": "Emerson Electric (EMR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "EMR"
+  },
+  {
+   "id": "ETR",
+   "name": "Entergy (ETR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ETR"
+  },
+  {
+   "id": "EOG",
+   "name": "EOG Resources (EOG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "EOG"
+  },
+  {
+   "id": "EQT",
+   "name": "EQT (EQT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "EQT"
+  },
+  {
+   "id": "EFX",
+   "name": "Equifax (EFX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "EFX"
+  },
+  {
+   "id": "EQIX",
+   "name": "Equinix (EQIX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "EQIX"
+  },
+  {
+   "id": "ERIE",
+   "name": "Erie Indemnity (ERIE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ERIE"
+  },
+  {
+   "id": "ESS",
+   "name": "Essex Property Trust (ESS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ESS"
+  },
+  {
+   "id": "EL",
+   "name": "Estée Lauder Companies (EL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "EL"
+  },
+  {
+   "id": "EG",
+   "name": "Everest (EG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "EG"
+  },
+  {
+   "id": "EVRG",
+   "name": "Evergy (EVRG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "EVRG"
+  },
+  {
+   "id": "P",
+   "name": "Everpure (P)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "P"
+  },
+  {
+   "id": "ES",
+   "name": "Eversource Energy (ES)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ES"
+  },
+  {
+   "id": "EXC",
+   "name": "Exelon (EXC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "EXC"
+  },
+  {
+   "id": "EXE",
+   "name": "Expand Energy (EXE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "EXE"
+  },
+  {
+   "id": "EXPE",
+   "name": "Expedia (EXPE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "EXPE"
+  },
+  {
+   "id": "EXPD",
+   "name": "Expeditors International (EXPD)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "EXPD"
+  },
+  {
+   "id": "EXR",
+   "name": "Extra Space Storage (EXR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "EXR"
+  },
+  {
+   "id": "XOM",
+   "name": "ExxonMobil (XOM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "XOM"
+  },
+  {
+   "id": "FFIV",
+   "name": "F5 (FFIV)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FFIV"
+  },
+  {
+   "id": "FDS",
+   "name": "FactSet (FDS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FDS"
+  },
+  {
+   "id": "FICO",
+   "name": "Fair Isaac (FICO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FICO"
+  },
+  {
+   "id": "FAST",
+   "name": "Fastenal (FAST)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FAST"
+  },
+  {
+   "id": "FRT",
+   "name": "Federal Realty Investment Trust (FRT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FRT"
+  },
+  {
+   "id": "FDX",
+   "name": "FedEx (FDX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FDX"
+  },
+  {
+   "id": "FDXF",
+   "name": "FedEx Freight (FDXF)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FDXF"
+  },
+  {
+   "id": "FERG",
+   "name": "Ferguson Enterprises (FERG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FERG"
+  },
+  {
+   "id": "FIS",
+   "name": "Fidelity National Information Services (FIS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FIS"
+  },
+  {
+   "id": "FITB",
+   "name": "Fifth Third Bancorp (FITB)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FITB"
+  },
+  {
+   "id": "FSLR",
+   "name": "First Solar (FSLR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FSLR"
+  },
+  {
+   "id": "FE",
+   "name": "FirstEnergy (FE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FE"
+  },
+  {
+   "id": "FISV",
+   "name": "Fiserv (FISV)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FISV"
+  },
+  {
+   "id": "FLEX",
+   "name": "Flex (FLEX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FLEX"
+  },
+  {
+   "id": "F",
+   "name": "Ford Motor (F)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "F"
+  },
+  {
+   "id": "FTNT",
+   "name": "Fortinet (FTNT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FTNT"
+  },
+  {
+   "id": "FTV",
+   "name": "Fortive (FTV)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FTV"
+  },
+  {
+   "id": "FOXA",
+   "name": "Fox (FOXA)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FOXA"
+  },
+  {
+   "id": "FOX",
+   "name": "Fox (FOX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FOX"
+  },
+  {
+   "id": "BEN",
+   "name": "Franklin Resources (BEN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "BEN"
+  },
+  {
+   "id": "FCX",
+   "name": "Freeport-McMoRan (FCX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FCX"
+  },
+  {
+   "id": "GRMN",
+   "name": "Garmin (GRMN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "GRMN"
+  },
+  {
+   "id": "IT",
+   "name": "Gartner (IT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "IT"
+  },
+  {
+   "id": "GE",
+   "name": "GE Aerospace (GE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "GE"
+  },
+  {
+   "id": "GEHC",
+   "name": "GE HealthCare (GEHC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "GEHC"
+  },
+  {
+   "id": "GEV",
+   "name": "GE Vernova (GEV)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "GEV"
+  },
+  {
+   "id": "GEN",
+   "name": "Gen Digital (GEN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "GEN"
+  },
+  {
+   "id": "GNRC",
+   "name": "Generac (GNRC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "GNRC"
+  },
+  {
+   "id": "GD",
+   "name": "General Dynamics (GD)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "GD"
+  },
+  {
+   "id": "GIS",
+   "name": "General Mills (GIS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "GIS"
+  },
+  {
+   "id": "GM",
+   "name": "General Motors (GM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "GM"
+  },
+  {
+   "id": "GPC",
+   "name": "Genuine Parts (GPC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "GPC"
+  },
+  {
+   "id": "GILD",
+   "name": "Gilead Sciences (GILD)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "GILD"
+  },
+  {
+   "id": "GPN",
+   "name": "Global Payments (GPN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "GPN"
+  },
+  {
+   "id": "GL",
+   "name": "Globe Life (GL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "GL"
+  },
+  {
+   "id": "GDDY",
+   "name": "GoDaddy (GDDY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "GDDY"
+  },
+  {
+   "id": "GS",
+   "name": "Goldman Sachs (GS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "GS"
+  },
+  {
+   "id": "HAL",
+   "name": "Halliburton (HAL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HAL"
+  },
+  {
+   "id": "HIG",
+   "name": "Hartford (HIG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HIG"
+  },
+  {
+   "id": "HAS",
+   "name": "Hasbro (HAS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HAS"
+  },
+  {
+   "id": "HCA",
+   "name": "HCA Healthcare (HCA)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HCA"
+  },
+  {
+   "id": "DOC",
+   "name": "Healthpeak Properties (DOC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DOC"
+  },
+  {
+   "id": "HSIC",
+   "name": "Henry Schein (HSIC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HSIC"
+  },
+  {
+   "id": "HSY",
+   "name": "Hershey (HSY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HSY"
+  },
+  {
+   "id": "HPE",
+   "name": "Hewlett Packard Enterprise (HPE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HPE"
+  },
+  {
+   "id": "HLT",
+   "name": "Hilton Worldwide (HLT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HLT"
+  },
+  {
+   "id": "HD",
+   "name": "Home Depot (HD)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HD"
+  },
+  {
+   "id": "HONA",
+   "name": "Honeywell Aerospace (HONA)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HONA"
+  },
+  {
+   "id": "HON",
+   "name": "Honeywell Technologies (HON)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HON"
+  },
+  {
+   "id": "HRL",
+   "name": "Hormel Foods (HRL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HRL"
+  },
+  {
+   "id": "HST",
+   "name": "Host Hotels & Resorts (HST)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HST"
+  },
+  {
+   "id": "HWM",
+   "name": "Howmet Aerospace (HWM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HWM"
+  },
+  {
+   "id": "HPQ",
+   "name": "HP (HPQ)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HPQ"
+  },
+  {
+   "id": "HUBB",
+   "name": "Hubbell (HUBB)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HUBB"
+  },
+  {
+   "id": "HUM",
+   "name": "Humana (HUM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HUM"
+  },
+  {
+   "id": "HBAN",
+   "name": "Huntington Bancshares (HBAN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HBAN"
+  },
+  {
+   "id": "HII",
+   "name": "Huntington Ingalls Industries (HII)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HII"
+  },
+  {
+   "id": "IBM",
+   "name": "IBM (IBM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "IBM"
+  },
+  {
+   "id": "IEX",
+   "name": "IDEX (IEX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "IEX"
+  },
+  {
+   "id": "IDXX",
+   "name": "Idexx Laboratories (IDXX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "IDXX"
+  },
+  {
+   "id": "ITW",
+   "name": "Illinois Tool Works (ITW)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ITW"
+  },
+  {
+   "id": "ILMN",
+   "name": "Illumina (ILMN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ILMN"
+  },
+  {
+   "id": "INCY",
+   "name": "Incyte (INCY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "INCY"
+  },
+  {
+   "id": "IR",
+   "name": "Ingersoll Rand (IR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "IR"
+  },
+  {
+   "id": "PODD",
+   "name": "Insulet (PODD)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PODD"
+  },
+  {
+   "id": "INTC",
+   "name": "Intel (INTC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "INTC"
+  },
+  {
+   "id": "IBKR",
+   "name": "Interactive Brokers (IBKR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "IBKR"
+  },
+  {
+   "id": "ICE",
+   "name": "Intercontinental Exchange (ICE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ICE"
+  },
+  {
+   "id": "IFF",
+   "name": "International Flavors & Fragrances (IFF)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "IFF"
+  },
+  {
+   "id": "IP",
+   "name": "International Paper (IP)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "IP"
+  },
+  {
+   "id": "INTU",
+   "name": "Intuit (INTU)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "INTU"
+  },
+  {
+   "id": "ISRG",
+   "name": "Intuitive Surgical (ISRG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ISRG"
+  },
+  {
+   "id": "IVZ",
+   "name": "Invesco (IVZ)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "IVZ"
+  },
+  {
+   "id": "INVH",
+   "name": "Invitation Homes (INVH)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "INVH"
+  },
+  {
+   "id": "IQV",
+   "name": "IQVIA (IQV)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "IQV"
+  },
+  {
+   "id": "IRM",
+   "name": "Iron Mountain (IRM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "IRM"
+  },
+  {
+   "id": "JBHT",
+   "name": "J.B. Hunt (JBHT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "JBHT"
+  },
+  {
+   "id": "JBL",
+   "name": "Jabil (JBL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "JBL"
+  },
+  {
+   "id": "JKHY",
+   "name": "Jack Henry & Associates (JKHY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "JKHY"
+  },
+  {
+   "id": "J",
+   "name": "Jacobs Solutions (J)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "J"
+  },
+  {
+   "id": "JNJ",
+   "name": "Johnson & Johnson (JNJ)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "JNJ"
+  },
+  {
+   "id": "JCI",
+   "name": "Johnson Controls (JCI)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "JCI"
+  },
+  {
+   "id": "JPM",
+   "name": "JPMorgan Chase (JPM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "JPM"
+  },
+  {
+   "id": "KVUE",
+   "name": "Kenvue (KVUE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "KVUE"
+  },
+  {
+   "id": "KDP",
+   "name": "Keurig Dr Pepper (KDP)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "KDP"
+  },
+  {
+   "id": "KEY",
+   "name": "KeyCorp (KEY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "KEY"
+  },
+  {
+   "id": "KEYS",
+   "name": "Keysight Technologies (KEYS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "KEYS"
+  },
+  {
+   "id": "KMB",
+   "name": "Kimberly-Clark (KMB)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "KMB"
+  },
+  {
+   "id": "KIM",
+   "name": "Kimco Realty (KIM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "KIM"
+  },
+  {
+   "id": "KMI",
+   "name": "Kinder Morgan (KMI)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "KMI"
+  },
+  {
+   "id": "KKR",
+   "name": "KKR & (KKR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "KKR"
+  },
+  {
+   "id": "KLAC",
+   "name": "KLA (KLAC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "KLAC"
+  },
+  {
+   "id": "KHC",
+   "name": "Kraft Heinz (KHC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "KHC"
+  },
+  {
+   "id": "KR",
+   "name": "Kroger (KR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "KR"
+  },
+  {
+   "id": "LHX",
+   "name": "L3Harris (LHX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "LHX"
+  },
+  {
+   "id": "LH",
+   "name": "Labcorp (LH)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "LH"
+  },
+  {
+   "id": "LRCX",
+   "name": "Lam Research (LRCX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "LRCX"
+  },
+  {
+   "id": "LVS",
+   "name": "Las Vegas Sands (LVS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "LVS"
+  },
+  {
+   "id": "LDOS",
+   "name": "Leidos (LDOS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "LDOS"
+  },
+  {
+   "id": "LEN",
+   "name": "Lennar (LEN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "LEN"
+  },
+  {
+   "id": "LII",
+   "name": "Lennox International (LII)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "LII"
+  },
+  {
+   "id": "LLY",
+   "name": "Lilly (LLY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "LLY"
+  },
+  {
+   "id": "LIN",
+   "name": "Linde (LIN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "LIN"
+  },
+  {
+   "id": "LYV",
+   "name": "Live Nation Entertainment (LYV)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "LYV"
+  },
+  {
+   "id": "LMT",
+   "name": "Lockheed Martin (LMT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "LMT"
+  },
+  {
+   "id": "L",
+   "name": "Loews (L)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "L"
+  },
+  {
+   "id": "LOW",
+   "name": "Lowe's (LOW)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "LOW"
+  },
+  {
+   "id": "LULU",
+   "name": "Lululemon Athletica (LULU)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "LULU"
+  },
+  {
+   "id": "LITE",
+   "name": "Lumentum (LITE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "LITE"
+  },
+  {
+   "id": "LYB",
+   "name": "LyondellBasell (LYB)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "LYB"
+  },
+  {
+   "id": "MTB",
+   "name": "M&T Bank (MTB)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MTB"
+  },
+  {
+   "id": "MPC",
+   "name": "Marathon Petroleum (MPC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MPC"
+  },
+  {
+   "id": "MAR",
+   "name": "Marriott International (MAR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MAR"
+  },
+  {
+   "id": "MRSH",
+   "name": "Marsh McLennan (MRSH)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MRSH"
+  },
+  {
+   "id": "MLM",
+   "name": "Martin Marietta Materials (MLM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MLM"
+  },
+  {
+   "id": "MRVL",
+   "name": "Marvell Technology (MRVL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MRVL"
+  },
+  {
+   "id": "MAS",
+   "name": "Masco (MAS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MAS"
+  },
+  {
+   "id": "MA",
+   "name": "Mastercard (MA)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MA"
+  },
+  {
+   "id": "MKC",
+   "name": "McCormick & (MKC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MKC"
+  },
+  {
+   "id": "MCD",
+   "name": "McDonald's (MCD)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MCD"
+  },
+  {
+   "id": "MCK",
+   "name": "McKesson (MCK)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MCK"
+  },
+  {
+   "id": "MDT",
+   "name": "Medtronic (MDT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MDT"
+  },
+  {
+   "id": "MRK",
+   "name": "Merck & (MRK)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MRK"
+  },
+  {
+   "id": "META",
+   "name": "Meta Platforms (META)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "META"
+  },
+  {
+   "id": "MET",
+   "name": "MetLife (MET)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MET"
+  },
+  {
+   "id": "MTD",
+   "name": "Mettler Toledo (MTD)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MTD"
+  },
+  {
+   "id": "MGM",
+   "name": "MGM Resorts (MGM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MGM"
+  },
+  {
+   "id": "MCHP",
+   "name": "Microchip Technology (MCHP)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MCHP"
+  },
+  {
+   "id": "MU",
+   "name": "Micron Technology (MU)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MU"
+  },
+  {
+   "id": "MSFT",
+   "name": "Microsoft (MSFT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MSFT"
+  },
+  {
+   "id": "MAA",
+   "name": "Mid-America Apartment Communities (MAA)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MAA"
+  },
+  {
+   "id": "MRNA",
+   "name": "Moderna (MRNA)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MRNA"
+  },
+  {
+   "id": "MDLZ",
+   "name": "Mondelez International (MDLZ)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MDLZ"
+  },
+  {
+   "id": "MPWR",
+   "name": "Monolithic Power Systems (MPWR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MPWR"
+  },
+  {
+   "id": "MNST",
+   "name": "Monster Beverage (MNST)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MNST"
+  },
+  {
+   "id": "MCO",
+   "name": "Moody's (MCO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MCO"
+  },
+  {
+   "id": "MS",
+   "name": "Morgan Stanley (MS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MS"
+  },
+  {
+   "id": "MOS",
+   "name": "Mosaic (MOS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MOS"
+  },
+  {
+   "id": "MSI",
+   "name": "Motorola Solutions (MSI)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MSI"
+  },
+  {
+   "id": "MSCI",
+   "name": "MSCI (MSCI)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MSCI"
+  },
+  {
+   "id": "NDAQ",
+   "name": "Nasdaq (NDAQ)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NDAQ"
+  },
+  {
+   "id": "NTAP",
+   "name": "NetApp (NTAP)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NTAP"
+  },
+  {
+   "id": "NFLX",
+   "name": "Netflix (NFLX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NFLX"
+  },
+  {
+   "id": "NEM",
+   "name": "Newmont (NEM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NEM"
+  },
+  {
+   "id": "NWSA",
+   "name": "News (NWSA)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NWSA"
+  },
+  {
+   "id": "NWS",
+   "name": "News (NWS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NWS"
+  },
+  {
+   "id": "NEE",
+   "name": "NextEra Energy (NEE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NEE"
+  },
+  {
+   "id": "NKE",
+   "name": "Nike (NKE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NKE"
+  },
+  {
+   "id": "NI",
+   "name": "NiSource (NI)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NI"
+  },
+  {
+   "id": "NDSN",
+   "name": "Nordson (NDSN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NDSN"
+  },
+  {
+   "id": "NSC",
+   "name": "Norfolk Southern (NSC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NSC"
+  },
+  {
+   "id": "NTRS",
+   "name": "Northern Trust (NTRS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NTRS"
+  },
+  {
+   "id": "NOC",
+   "name": "Northrop Grumman (NOC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NOC"
+  },
+  {
+   "id": "NCLH",
+   "name": "Norwegian Cruise Line (NCLH)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NCLH"
+  },
+  {
+   "id": "NRG",
+   "name": "NRG Energy (NRG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NRG"
+  },
+  {
+   "id": "NUE",
+   "name": "Nucor (NUE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NUE"
+  },
+  {
+   "id": "NVDA",
+   "name": "Nvidia (NVDA)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NVDA"
+  },
+  {
+   "id": "NVR",
+   "name": "NVR (NVR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NVR"
+  },
+  {
+   "id": "NXPI",
+   "name": "NXP Semiconductors (NXPI)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NXPI"
+  },
+  {
+   "id": "ORLY",
+   "name": "O'Reilly Automotive (ORLY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ORLY"
+  },
+  {
+   "id": "OXY",
+   "name": "Occidental Petroleum (OXY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "OXY"
+  },
+  {
+   "id": "ODFL",
+   "name": "Old Dominion (ODFL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ODFL"
+  },
+  {
+   "id": "OMC",
+   "name": "Omnicom (OMC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "OMC"
+  },
+  {
+   "id": "ON",
+   "name": "ON Semiconductor (ON)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ON"
+  },
+  {
+   "id": "OKE",
+   "name": "Oneok (OKE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "OKE"
+  },
+  {
+   "id": "ORCL",
+   "name": "Oracle (ORCL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ORCL"
+  },
+  {
+   "id": "OTIS",
+   "name": "Otis Worldwide (OTIS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "OTIS"
+  },
+  {
+   "id": "PCAR",
+   "name": "Paccar (PCAR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PCAR"
+  },
+  {
+   "id": "PKG",
+   "name": "Packaging Corporation of America (PKG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PKG"
+  },
+  {
+   "id": "PLTR",
+   "name": "Palantir Technologies (PLTR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PLTR"
+  },
+  {
+   "id": "PANW",
+   "name": "Palo Alto Networks (PANW)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PANW"
+  },
+  {
+   "id": "PH",
+   "name": "Parker Hannifin (PH)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PH"
+  },
+  {
+   "id": "PAYX",
+   "name": "Paychex (PAYX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PAYX"
+  },
+  {
+   "id": "PYPL",
+   "name": "PayPal (PYPL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PYPL"
+  },
+  {
+   "id": "PNR",
+   "name": "Pentair (PNR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PNR"
+  },
+  {
+   "id": "PEP",
+   "name": "PepsiCo (PEP)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PEP"
+  },
+  {
+   "id": "PFE",
+   "name": "Pfizer (PFE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PFE"
+  },
+  {
+   "id": "PCG",
+   "name": "PG&E (PCG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PCG"
+  },
+  {
+   "id": "PM",
+   "name": "Philip Morris International (PM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PM"
+  },
+  {
+   "id": "PSX",
+   "name": "Phillips 66 (PSX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PSX"
+  },
+  {
+   "id": "PNW",
+   "name": "Pinnacle West Capital (PNW)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PNW"
+  },
+  {
+   "id": "PNC",
+   "name": "PNC Financial Services (PNC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PNC"
+  },
+  {
+   "id": "PPG",
+   "name": "PPG Industries (PPG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PPG"
+  },
+  {
+   "id": "PPL",
+   "name": "PPL (PPL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PPL"
+  },
+  {
+   "id": "PFG",
+   "name": "Principal Financial (PFG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PFG"
+  },
+  {
+   "id": "PG",
+   "name": "Procter & Gamble (PG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PG"
+  },
+  {
+   "id": "PGR",
+   "name": "Progressive (PGR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PGR"
+  },
+  {
+   "id": "PLD",
+   "name": "Prologis (PLD)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PLD"
+  },
+  {
+   "id": "PRU",
+   "name": "Prudential Financial (PRU)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PRU"
+  },
+  {
+   "id": "PEG",
+   "name": "Public Service Enterprise (PEG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PEG"
+  },
+  {
+   "id": "PTC",
+   "name": "PTC (PTC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PTC"
+  },
+  {
+   "id": "PSA",
+   "name": "Public Storage (PSA)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PSA"
+  },
+  {
+   "id": "PHM",
+   "name": "PulteGroup (PHM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PHM"
+  },
+  {
+   "id": "PWR",
+   "name": "Quanta Services (PWR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PWR"
+  },
+  {
+   "id": "QCOM",
+   "name": "Qualcomm (QCOM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "QCOM"
+  },
+  {
+   "id": "DGX",
+   "name": "Quest Diagnostics (DGX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DGX"
+  },
+  {
+   "id": "Q",
+   "name": "Qnity Electronics (Q)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "Q"
+  },
+  {
+   "id": "RL",
+   "name": "Ralph Lauren (RL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "RL"
+  },
+  {
+   "id": "RJF",
+   "name": "Raymond James Financial (RJF)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "RJF"
+  },
+  {
+   "id": "RDDT",
+   "name": "Reddit (RDDT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "RDDT"
+  },
+  {
+   "id": "RTX",
+   "name": "RTX (RTX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "RTX"
+  },
+  {
+   "id": "O",
+   "name": "Realty Income (O)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "O"
+  },
+  {
+   "id": "REG",
+   "name": "Regency Centers (REG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "REG"
+  },
+  {
+   "id": "REGN",
+   "name": "Regeneron Pharmaceuticals (REGN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "REGN"
+  },
+  {
+   "id": "RF",
+   "name": "Regions Financial (RF)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "RF"
+  },
+  {
+   "id": "RSG",
+   "name": "Republic Services (RSG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "RSG"
+  },
+  {
+   "id": "RMD",
+   "name": "ResMed| (RMD)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "RMD"
+  },
+  {
+   "id": "RVTY",
+   "name": "Revvity (RVTY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "RVTY"
+  },
+  {
+   "id": "HOOD",
+   "name": "Robinhood Markets (HOOD)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "HOOD"
+  },
+  {
+   "id": "ROK",
+   "name": "Rockwell Automation (ROK)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ROK"
+  },
+  {
+   "id": "ROL",
+   "name": "Rollins (ROL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ROL"
+  },
+  {
+   "id": "ROP",
+   "name": "Roper Technologies (ROP)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ROP"
+  },
+  {
+   "id": "ROST",
+   "name": "Ross Stores (ROST)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ROST"
+  },
+  {
+   "id": "RCL",
+   "name": "Royal Caribbean (RCL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "RCL"
+  },
+  {
+   "id": "SPGI",
+   "name": "S&P Global (SPGI)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SPGI"
+  },
+  {
+   "id": "CRM",
+   "name": "Salesforce (CRM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CRM"
+  },
+  {
+   "id": "SNDK",
+   "name": "Sandisk (SNDK)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SNDK"
+  },
+  {
+   "id": "SBAC",
+   "name": "SBA Communications (SBAC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SBAC"
+  },
+  {
+   "id": "SLB",
+   "name": "Schlumberger (SLB)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SLB"
+  },
+  {
+   "id": "STX",
+   "name": "Seagate Technology (STX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "STX"
+  },
+  {
+   "id": "SRE",
+   "name": "Sempra (SRE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SRE"
+  },
+  {
+   "id": "NOW",
+   "name": "ServiceNow (NOW)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NOW"
+  },
+  {
+   "id": "SHW",
+   "name": "Sherwin-Williams (SHW)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SHW"
+  },
+  {
+   "id": "SPG",
+   "name": "Simon Property (SPG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SPG"
+  },
+  {
+   "id": "SKYD",
+   "name": "Skydance (SKYD)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SKYD"
+  },
+  {
+   "id": "SWKS",
+   "name": "Skyworks Solutions (SWKS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SWKS"
+  },
+  {
+   "id": "SJM",
+   "name": "J.M. Smucker (SJM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SJM"
+  },
+  {
+   "id": "SW",
+   "name": "Smurfit Westrock (SW)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SW"
+  },
+  {
+   "id": "SNA",
+   "name": "Snap-on (SNA)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SNA"
+  },
+  {
+   "id": "SOLV",
+   "name": "Solventum (SOLV)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SOLV"
+  },
+  {
+   "id": "SO",
+   "name": "Southern (SO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SO"
+  },
+  {
+   "id": "LUV",
+   "name": "Southwest Airlines (LUV)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "LUV"
+  },
+  {
+   "id": "SWK",
+   "name": "Stanley Black & Decker (SWK)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SWK"
+  },
+  {
+   "id": "SBUX",
+   "name": "Starbucks (SBUX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SBUX"
+  },
+  {
+   "id": "STT",
+   "name": "State Street (STT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "STT"
+  },
+  {
+   "id": "STLD",
+   "name": "Steel Dynamics (STLD)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "STLD"
+  },
+  {
+   "id": "STE",
+   "name": "Steris (STE)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "STE"
+  },
+  {
+   "id": "SYK",
+   "name": "Stryker (SYK)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SYK"
+  },
+  {
+   "id": "SMCI",
+   "name": "Supermicro (SMCI)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SMCI"
+  },
+  {
+   "id": "SYF",
+   "name": "Synchrony Financial (SYF)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SYF"
+  },
+  {
+   "id": "SNPS",
+   "name": "Synopsys (SNPS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SNPS"
+  },
+  {
+   "id": "SYY",
+   "name": "Sysco (SYY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SYY"
+  },
+  {
+   "id": "TMUS",
+   "name": "T-Mobile US (TMUS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TMUS"
+  },
+  {
+   "id": "TROW",
+   "name": "T. Rowe Price (TROW)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TROW"
+  },
+  {
+   "id": "TTWO",
+   "name": "Take-Two Interactive (TTWO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TTWO"
+  },
+  {
+   "id": "TPR",
+   "name": "Tapestry (TPR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TPR"
+  },
+  {
+   "id": "TRGP",
+   "name": "Targa Resources (TRGP)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TRGP"
+  },
+  {
+   "id": "TGT",
+   "name": "Target (TGT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TGT"
+  },
+  {
+   "id": "TEL",
+   "name": "TE Connectivity (TEL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TEL"
+  },
+  {
+   "id": "TDY",
+   "name": "Teledyne Technologies (TDY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TDY"
+  },
+  {
+   "id": "TER",
+   "name": "Teradyne (TER)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TER"
+  },
+  {
+   "id": "TSLA",
+   "name": "Tesla (TSLA)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TSLA"
+  },
+  {
+   "id": "TXN",
+   "name": "Texas Instruments (TXN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TXN"
+  },
+  {
+   "id": "TPL",
+   "name": "Texas Pacific Land (TPL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TPL"
+  },
+  {
+   "id": "TXT",
+   "name": "Textron (TXT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TXT"
+  },
+  {
+   "id": "TMO",
+   "name": "Thermo Fisher Scientific (TMO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TMO"
+  },
+  {
+   "id": "TJX",
+   "name": "TJX Companies (TJX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TJX"
+  },
+  {
+   "id": "TKO",
+   "name": "TKO (TKO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TKO"
+  },
+  {
+   "id": "TSCO",
+   "name": "Tractor Supply (TSCO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TSCO"
+  },
+  {
+   "id": "TT",
+   "name": "Trane Technologies (TT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TT"
+  },
+  {
+   "id": "TDG",
+   "name": "TransDigm (TDG)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TDG"
+  },
+  {
+   "id": "TRV",
+   "name": "Travelers Companies (TRV)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TRV"
+  },
+  {
+   "id": "TRMB",
+   "name": "Trimble (TRMB)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TRMB"
+  },
+  {
+   "id": "TFC",
+   "name": "Truist Financial (TFC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TFC"
+  },
+  {
+   "id": "TWLO",
+   "name": "Twilio (TWLO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TWLO"
+  },
+  {
+   "id": "TYL",
+   "name": "Tyler Technologies (TYL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TYL"
+  },
+  {
+   "id": "TSN",
+   "name": "Tyson Foods (TSN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TSN"
+  },
+  {
+   "id": "USB",
+   "name": "U.S. Bancorp (USB)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "USB"
+  },
+  {
+   "id": "UBER",
+   "name": "Uber (UBER)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "UBER"
+  },
+  {
+   "id": "UDR",
+   "name": "UDR (UDR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "UDR"
+  },
+  {
+   "id": "ULTA",
+   "name": "Ulta Beauty (ULTA)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ULTA"
+  },
+  {
+   "id": "UNP",
+   "name": "Union Pacific (UNP)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "UNP"
+  },
+  {
+   "id": "UAL",
+   "name": "United Airlines (UAL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "UAL"
+  },
+  {
+   "id": "UPS",
+   "name": "United Parcel Service (UPS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "UPS"
+  },
+  {
+   "id": "URI",
+   "name": "United Rentals (URI)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "URI"
+  },
+  {
+   "id": "UNH",
+   "name": "UnitedHealth (UNH)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "UNH"
+  },
+  {
+   "id": "UHS",
+   "name": "Universal Health Services (UHS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "UHS"
+  },
+  {
+   "id": "VLO",
+   "name": "Valero Energy (VLO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "VLO"
+  },
+  {
+   "id": "VEEV",
+   "name": "Veeva Systems (VEEV)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "VEEV"
+  },
+  {
+   "id": "VTR",
+   "name": "Ventas (VTR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "VTR"
+  },
+  {
+   "id": "VLTO",
+   "name": "Veralto (VLTO)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "VLTO"
+  },
+  {
+   "id": "VRSN",
+   "name": "Verisign (VRSN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "VRSN"
+  },
+  {
+   "id": "VRSK",
+   "name": "Verisk Analytics (VRSK)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "VRSK"
+  },
+  {
+   "id": "VZ",
+   "name": "Verizon (VZ)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "VZ"
+  },
+  {
+   "id": "VRTX",
+   "name": "Vertex Pharmaceuticals (VRTX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "VRTX"
+  },
+  {
+   "id": "VRT",
+   "name": "Vertiv (VRT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "VRT"
+  },
+  {
+   "id": "VTRS",
+   "name": "Viatris (VTRS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "VTRS"
+  },
+  {
+   "id": "VICI",
+   "name": "Vici Properties (VICI)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "VICI"
+  },
+  {
+   "id": "V",
+   "name": "Visa (V)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "V"
+  },
+  {
+   "id": "VST",
+   "name": "Vistra (VST)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "VST"
+  },
+  {
+   "id": "VMRK",
+   "name": "Vivmark Residential (VMRK)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "VMRK"
+  },
+  {
+   "id": "VMC",
+   "name": "Vulcan Materials (VMC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "VMC"
+  },
+  {
+   "id": "VYLR",
+   "name": "Vylor (VYLR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "VYLR"
+  },
+  {
+   "id": "WRB",
+   "name": "W. R. Berkley (WRB)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "WRB"
+  },
+  {
+   "id": "GWW",
+   "name": "W. W. Grainger (GWW)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "GWW"
+  },
+  {
+   "id": "WAB",
+   "name": "Wabtec (WAB)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "WAB"
+  },
+  {
+   "id": "WMT",
+   "name": "Walmart (WMT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "WMT"
+  },
+  {
+   "id": "DIS",
+   "name": "Walt Disney (DIS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "DIS"
+  },
+  {
+   "id": "WM",
+   "name": "Waste Management (WM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "WM"
+  },
+  {
+   "id": "WAT",
+   "name": "Waters (WAT)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "WAT"
+  },
+  {
+   "id": "WEC",
+   "name": "WEC Energy (WEC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "WEC"
+  },
+  {
+   "id": "WFC",
+   "name": "Wells Fargo (WFC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "WFC"
+  },
+  {
+   "id": "WELL",
+   "name": "Welltower (WELL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "WELL"
+  },
+  {
+   "id": "WST",
+   "name": "West Pharmaceutical Services (WST)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "WST"
+  },
+  {
+   "id": "WDC",
+   "name": "Western Digital (WDC)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "WDC"
+  },
+  {
+   "id": "WY",
+   "name": "Weyerhaeuser (WY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "WY"
+  },
+  {
+   "id": "WSM",
+   "name": "Williams-Sonoma (WSM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "WSM"
+  },
+  {
+   "id": "WMB",
+   "name": "Williams Companies (WMB)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "WMB"
+  },
+  {
+   "id": "WTW",
+   "name": "Willis Towers Watson (WTW)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "WTW"
+  },
+  {
+   "id": "WDAY",
+   "name": "Workday (WDAY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "WDAY"
+  },
+  {
+   "id": "WYNN",
+   "name": "Wynn Resorts (WYNN)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "WYNN"
+  },
+  {
+   "id": "XEL",
+   "name": "Xcel Energy (XEL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "XEL"
+  },
+  {
+   "id": "XYL",
+   "name": "Xylem (XYL)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "XYL"
+  },
+  {
+   "id": "YUM",
+   "name": "Yum! Brands (YUM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "YUM"
+  },
+  {
+   "id": "ZBRA",
+   "name": "Zebra Technologies (ZBRA)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ZBRA"
+  },
+  {
+   "id": "ZBH",
+   "name": "Zimmer Biomet (ZBH)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ZBH"
+  },
+  {
+   "id": "ZTS",
+   "name": "Zoetis (ZTS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ZTS"
+  },
+  {
+   "id": "ALNY",
+   "name": "Alnylam Pharmaceuticals (ALNY)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ALNY"
+  },
+  {
+   "id": "ARM",
+   "name": "Arm (ARM)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ARM"
+  },
+  {
+   "id": "ASML",
+   "name": "ASML (ASML)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ASML"
+  },
+  {
+   "id": "ALAB",
+   "name": "Astera Labs (ALAB)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "ALAB"
+  },
+  {
+   "id": "CCEP",
+   "name": "Coca-Cola Europacific Partners (CCEP)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CCEP"
+  },
+  {
+   "id": "CRWV",
+   "name": "CoreWeave (CRWV)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "CRWV"
+  },
+  {
+   "id": "FER",
+   "name": "Ferrovial (FER)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "FER"
+  },
+  {
+   "id": "MSTR",
+   "name": "MicroStrategy (MSTR)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "MSTR"
+  },
+  {
+   "id": "NBIS",
+   "name": "Nebius (NBIS)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "NBIS"
+  },
+  {
+   "id": "PDD",
+   "name": "PDD (PDD)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "PDD"
+  },
+  {
+   "id": "RKLB",
+   "name": "Rocket Lab (RKLB)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "RKLB"
+  },
+  {
+   "id": "SHOP",
+   "name": "Shopify (SHOP)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SHOP"
+  },
+  {
+   "id": "SPCX",
+   "name": "SpaceX (SPCX)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "SPCX"
+  },
+  {
+   "id": "TRI",
+   "name": "Thomson Reuters (TRI)",
+   "group": "Acciones EE.UU.",
+   "yahoo": "TRI"
+  },
+  {
+   "id": "BTC",
+   "name": "Bitcoin (BTC)",
+   "group": "Cripto",
+   "yahoo": "BTC-USD"
+  },
+  {
+   "id": "ETH",
+   "name": "Ethereum (ETH)",
+   "group": "Cripto",
+   "yahoo": "ETH-USD"
+  },
+  {
+   "id": "BNB",
+   "name": "BNB (BNB)",
+   "group": "Cripto",
+   "yahoo": "BNB-USD"
+  },
+  {
+   "id": "XRP",
+   "name": "XRP (XRP)",
+   "group": "Cripto",
+   "yahoo": "XRP-USD"
+  },
+  {
+   "id": "SOL",
+   "name": "Solana (SOL)",
+   "group": "Cripto",
+   "yahoo": "SOL-USD"
+  },
+  {
+   "id": "TRX",
+   "name": "TRON (TRX)",
+   "group": "Cripto",
+   "yahoo": "TRX-USD"
+  },
+  {
+   "id": "ZEC",
+   "name": "Zcash (ZEC)",
+   "group": "Cripto",
+   "yahoo": "ZEC-USD"
+  },
+  {
+   "id": "DOGE",
+   "name": "Dogecoin (DOGE)",
+   "group": "Cripto",
+   "yahoo": "DOGE-USD"
+  },
+  {
+   "id": "XMR",
+   "name": "Monero (XMR)",
+   "group": "Cripto",
+   "yahoo": "XMR-USD"
+  },
+  {
+   "id": "WBT",
+   "name": "WhiteBIT Coin (WBT)",
+   "group": "Cripto",
+   "yahoo": "WBT-USD"
+  },
+  {
+   "id": "LINK",
+   "name": "Chainlink (LINK)",
+   "group": "Cripto",
+   "yahoo": "LINK-USD"
+  },
+  {
+   "id": "LEO",
+   "name": "LEO Token (LEO)",
+   "group": "Cripto",
+   "yahoo": "LEO-USD"
+  },
+  {
+   "id": "ADA",
+   "name": "Cardano (ADA)",
+   "group": "Cripto",
+   "yahoo": "ADA-USD"
+  },
+  {
+   "id": "RAIN",
+   "name": "Rain (RAIN)",
+   "group": "Cripto",
+   "yahoo": "RAIN38341-USD"
+  },
+  {
+   "id": "NEAR",
+   "name": "NEAR Protocol (NEAR)",
+   "group": "Cripto",
+   "yahoo": "NEAR-USD"
+  },
+  {
+   "id": "XLM",
+   "name": "Stellar (XLM)",
+   "group": "Cripto",
+   "yahoo": "XLM-USD"
+  },
+  {
+   "id": "BCH",
+   "name": "Bitcoin Cash (BCH)",
+   "group": "Cripto",
+   "yahoo": "BCH-USD"
+  },
+  {
+   "id": "LTC",
+   "name": "Litecoin (LTC)",
+   "group": "Cripto",
+   "yahoo": "LTC-USD"
+  },
+  {
+   "id": "UNI",
+   "name": "Uniswap (UNI)",
+   "group": "Cripto",
+   "yahoo": "UNI7083-USD"
+  },
+  {
+   "id": "DAI",
+   "name": "Dai (DAI)",
+   "group": "Cripto",
+   "yahoo": "DAI-USD"
+  },
+  {
+   "id": "AVAX",
+   "name": "Avalanche (AVAX)",
+   "group": "Cripto",
+   "yahoo": "AVAX-USD"
+  },
+  {
+   "id": "CC",
+   "name": "Canton (CC)",
+   "group": "Cripto",
+   "yahoo": "CC37263-USD"
+  },
+  {
+   "id": "SUI",
+   "name": "Sui (SUI)",
+   "group": "Cripto",
+   "yahoo": "SUI20947-USD"
+  },
+  {
+   "id": "GRAM",
+   "name": "Gram (prev. Toncoin) (GRAM)",
+   "group": "Cripto",
+   "yahoo": "GRAM-USD"
+  },
+  {
+   "id": "HBAR",
+   "name": "Hedera (HBAR)",
+   "group": "Cripto",
+   "yahoo": "HBAR-USD"
+  },
+  {
+   "id": "TAO",
+   "name": "Bittensor (TAO)",
+   "group": "Cripto",
+   "yahoo": "TAO22974-USD"
+  },
+  {
+   "id": "SHIB",
+   "name": "Shiba Inu (SHIB)",
+   "group": "Cripto",
+   "yahoo": "SHIB-USD"
+  },
+  {
+   "id": "CRO",
+   "name": "Cronos (CRO)",
+   "group": "Cripto",
+   "yahoo": "CRO-USD"
+  },
+  {
+   "id": "QNT",
+   "name": "Quant (QNT)",
+   "group": "Cripto",
+   "yahoo": "QNT-USD"
+  },
+  {
+   "id": "ENA",
+   "name": "Ethena (ENA)",
+   "group": "Cripto",
+   "yahoo": "ENA-USD"
+  },
+  {
+   "id": "BTW",
+   "name": "Bitway (BTW)",
+   "group": "Cripto",
+   "yahoo": "BTW39158-USD"
+  },
+  {
+   "id": "OKB",
+   "name": "OKB (OKB)",
+   "group": "Cripto",
+   "yahoo": "OKB-USD"
+  },
+  {
+   "id": "AAVE",
+   "name": "Aave (AAVE)",
+   "group": "Cripto",
+   "yahoo": "AAVE-USD"
+  },
+  {
+   "id": "WLD",
+   "name": "Worldcoin (WLD)",
+   "group": "Cripto",
+   "yahoo": "WLD-USD"
+  },
+  {
+   "id": "ONDO",
+   "name": "Ondo (ONDO)",
+   "group": "Cripto",
+   "yahoo": "ONDO-USD"
+  },
+  {
+   "id": "PUMP",
+   "name": "Pump.fun (PUMP)",
+   "group": "Cripto",
+   "yahoo": "PUMP36507-USD"
+  },
+  {
+   "id": "DOT",
+   "name": "Polkadot (DOT)",
+   "group": "Cripto",
+   "yahoo": "DOT-USD"
+  },
+  {
+   "id": "PEPE",
+   "name": "Pepe (PEPE)",
+   "group": "Cripto",
+   "yahoo": "PEPE24478-USD"
+  },
+  {
+   "id": "ASTER",
+   "name": "Aster (ASTER)",
+   "group": "Cripto",
+   "yahoo": "ASTER36341-USD"
+  },
+  {
+   "id": "SKY",
+   "name": "Sky (SKY)",
+   "group": "Cripto",
+   "yahoo": "SKY-USD"
+  },
+  {
+   "id": "MNT",
+   "name": "Mantle (MNT)",
+   "group": "Cripto",
+   "yahoo": "MNT-USD"
+  },
+  {
+   "id": "WLFI",
+   "name": "World Liberty Financial (WLFI)",
+   "group": "Cripto",
+   "yahoo": "WLFI-USD"
+  },
+  {
+   "id": "M",
+   "name": "MemeCore (M)",
+   "group": "Cripto",
+   "yahoo": "M-USD"
+  },
+  {
+   "id": "MORPHO",
+   "name": "Morpho (MORPHO)",
+   "group": "Cripto",
+   "yahoo": "MORPHO34104-USD"
+  },
+  {
+   "id": "ICP",
+   "name": "Internet Computer (ICP)",
+   "group": "Cripto",
+   "yahoo": "ICP-USD"
+  },
+  {
+   "id": "U",
+   "name": "United Stables (U)",
+   "group": "Cripto",
+   "yahoo": "U39120-USD"
+  },
+  {
+   "id": "HTX",
+   "name": "HTX DAO (HTX)",
+   "group": "Cripto",
+   "yahoo": "HTX-USD"
+  },
+  {
+   "id": "BGB",
+   "name": "Bitget Token (BGB)",
+   "group": "Cripto",
+   "yahoo": "BGB-USD"
+  },
+  {
+   "id": "ARB",
+   "name": "Arbitrum (ARB)",
+   "group": "Cripto",
+   "yahoo": "ARB-USD"
+  },
+  {
+   "id": "ETC",
+   "name": "Ethereum Classic (ETC)",
+   "group": "Cripto",
+   "yahoo": "ETC-USD"
+  },
+  {
+   "id": "VVV",
+   "name": "Venice Token (VVV)",
+   "group": "Cripto",
+   "yahoo": "VVV35509-USD"
+  },
+  {
+   "id": "JST",
+   "name": "JUST (JST)",
+   "group": "Cripto",
+   "yahoo": "JST-USD"
+  },
+  {
+   "id": "GT",
+   "name": "Gate (GT)",
+   "group": "Cripto",
+   "yahoo": "GT-USD"
+  },
+  {
+   "id": "JUP",
+   "name": "Jupiter (JUP)",
+   "group": "Cripto",
+   "yahoo": "JUP-USD"
+  },
+  {
+   "id": "KAS",
+   "name": "Kaspa (KAS)",
+   "group": "Cripto",
+   "yahoo": "KAS-USD"
+  },
+  {
+   "id": "KCS",
+   "name": "KuCoin (KCS)",
+   "group": "Cripto",
+   "yahoo": "KCS-USD"
+  },
+  {
+   "id": "ALGO",
+   "name": "Algorand (ALGO)",
+   "group": "Cripto",
+   "yahoo": "ALGO-USD"
+  },
+  {
+   "id": "RENDER",
+   "name": "Render (RENDER)",
+   "group": "Cripto",
+   "yahoo": "RENDER-USD"
+  },
+  {
+   "id": "ATOM",
+   "name": "Cosmos Hub (ATOM)",
+   "group": "Cripto",
+   "yahoo": "ATOM-USD"
+  },
+  {
+   "id": "FIL",
+   "name": "Filecoin (FIL)",
+   "group": "Cripto",
+   "yahoo": "FIL-USD"
+  },
+  {
+   "id": "INJ",
+   "name": "Injective (INJ)",
+   "group": "Cripto",
+   "yahoo": "INJ-USD"
+  },
+  {
+   "id": "AERO",
+   "name": "Aerodrome Finance (AERO)",
+   "group": "Cripto",
+   "yahoo": "AERO-USD"
+  },
+  {
+   "id": "NEXO",
+   "name": "NEXO (NEXO)",
+   "group": "Cripto",
+   "yahoo": "NEXO-USD"
+  },
+  {
+   "id": "LIT",
+   "name": "Lighter (LIT)",
+   "group": "Cripto",
+   "yahoo": "LIT39125-USD"
+  },
+  {
+   "id": "ZRO",
+   "name": "LayerZero (ZRO)",
+   "group": "Cripto",
+   "yahoo": "ZRO26997-USD"
+  },
+  {
+   "id": "PEARL",
+   "name": "Pearl (PEARL)",
+   "group": "Cripto",
+   "yahoo": "PEARL41876-USD"
+  },
+  {
+   "id": "APT",
+   "name": "Aptos (APT)",
+   "group": "Cripto",
+   "yahoo": "APT21794-USD"
+  },
+  {
+   "id": "CAKE",
+   "name": "PancakeSwap (CAKE)",
+   "group": "Cripto",
+   "yahoo": "CAKE-USD"
+  },
+  {
+   "id": "GHO",
+   "name": "GHO (GHO)",
+   "group": "Cripto",
+   "yahoo": "GHO-USD"
+  },
+  {
+   "id": "AKE",
+   "name": "Akedo (AKE)",
+   "group": "Cripto",
+   "yahoo": "AKE-USD"
+  },
+  {
+   "id": "ETHFI",
+   "name": "Ether.fi (ETHFI)",
+   "group": "Cripto",
+   "yahoo": "ETHFI-USD"
+  },
+  {
+   "id": "STX4847-USD",
+   "name": "Stacks (STX)",
+   "group": "Cripto",
+   "yahoo": "STX4847-USD"
+  },
+  {
+   "id": "NIGHT",
+   "name": "Midnight (NIGHT)",
+   "group": "Cripto",
+   "yahoo": "NIGHT-USD"
+  },
+  {
+   "id": "XDC",
+   "name": "XDC Network (XDC)",
+   "group": "Cripto",
+   "yahoo": "XDC-USD"
+  },
+  {
+   "id": "DASH-USD",
+   "name": "Dash (DASH)",
+   "group": "Cripto",
+   "yahoo": "DASH-USD"
+  },
+  {
+   "id": "PYTH",
+   "name": "Pyth Network (PYTH)",
+   "group": "Cripto",
+   "yahoo": "PYTH-USD"
+  },
+  {
+   "id": "TIA",
+   "name": "Celestia (TIA)",
+   "group": "Cripto",
+   "yahoo": "TIA-USD"
+  },
+  {
+   "id": "VET",
+   "name": "VeChain (VET)",
+   "group": "Cripto",
+   "yahoo": "VET-USD"
+  },
+  {
+   "id": "Q38236-USD",
+   "name": "Quack AI (Q)",
+   "group": "Cripto",
+   "yahoo": "Q38236-USD"
+  },
+  {
+   "id": "CRV",
+   "name": "Curve DAO (CRV)",
+   "group": "Cripto",
+   "yahoo": "CRV-USD"
+  },
+  {
+   "id": "BDX-USD",
+   "name": "Beldex (BDX)",
+   "group": "Cripto",
+   "yahoo": "BDX-USD"
+  },
+  {
+   "id": "FLR",
+   "name": "Flare (FLR)",
+   "group": "Cripto",
+   "yahoo": "FLR-USD"
+  },
+  {
+   "id": "RAY",
+   "name": "Raydium (RAY)",
+   "group": "Cripto",
+   "yahoo": "RAY-USD"
+  },
+  {
+   "id": "KAU",
+   "name": "Kinesis Gold (KAU)",
+   "group": "Cripto",
+   "yahoo": "KAU24382-USD"
+  },
+  {
+   "id": "PENGU",
+   "name": "Pudgy Penguins (PENGU)",
+   "group": "Cripto",
+   "yahoo": "PENGU34466-USD"
+  },
+  {
+   "id": "YLDS",
+   "name": "YLDS (YLDS)",
+   "group": "Cripto",
+   "yahoo": "YLDS-USD"
+  },
+  {
+   "id": "TRUMP",
+   "name": "Official Trump (TRUMP)",
+   "group": "Cripto",
+   "yahoo": "TRUMP35336-USD"
+  },
+  {
+   "id": "STABLE",
+   "name": "​​Stable (STABLE)",
+   "group": "Cripto",
+   "yahoo": "STABLE38892-USD"
+  },
+  {
+   "id": "A7A5",
+   "name": "A7A5 (A7A5)",
+   "group": "Cripto",
+   "yahoo": "A7A5-USD"
+  },
+  {
+   "id": "FET",
+   "name": "Artificial Superintelligence Alliance (FET)",
+   "group": "Cripto",
+   "yahoo": "FET-USD"
+  },
+  {
+   "id": "HASH",
+   "name": "Provenance Blockchain (HASH)",
+   "group": "Cripto",
+   "yahoo": "HASH19960-USD"
+  },
+  {
+   "id": "VIRTUAL",
+   "name": "Virtuals Protocol (VIRTUAL)",
+   "group": "Cripto",
+   "yahoo": "VIRTUAL-USD"
+  },
+  {
+   "id": "STRK",
+   "name": "Starknet (STRK)",
+   "group": "Cripto",
+   "yahoo": "STRK-USD"
+  },
+  {
+   "id": "GRASS",
+   "name": "Grass (GRASS)",
+   "group": "Cripto",
+   "yahoo": "GRASS32956-USD"
+  },
+  {
+   "id": "SEI",
+   "name": "Sei (SEI)",
+   "group": "Cripto",
+   "yahoo": "SEI-USD"
+  },
+  {
+   "id": "DRV",
+   "name": "Derive (DRV)",
+   "group": "Cripto",
+   "yahoo": "DRV35014-USD"
+  },
+  {
+   "id": "PENDLE",
+   "name": "Pendle (PENDLE)",
+   "group": "Cripto",
+   "yahoo": "PENDLE-USD"
+  },
+  {
+   "id": "FF",
+   "name": "Falcon Finance (FF)",
+   "group": "Cripto",
+   "yahoo": "FF38482-USD"
+  },
+  {
+   "id": "BSV",
+   "name": "Bitcoin SV (BSV)",
+   "group": "Cripto",
+   "yahoo": "BSV-USD"
+  },
+  {
+   "id": "SPX",
+   "name": "SPX6900 (SPX)",
+   "group": "Cripto",
+   "yahoo": "SPX28081-USD"
+  }
+ ]
 }
