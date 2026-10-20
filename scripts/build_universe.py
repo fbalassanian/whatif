@@ -55,16 +55,24 @@ def get(url: str) -> str:
         return r.read().decode("utf-8")
 
 
-def wiki_table(page: str, sym_cols: tuple[str, ...], name_cols: tuple[str, ...]) -> list[tuple[str, str]]:
+def wiki_table(pages: tuple[str, ...], sym_cols: tuple[str, ...], name_cols: tuple[str, ...]) -> list[tuple[str, str]]:
+    """Primera tabla con columnas de símbolo y nombre (y al menos 90 filas) en alguna de las páginas.
+    Los nombres de columna se comparan sin notas al pie ("Company[1]") y sin mayúsculas."""
     import pandas as pd
-    html = get(f"https://en.wikipedia.org/wiki/{page}")
-    for t in pd.read_html(io.StringIO(html)):
-        cols = [str(c) for c in t.columns]
-        sc = next((c for c in cols if c in sym_cols), None)
-        nc = next((c for c in cols if c in name_cols), None)
-        if sc and nc and len(t) > 50:
-            return [(str(s).strip(), str(n).strip()) for s, n in zip(t[sc], t[nc]) if str(s).strip()]
-    raise RuntimeError(f"No encontré la tabla de símbolos en {page}")
+    base = lambda c: re.sub(r"\[.*?\]", "", str(c[-1] if isinstance(c, tuple) else c)).strip().lower()
+    for page in pages:
+        try:
+            tables = pd.read_html(io.StringIO(get(f"https://en.wikipedia.org/wiki/{page}")))
+        except Exception as e:  # noqa: BLE001
+            log(f"  {page}: {e}")
+            continue
+        for t in tables:
+            cols = {base(c): c for c in t.columns}
+            sc = next((cols[k] for k in sym_cols if k in cols), None)
+            nc = next((cols[k] for k in name_cols if k in cols), None)
+            if sc is not None and nc is not None and len(t) >= 90:
+                return [(str(a).strip(), str(b).strip()) for a, b in zip(t[sc], t[nc]) if str(a).strip() and str(a) != "nan"]
+    raise RuntimeError(f"No encontré la tabla de símbolos en {', '.join(pages)}")
 
 
 def clean_name(n: str) -> str:
@@ -123,8 +131,12 @@ def main() -> int:
     for s, n in ADRS:
         add(s, s, n, "Argentina (ADRs)")
 
-    sp = wiki_table("List_of_S%26P_500_companies", ("Symbol",), ("Security",))
-    nq = wiki_table("Nasdaq-100", ("Ticker", "Symbol"), ("Company", "Security"))
+    sp = wiki_table(("List_of_S%26P_500_companies",), ("symbol", "ticker"), ("security", "company"))
+    try:
+        nq = wiki_table(("List_of_NASDAQ-100_companies", "Nasdaq-100"), ("ticker", "symbol"), ("company", "security"))
+    except Exception as e:  # noqa: BLE001
+        log(f"⚠ Nasdaq-100: {e}. Sigo sin esa lista.")
+        nq = []
     log(f"Wikipedia: {len(sp)} del S&P 500, {len(nq)} del Nasdaq-100")
     for s, n in sp + nq:
         y = s.replace(".", "-")                         # BRK.B -> BRK-B
