@@ -331,7 +331,7 @@ footer a { color: var(--cyan); }
   </section>
 
   <footer>
-    <span>Cada compra se hace al cierre del mes; con aportes mensuales, cada aporte entra al cierre de su mes, incluido el mes final, y el rendimiento anual es la TIR. Los dividendos se reinvierten al cierre del mes en que se pagan. No hay impuestos ni comisiones. La proyección usa el rendimiento que elegís, con un margen de 4 puntos por año para arriba y para abajo. Nada de esto es una recomendación de inversión.</span>
+    <span>Cada compra se hace al cierre del mes; con aportes mensuales, cada aporte entra al cierre de su mes, incluido el mes final, y el rendimiento anual es la TIR. Los dividendos se reinvierten al cierre del mes en que se pagan. No hay impuestos ni comisiones. La proyección usa el rendimiento que elegís. Nada de esto es una recomendación de inversión.</span>
     <span>Precios y dividendos de Yahoo Finance. Gráfico hecho con <a href="https://www.tradingview.com/lightweight-charts/" target="_blank" rel="noopener">TradingView Lightweight Charts</a>.</span>
   </footer>
 </div>
@@ -520,18 +520,15 @@ function irrAnnual(flows, amount, T, value) {
   return Math.pow(1 + (lo + hi) / 2, 12) - 1;
 }
 // Proyección mensual desde el último dato. rateAt(i) da el rendimiento anual supuesto para el mes i
-// (igual todos los años, o el que elegiste para ese año calendario); la banda es ±4 puntos.
+// (igual todos los años, o el que elegiste para ese año calendario).
 function project(from, value, toIdx, rateAt, monthly) {
-  const series = shift => {
-    const out = [];
-    let v = value;
-    for (let i = mIdx(from); i <= toIdx; i++) {
-      if (i > mIdx(from)) v = v * Math.pow(1 + Math.max(rateAt(i) + shift, -0.99), 1 / 12) + monthly;
-      out.push({ time: mKey(i) + "-01", value: v });
-    }
-    return out;
-  };
-  return { mid: series(0), lo: series(-0.04), hi: series(0.04) };
+  const out = [];
+  let v = value;
+  for (let i = mIdx(from); i <= toIdx; i++) {
+    if (i > mIdx(from)) v = v * Math.pow(1 + Math.max(rateAt(i), -0.99), 1 / 12) + monthly;
+    out.push({ time: mKey(i) + "-01", value: v });
+  }
+  return { mid: out };
 }
 // rendimiento supuesto: "same" = el del control deslizante; "year" = uno por año calendario (en %)
 let rateMode = "same";
@@ -563,9 +560,9 @@ function compute() {
     const p = project(L, h.value, mIdx(end), rateAtMonth, monthly);
     const months = mIdx(end) - mIdx(L);
     Object.assign(d, { proj: p, monthly, months, contribTotal: monthly * months, invested: h.invested + monthly * months,
-                       final: p.mid.at(-1).value, lo: p.lo.at(-1).value, hi: p.hi.at(-1).value });
+                       final: p.mid.at(-1).value });
     p.mid.slice(1).forEach((pt, j) => d.timeline.push({ key: pt.time.slice(0, 7), time: pt.time, value: pt.value,
-      invested: h.invested + monthly * (j + 1), proj: true, lo: p.lo[j + 1].value, hi: p.hi[j + 1].value }));
+      invested: h.invested + monthly * (j + 1), proj: true }));
   }
   d.base = d.timeline.map(t => ({ time: t.time, value: t.invested }));
 
@@ -580,7 +577,7 @@ function compute() {
 }
 
 // ================================================================ gráfico
-let chart, sGhost, sMain, sBase, sProj, sLo, sHi, sRace = [];
+let chart, sGhost, sMain, sBase, sProj, sRace = [];
 let D = null, cursor = 0;
 function initChart() {
   chart = LightweightCharts.createChart($("chart"), {
@@ -604,8 +601,6 @@ function initChart() {
   // el fantasma lleva el recorrido completo y fija la escala, así el gráfico no salta al reproducir
   sGhost = chart.addLineSeries({ ...quiet, lineWidth: 1, color: hexA(cssVar("--cyan"), .22),
     autoscaleInfoProvider: () => D ? { priceRange: { minValue: D.min, maxValue: D.max } } : null });
-  sHi = chart.addLineSeries({ ...quiet, lineWidth: 1, lineStyle: 2, color: hexA(cssVar("--violet"), .45) });
-  sLo = chart.addLineSeries({ ...quiet, lineWidth: 1, lineStyle: 2, color: hexA(cssVar("--violet"), .45) });
   sBase = chart.addLineSeries({ ...quiet, lineWidth: 1, lineStyle: 1, lineType: 1, color: hexA(cssVar("--muted"), .7) });
   sRace = RACE_COLORS.map(c => chart.addLineSeries({ ...quiet, lineWidth: 2, color: cssVar(c), crosshairMarkerVisible: true }));
   sProj = chart.addLineSeries({ priceLineVisible: false, lastValueVisible: false, lineWidth: 3, lineStyle: 2, color: cssVar("--violet") });
@@ -639,15 +634,13 @@ function render() {
   if (!parseAmount()) { $("when").textContent = "Escribí un monto mayor a cero."; return; }
   D = compute();
   D.index = new Map(D.timeline.map((t, i) => [t.key, i]));
-  const vals = D.timeline.flatMap(t => t.proj ? [t.lo, t.hi] : [t.value, t.invested]);
+  const vals = D.timeline.flatMap(t => [t.value, t.invested]);
   D.race.forEach(r => r.sim && r.sim.pts.forEach(p => vals.push(p.value)));
   D.min = Math.min(...vals); D.max = Math.max(...vals);
   chart.priceScale("right").applyOptions({ mode: D.max / Math.max(D.min, 1e-9) > 20 ? 1 : 0 });
 
   sGhost.setData(D.timeline.map(t => ({ time: t.time, value: t.value })));
   sBase.setData(D.base);
-  sLo.setData(D.future ? D.proj.lo : []);
-  sHi.setData(D.future ? D.proj.hi : []);
 
   const scrub = $("scrub");
   scrub.max = String(D.timeline.length - 1);
@@ -719,7 +712,6 @@ function showReadout(i, animate) {
     `Pusiste <b>${usd(t.invested)}</b>${D.dca ? ` en ${D.timeline.slice(0, i + 1).filter((p, j, arr) => j === 0 || p.invested !== arr[j - 1].invested).length} aportes` : ""}`,
     `${gain >= 0 ? "Ganancia" : "Pérdida"} <b class="${gain >= 0 ? "gain" : "loss"}">${usd(Math.abs(gain))}</b>`,
   ];
-  if (t.proj) facts.push(`Rango estimado <b>${usd(t.lo)}</b> a <b>${usd(t.hi)}</b>`);
   $("facts").innerHTML = facts.map(f => `<span>${f}</span>`).join("");
   setNumber(t.value, animate && !reduceMotion);
 }
