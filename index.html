@@ -291,6 +291,7 @@ footer a { color: var(--cyan); }
       </div>
       <button type="button" class="btn" id="dice"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="3" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="5" cy="5" r="1.2" fill="currentColor"/><circle cx="11" cy="11" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/></svg><span data-i18n="dice">Sorpréndeme</span></button>
       <button type="button" class="btn" id="share"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 9.5l3-3M5 11a2.5 2.5 0 0 1 0-3.5l1.5-1.5M11 5a2.5 2.5 0 0 1 0 3.5L9.5 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="share">Copiar link</span></button>
+      <button type="button" class="btn" id="save"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8m0 0l-3-3m3 3l3-3M3 11v2.5h10V11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="save">Guardar imagen</span></button>
     </div>
   </header>
 
@@ -449,7 +450,7 @@ const I18N = {
     futPick: m => `Elegí un mes posterior a ${m} como fecha final, o <button type="button" class="linkbtn" id="go10">mirá 10 años para adelante</button>.`,
     race: "Carrera", noDataTo: m => `sin datos hasta ${m}`, remove: n => `Quitar ${n}`, since: m => `desde ${m}`, findOther: "Buscar otro…",
     verdict: (m, w, v, x, d, s) => `En ${m} va primero <b>${w}</b>, con ${v} (${x}). Le saca ${d} a ${s}.`,
-    copyBox: "Copiá el link de la caja", copied: "Link copiado", loadFail: "No pude cargar ese activo", loadFailLong: "No pude cargar ese activo. Probá con otro.",
+    copyBox: "Copiá el link de la caja", copied: "Link copiado", save: "Guardar imagen", saving: "Armando la imagen…", saved: "Imagen guardada", saveFail: "No pude armar la imagen", notAdvice: "Simulación con datos históricos. No es una recomendación de inversión.", loadFail: "No pude cargar ese activo", loadFailLong: "No pude cargar ese activo. Probá con otro.",
     amountZero: "Escribí un monto mayor a cero.", fake: "Datos simulados de prueba",
     asofClose: (y, m, d) => `Datos al cierre del ${d}/${m}/${y}`, asofDay: d => `Datos al ${d}`,
     day: (d, m, y) => `${d} ${m} ${y}`,
@@ -482,7 +483,7 @@ const I18N = {
     futPick: m => `Pick an end month after ${m}, or <button type="button" class="linkbtn" id="go10">look 10 years ahead</button>.`,
     race: "Race", noDataTo: m => `no data through ${m}`, remove: n => `Remove ${n}`, since: m => `since ${m}`, findOther: "Find another…",
     verdict: (m, w, v, x, d, s) => `In ${m}, <b>${w}</b> leads with ${v} (${x}), ${d} ahead of ${s}.`,
-    copyBox: "Copy the link from the box", copied: "Link copied", loadFail: "Couldn't load that asset", loadFailLong: "Couldn't load that asset. Try another one.",
+    copyBox: "Copy the link from the box", copied: "Link copied", save: "Save image", saving: "Building the image…", saved: "Image saved", saveFail: "Couldn't build the image", notAdvice: "Simulation with historical data. Not investment advice.", loadFail: "Couldn't load that asset", loadFailLong: "Couldn't load that asset. Try another one.",
     amountZero: "Enter an amount greater than zero.", fake: "Simulated test data",
     asofClose: (y, m, d) => `Data as of ${I18N.en.months[m - 1]} ${d}, ${y} close`, asofDay: d => `Data as of ${d}`,
     day: (d, m, y) => `${m} ${d}, ${y}`,
@@ -1119,6 +1120,114 @@ $("share").addEventListener("click", () => {
   const url = location.href;
   const fallback = () => { const b = $("share-box"); b.hidden = false; b.value = url; b.focus(); b.select(); toast(T.copyBox); };
   try { navigator.clipboard.writeText(url).then(() => toast(T.copied), fallback); } catch (e) { fallback(); }
+});
+
+
+// ================================================================ guardar imagen (resumen en PNG)
+function wrapText(ctx, text, x, y, maxW, lh) {
+  const words = text.split(/\s+/); let line = "", lines = [];
+  for (const w of words) { const t = line ? line + " " + w : w; if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t; }
+  if (line) lines.push(line);
+  lines.forEach((l, i) => ctx.fillText(l, x, y + i * lh));
+  return y + lines.length * lh;
+}
+async function buildImage() {
+  try { await document.fonts.ready; } catch (e) { /* sin API de fuentes */ }
+  const W = 1080, P = 64, cw = W - 2 * P;
+  const C = { void: cssVar("--void"), panel: cssVar("--panel"), line: cssVar("--line"), text: cssVar("--text"), muted: cssVar("--muted"),
+              cyan: cssVar("--cyan"), violet: cssVar("--violet"), gain: cssVar("--mint"), loss: cssVar("--coral") };
+  const F = { d: '"Unbounded", "Segoe UI", sans-serif', n: '"Chakra Petch", "Segoe UI", sans-serif', b: '"Sora", "Segoe UI", sans-serif' };
+  const shot = chart.takeScreenshot();
+  const chartH = Math.round(cw * shot.height / shot.width);
+  const cv = document.createElement("canvas"); cv.width = W; cv.height = 2400;
+  const ctx = cv.getContext("2d");
+  const draw = () => {
+    ctx.fillStyle = C.void; ctx.fillRect(0, 0, W, cv.height);
+    const g = ctx.createRadialGradient(W * .85, 0, 0, W * .85, 0, 800); g.addColorStop(0, "rgba(155,123,255,.25)"); g.addColorStop(1, "rgba(155,123,255,0)");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, cv.height);
+    let y = P + 20;
+    ctx.textBaseline = "alphabetic";
+    ctx.fillStyle = C.text; ctx.font = `800 40px ${F.d}`; ctx.fillText("Portfolito", P, y + 20);
+    ctx.fillStyle = C.muted; ctx.font = `400 24px ${F.b}`; ctx.textAlign = "right"; ctx.fillText($("status").textContent, W - P, y + 16); ctx.textAlign = "left";
+    y += 90;
+    // la pregunta, tal como está armada
+    const q = [T.qIf, T.qIn, $("s-month").selectedOptions[0].text, $("s-year").value, T.qPut, "USD", $("amount").value,
+               $("freq").selectedOptions[0].text, T.qInto, nameOf(asset) + ",", T.qHow, $("e-month").selectedOptions[0].text, $("e-year").value + "?"].join(" ");
+    ctx.fillStyle = C.text; ctx.font = `600 38px ${F.d}`;
+    y = wrapText(ctx, q, P, y, cw, 54) + 30;
+    // el resultado
+    ctx.fillStyle = C.muted; ctx.font = `400 28px ${F.b}`; ctx.fillText($("when").innerText.replace(/\s+/g, " "), P, y); y += 96;
+    ctx.font = `700 96px ${F.n}`; const big = $("num").textContent;
+    const bg = ctx.createLinearGradient(P, 0, P + 600, 0); bg.addColorStop(0, C.cyan); bg.addColorStop(1, C.violet);
+    ctx.fillStyle = C.muted; ctx.font = `600 32px ${F.n}`; ctx.fillText("USD", P, y);
+    const ux = P + ctx.measureText("USD ").width + 6;
+    ctx.fillStyle = bg; ctx.font = `700 96px ${F.n}`; ctx.fillText(($("est").hidden ? "" : "~") + big, ux, y);
+    const mx = ux + ctx.measureText(($("est").hidden ? "" : "~") + big).width + 22;
+    ctx.font = `600 30px ${F.n}`; ctx.fillStyle = $("mult").classList.contains("down") ? C.loss : C.gain; ctx.fillText($("mult").textContent, mx, y - 8);
+    y += 54;
+    ctx.font = `400 28px ${F.b}`;
+    [...$("facts").children].forEach(el => {
+      const isGain = el.querySelector(".gain"), isLoss = el.querySelector(".loss");
+      ctx.fillStyle = C.muted; const label = el.childNodes[0].textContent; ctx.fillText(label, P, y);
+      const lw = ctx.measureText(label).width;
+      const b = el.querySelector("b"); ctx.font = `600 28px ${F.b}`; ctx.fillStyle = isGain ? C.gain : isLoss ? C.loss : C.text;
+      ctx.fillText(b ? b.textContent : "", P + lw, y);
+      const rest = [...el.childNodes].slice(2).map(n => n.textContent).join("");
+      ctx.font = `400 28px ${F.b}`; ctx.fillStyle = C.muted; if (rest) ctx.fillText(rest, P + lw + ctx.measureText(b ? b.textContent : "").width + 2, y);
+      y += 42;
+    });
+    y += 18;
+    // el gráfico, con leyenda
+    const legend = [[C.cyan, asset.short], ...D.race.filter(r => r.sim).map(r => [cssVar(r.color), r.a.short]), [C.muted, T.youPut]];
+    if (D.future) legend.push([C.violet, T.projection]);
+    ctx.font = `400 24px ${F.b}`; let lx = P;
+    legend.forEach(([c, l]) => { const w = ctx.measureText(l).width + 56; if (lx + w > W - P) { lx = P; y += 36; }
+      ctx.fillStyle = c; ctx.fillRect(lx, y - 9, 26, 4); ctx.fillStyle = C.muted; ctx.fillText(l, lx + 34, y); lx += w; });
+    y += 26;
+    ctx.fillStyle = C.panel; ctx.strokeStyle = C.line; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.roundRect(P - 16, y - 8, cw + 32, chartH + 32, 22); ctx.fill(); ctx.stroke();
+    ctx.drawImage(shot, P, y + 8, cw, chartH);
+    y += chartH + 70;
+    // números clave
+    const cells = [...$("strip").querySelectorAll(".cell")];
+    const cwid = (cw - 2 * 24) / cells.length;
+    cells.forEach((el, i) => {
+      const x = P + i * (cwid + 24), v = el.querySelector(".v");
+      ctx.fillStyle = C.muted; ctx.font = `500 22px ${F.b}`; ctx.fillText(el.querySelector(".k").textContent.toUpperCase(), x, y);
+      ctx.fillStyle = v.classList.contains("gain") ? C.gain : v.classList.contains("loss") ? C.loss : C.text; ctx.font = `700 40px ${F.n}`;
+      ctx.fillText(v.textContent, x, y + 50);
+      ctx.fillStyle = C.muted; ctx.font = `400 20px ${F.b}`; wrapText(ctx, el.querySelector(".s").textContent, x, y + 84, cwid, 28);
+    });
+    y += 160;
+    if (!$("verdict").hidden) { ctx.fillStyle = C.text; ctx.font = `400 28px ${F.b}`; y = wrapText(ctx, $("verdict").innerText, P, y, cw, 40) + 24; }
+    // pie
+    ctx.strokeStyle = C.line; ctx.beginPath(); ctx.moveTo(P, y); ctx.lineTo(W - P, y); ctx.stroke(); y += 44;
+    ctx.fillStyle = C.cyan; ctx.font = `600 26px ${F.d}`; ctx.fillText(location.host, P, y);
+    ctx.fillStyle = C.muted; ctx.font = `400 20px ${F.b}`; y = wrapText(ctx, T.notAdvice, P, y + 36, cw, 28) + P - 20;
+    return y;
+  };
+  const h = draw();                 // primera pasada para medir el alto
+  cv.height = Math.ceil(h); draw();
+  return new Promise((res, rej) => cv.toBlob(b => b ? res(b) : rej(new Error("toBlob")), "image/png"));
+}
+$("save").addEventListener("click", async () => {
+  if (!D || !asset) return;
+  stopPlay();
+  toast(T.saving);
+  let blob;
+  try { blob = await buildImage(); } catch (e) { toast(T.saveFail); return; }
+  const name = `portfolito-${asset.id}-${startKey()}.png`;
+  const file = new File([blob], name, { type: "image/png" });
+  const touch = matchMedia("(pointer: coarse)").matches;
+  if (touch && navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { writeHash(); await navigator.share({ files: [file], title: "Portfolito", text: location.href }); return; }
+    catch (e) { if (e && e.name === "AbortError") return; }
+  }
+  const url = URL.createObjectURL(blob);
+  const a = Object.assign(document.createElement("a"), { href: url, download: name });
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  toast(T.saved);
 });
 
 // ================================================================ cambios de escenario
