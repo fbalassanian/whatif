@@ -219,7 +219,7 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .field label { font-size: 12px; color: var(--muted); }
 .field .row { display: flex; align-items: center; gap: 12px; }
 .field output { font-family: var(--digits); font-weight: 600; font-size: 16px; min-width: 4.5ch; text-align: right; color: var(--violet); }
-#rate { flex: 1; accent-color: var(--violet); min-width: 0; }
+#rate-row { max-width: 160px; }
 .rate-field { grid-column: 1 / -1; }
 .rate-head { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: space-between; }
 .ratemode { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; }
@@ -320,7 +320,7 @@ footer a { color: var(--cyan); }
             <button type="button" data-mode="year" aria-pressed="false">Año por año</button>
           </div>
         </div>
-        <div class="row" id="rate-row"><input id="rate" type="range" min="0" max="30" step="0.5" value="8"><output id="rate-o" for="rate"></output></div>
+        <div class="yr" id="rate-row"><div class="in"><input id="rate" type="number" inputmode="decimal" step="0.5" min="-90" max="300" value="8"><span>%</span></div></div>
         <div class="years" id="years" hidden></div>
       </div>
       <div class="field" id="contrib-field">
@@ -531,10 +531,10 @@ function project(from, value, toIdx, rateAt, monthly) {
   return { mid: out };
 }
 // rendimiento supuesto: "same" = el del control deslizante; "year" = uno por año calendario (en %)
-let rateMode = "same";
+let rateMode = "same", baseRate = 8;
 const yearRates = new Map();
 function rateAtMonth(i) {
-  const base = Number($("rate").value) / 100;
+  const base = baseRate / 100;
   if (rateMode !== "year") return base;
   const y = Math.floor(i / 12);
   return yearRates.has(y) ? yearRates.get(y) / 100 : base;
@@ -779,7 +779,6 @@ function renderStrip() {
 function renderFuture() {
   $("knobs").disabled = !D.future;
   $("contrib-field").hidden = D.dca;
-  $("rate-o").textContent = fmtNum(Number($("rate").value), 1) + "%";
   $("future-hint").innerHTML = D.future
     ? `De hoy (${lastLabel()}) a ${mLabel(D.end)}: ${fmtNum(D.months / 12, D.months % 12 ? 1 : 0)} años${D.dca ? `, sumando ${usd(D.amount)} por mes` : ""}.`
     : `Elegí un mes posterior a ${mLabel(asset.last)} como fecha final, o <button type="button" class="linkbtn" id="go10">mirá 10 años para adelante</button>.`;
@@ -801,7 +800,7 @@ function renderRates() {
   const key = [first, last, fm, lm].join("-");
   if (key === yearsKey) return;
   yearsKey = key;
-  const base = Number($("rate").value);
+  const base = baseRate;
   let html = "";
   for (let y = first; y <= last; y++) {
     if (!yearRates.has(y)) yearRates.set(y, base);
@@ -860,7 +859,7 @@ function updateRaceValues(key) {
 // Formato: #ticker~inicio~monto~frecuencia~final~dividendos~carrera~rendimiento   (solo letras, números, . - ~ _)
 // rendimiento: "r8" (igual todos los años) o "y2027_8_-10_12.5" (desde ese año, uno por año)
 function rateToken() {
-  const base = Number($("rate").value);
+  const base = baseRate;
   if (rateMode !== "year" || !yearRange) return "r" + base;
   const vals = [];
   for (let y = yearRange[0]; y <= yearRange[1]; y++) vals.push(yearRates.has(y) ? yearRates.get(y) : base);
@@ -927,7 +926,14 @@ $("ticker").addEventListener("input", () => {
 $("s-year").addEventListener("input", () => { fillStartMonth($("s-month").value); fillEnd(endKey()); render(); });
 $("s-month").addEventListener("input", () => { fillEnd(endKey()); render(); });
 $("e-year").addEventListener("input", () => { fillEndMonth($("e-month").value); render(); });
-["e-month", "rate", "contrib", "reinvest", "freq"].forEach(id => $(id).addEventListener("input", render));
+["e-month", "contrib", "reinvest", "freq"].forEach(id => $(id).addEventListener("input", render));
+$("rate").addEventListener("input", () => {
+  const el = $("rate"), v = Number(el.value);
+  if (el.value === "" || !isFinite(v)) return;                // a mitad de escribir ("-", vacío): esperar
+  baseRate = Math.max(-90, Math.min(300, v));
+  el.classList.toggle("neg", v < 0);
+  render();
+});
 document.querySelectorAll(".ratemode button").forEach(b => b.addEventListener("click", () => {
   rateMode = b.dataset.mode; yearsKey = ""; render();
 }));
@@ -976,7 +982,7 @@ $("dice").addEventListener("click", async () => {
     $("freq").value = st.freq;
     $("reinvest").checked = st.reinvest;
     if (st.amount) $("amount").value = fmtNum(st.amount);
-    if (st.rate?.mode === "same") $("rate").value = String(Math.min(30, Math.max(0, st.rate.base)));
+    if (st.rate?.mode === "same") { baseRate = Math.max(-90, Math.min(300, st.rate.base)); $("rate").value = String(baseRate); $("rate").classList.toggle("neg", baseRate < 0); }
     if (st.rate?.mode === "year") { rateMode = "year"; st.rate.years.forEach(([y, v]) => yearRates.set(y, v)); }
     for (const id of st.race) { try { race.push({ id, asset: await getAsset(id) }); } catch (e) { /* se omite */ } }
     await selectAsset(st.start, st.end);
