@@ -4,57 +4,633 @@
  "assets": [
   {
    "id": "SPY",
-   "name": "S&P 500 (SPY)",
-   "group": "Índices y ETFs",
+   "name": "S&P 500 SPDR (SPY)",
+   "group": "ETFs",
    "yahoo": "SPY"
   },
   {
+   "id": "VOO",
+   "name": "S&P 500 Vanguard (VOO)",
+   "group": "ETFs",
+   "yahoo": "VOO"
+  },
+  {
+   "id": "IVV",
+   "name": "S&P 500 iShares (IVV)",
+   "group": "ETFs",
+   "yahoo": "IVV"
+  },
+  {
+   "id": "RSP",
+   "name": "S&P 500 equiponderado (RSP)",
+   "group": "ETFs",
+   "yahoo": "RSP"
+  },
+  {
    "id": "QQQ",
-   "name": "Nasdaq 100 (QQQ)",
-   "group": "Índices y ETFs",
+   "name": "Nasdaq 100 Invesco (QQQ)",
+   "group": "ETFs",
    "yahoo": "QQQ"
+  },
+  {
+   "id": "QQQM",
+   "name": "Nasdaq 100 Invesco, mini (QQQM)",
+   "group": "ETFs",
+   "yahoo": "QQQM"
   },
   {
    "id": "DIA",
    "name": "Dow Jones (DIA)",
-   "group": "Índices y ETFs",
+   "group": "ETFs",
    "yahoo": "DIA"
   },
   {
    "id": "IWM",
    "name": "Russell 2000 (IWM)",
-   "group": "Índices y ETFs",
+   "group": "ETFs",
    "yahoo": "IWM"
   },
   {
    "id": "VTI",
    "name": "Mercado total EE.UU. (VTI)",
-   "group": "Índices y ETFs",
+   "group": "ETFs",
    "yahoo": "VTI"
   },
   {
-   "id": "EEM",
-   "name": "Emergentes (EEM)",
-   "group": "Índices y ETFs",
-   "yahoo": "EEM"
+   "id": "MDY",
+   "name": "S&P MidCap 400 (MDY)",
+   "group": "ETFs",
+   "yahoo": "MDY"
+  },
+  {
+   "id": "IJH",
+   "name": "S&P MidCap 400 iShares (IJH)",
+   "group": "ETFs",
+   "yahoo": "IJH"
+  },
+  {
+   "id": "IJR",
+   "name": "S&P SmallCap 600 (IJR)",
+   "group": "ETFs",
+   "yahoo": "IJR"
+  },
+  {
+   "id": "VUG",
+   "name": "Crecimiento EE.UU. Vanguard (VUG)",
+   "group": "ETFs",
+   "yahoo": "VUG"
+  },
+  {
+   "id": "VTV",
+   "name": "Valor EE.UU. Vanguard (VTV)",
+   "group": "ETFs",
+   "yahoo": "VTV"
+  },
+  {
+   "id": "IWF",
+   "name": "Russell 1000 Crecimiento (IWF)",
+   "group": "ETFs",
+   "yahoo": "IWF"
+  },
+  {
+   "id": "IWD",
+   "name": "Russell 1000 Valor (IWD)",
+   "group": "ETFs",
+   "yahoo": "IWD"
+  },
+  {
+   "id": "MTUM",
+   "name": "Momentum EE.UU. (MTUM)",
+   "group": "ETFs",
+   "yahoo": "MTUM"
+  },
+  {
+   "id": "USMV",
+   "name": "Baja volatilidad EE.UU. (USMV)",
+   "group": "ETFs",
+   "yahoo": "USMV"
+  },
+  {
+   "id": "SCHD",
+   "name": "Dividendos EE.UU. Schwab (SCHD)",
+   "group": "ETFs",
+   "yahoo": "SCHD"
+  },
+  {
+   "id": "VIG",
+   "name": "Dividendos crecientes Vanguard (VIG)",
+   "group": "ETFs",
+   "yahoo": "VIG"
+  },
+  {
+   "id": "VYM",
+   "name": "Alto dividendo Vanguard (VYM)",
+   "group": "ETFs",
+   "yahoo": "VYM"
+  },
+  {
+   "id": "DGRO",
+   "name": "Crecimiento de dividendos iShares (DGRO)",
+   "group": "ETFs",
+   "yahoo": "DGRO"
+  },
+  {
+   "id": "HDV",
+   "name": "Alto dividendo iShares (HDV)",
+   "group": "ETFs",
+   "yahoo": "HDV"
+  },
+  {
+   "id": "NOBL",
+   "name": "Aristócratas del dividendo (NOBL)",
+   "group": "ETFs",
+   "yahoo": "NOBL"
+  },
+  {
+   "id": "JEPI",
+   "name": "Ingreso premium S&P 500 JPMorgan (JEPI)",
+   "group": "ETFs",
+   "yahoo": "JEPI"
+  },
+  {
+   "id": "JEPQ",
+   "name": "Ingreso premium Nasdaq JPMorgan (JEPQ)",
+   "group": "ETFs",
+   "yahoo": "JEPQ"
+  },
+  {
+   "id": "XLK",
+   "name": "Sector tecnología (XLK)",
+   "group": "ETFs",
+   "yahoo": "XLK"
+  },
+  {
+   "id": "XLF",
+   "name": "Sector financiero (XLF)",
+   "group": "ETFs",
+   "yahoo": "XLF"
+  },
+  {
+   "id": "XLE",
+   "name": "Sector energía (XLE)",
+   "group": "ETFs",
+   "yahoo": "XLE"
+  },
+  {
+   "id": "XLV",
+   "name": "Sector salud (XLV)",
+   "group": "ETFs",
+   "yahoo": "XLV"
+  },
+  {
+   "id": "XLY",
+   "name": "Sector consumo discrecional (XLY)",
+   "group": "ETFs",
+   "yahoo": "XLY"
+  },
+  {
+   "id": "XLP",
+   "name": "Sector consumo básico (XLP)",
+   "group": "ETFs",
+   "yahoo": "XLP"
+  },
+  {
+   "id": "XLI",
+   "name": "Sector industrial (XLI)",
+   "group": "ETFs",
+   "yahoo": "XLI"
+  },
+  {
+   "id": "XLU",
+   "name": "Sector servicios públicos (XLU)",
+   "group": "ETFs",
+   "yahoo": "XLU"
+  },
+  {
+   "id": "XLB",
+   "name": "Sector materiales (XLB)",
+   "group": "ETFs",
+   "yahoo": "XLB"
+  },
+  {
+   "id": "XLRE",
+   "name": "Sector inmobiliario (XLRE)",
+   "group": "ETFs",
+   "yahoo": "XLRE"
+  },
+  {
+   "id": "XLC",
+   "name": "Sector comunicaciones (XLC)",
+   "group": "ETFs",
+   "yahoo": "XLC"
+  },
+  {
+   "id": "VGT",
+   "name": "Tecnología Vanguard (VGT)",
+   "group": "ETFs",
+   "yahoo": "VGT"
+  },
+  {
+   "id": "SMH",
+   "name": "Semiconductores VanEck (SMH)",
+   "group": "ETFs",
+   "yahoo": "SMH"
+  },
+  {
+   "id": "SOXX",
+   "name": "Semiconductores iShares (SOXX)",
+   "group": "ETFs",
+   "yahoo": "SOXX"
+  },
+  {
+   "id": "IBB",
+   "name": "Biotecnología iShares (IBB)",
+   "group": "ETFs",
+   "yahoo": "IBB"
+  },
+  {
+   "id": "XBI",
+   "name": "Biotecnología SPDR (XBI)",
+   "group": "ETFs",
+   "yahoo": "XBI"
+  },
+  {
+   "id": "KRE",
+   "name": "Bancos regionales (KRE)",
+   "group": "ETFs",
+   "yahoo": "KRE"
+  },
+  {
+   "id": "ITA",
+   "name": "Aeroespacial y defensa (ITA)",
+   "group": "ETFs",
+   "yahoo": "ITA"
+  },
+  {
+   "id": "XHB",
+   "name": "Construcción de viviendas (XHB)",
+   "group": "ETFs",
+   "yahoo": "XHB"
+  },
+  {
+   "id": "JETS",
+   "name": "Aerolíneas (JETS)",
+   "group": "ETFs",
+   "yahoo": "JETS"
+  },
+  {
+   "id": "ARKK",
+   "name": "Innovación ARK (ARKK)",
+   "group": "ETFs",
+   "yahoo": "ARKK"
+  },
+  {
+   "id": "ICLN",
+   "name": "Energía limpia (ICLN)",
+   "group": "ETFs",
+   "yahoo": "ICLN"
+  },
+  {
+   "id": "TAN",
+   "name": "Energía solar (TAN)",
+   "group": "ETFs",
+   "yahoo": "TAN"
+  },
+  {
+   "id": "LIT",
+   "name": "Litio y baterías (LIT)",
+   "group": "ETFs",
+   "yahoo": "LIT"
+  },
+  {
+   "id": "URA",
+   "name": "Uranio (URA)",
+   "group": "ETFs",
+   "yahoo": "URA"
+  },
+  {
+   "id": "BOTZ",
+   "name": "Robótica e IA (BOTZ)",
+   "group": "ETFs",
+   "yahoo": "BOTZ"
+  },
+  {
+   "id": "CIBR",
+   "name": "Ciberseguridad (CIBR)",
+   "group": "ETFs",
+   "yahoo": "CIBR"
+  },
+  {
+   "id": "IGV",
+   "name": "Software (IGV)",
+   "group": "ETFs",
+   "yahoo": "IGV"
+  },
+  {
+   "id": "IBIT",
+   "name": "Bitcoin iShares (IBIT)",
+   "group": "ETFs",
+   "yahoo": "IBIT"
+  },
+  {
+   "id": "FBTC",
+   "name": "Bitcoin Fidelity (FBTC)",
+   "group": "ETFs",
+   "yahoo": "FBTC"
+  },
+  {
+   "id": "ETHA",
+   "name": "Ethereum iShares (ETHA)",
+   "group": "ETFs",
+   "yahoo": "ETHA"
+  },
+  {
+   "id": "ARGT",
+   "name": "Argentina Global X (ARGT)",
+   "group": "ETFs",
+   "yahoo": "ARGT"
   },
   {
    "id": "EWZ",
    "name": "Brasil (EWZ)",
-   "group": "Índices y ETFs",
+   "group": "ETFs",
    "yahoo": "EWZ"
   },
   {
+   "id": "ILF",
+   "name": "Latinoamérica 40 (ILF)",
+   "group": "ETFs",
+   "yahoo": "ILF"
+  },
+  {
+   "id": "EWW",
+   "name": "México (EWW)",
+   "group": "ETFs",
+   "yahoo": "EWW"
+  },
+  {
+   "id": "ECH",
+   "name": "Chile (ECH)",
+   "group": "ETFs",
+   "yahoo": "ECH"
+  },
+  {
+   "id": "FXI",
+   "name": "China grandes empresas (FXI)",
+   "group": "ETFs",
+   "yahoo": "FXI"
+  },
+  {
+   "id": "MCHI",
+   "name": "China MSCI (MCHI)",
+   "group": "ETFs",
+   "yahoo": "MCHI"
+  },
+  {
+   "id": "KWEB",
+   "name": "Internet China (KWEB)",
+   "group": "ETFs",
+   "yahoo": "KWEB"
+  },
+  {
+   "id": "EWJ",
+   "name": "Japón (EWJ)",
+   "group": "ETFs",
+   "yahoo": "EWJ"
+  },
+  {
+   "id": "INDA",
+   "name": "India (INDA)",
+   "group": "ETFs",
+   "yahoo": "INDA"
+  },
+  {
+   "id": "EWY",
+   "name": "Corea del Sur (EWY)",
+   "group": "ETFs",
+   "yahoo": "EWY"
+  },
+  {
+   "id": "EWT",
+   "name": "Taiwán (EWT)",
+   "group": "ETFs",
+   "yahoo": "EWT"
+  },
+  {
+   "id": "EWG",
+   "name": "Alemania (EWG)",
+   "group": "ETFs",
+   "yahoo": "EWG"
+  },
+  {
+   "id": "EWU",
+   "name": "Reino Unido (EWU)",
+   "group": "ETFs",
+   "yahoo": "EWU"
+  },
+  {
+   "id": "EZU",
+   "name": "Eurozona (EZU)",
+   "group": "ETFs",
+   "yahoo": "EZU"
+  },
+  {
+   "id": "VGK",
+   "name": "Europa Vanguard (VGK)",
+   "group": "ETFs",
+   "yahoo": "VGK"
+  },
+  {
+   "id": "EEM",
+   "name": "Emergentes iShares (EEM)",
+   "group": "ETFs",
+   "yahoo": "EEM"
+  },
+  {
+   "id": "VWO",
+   "name": "Emergentes Vanguard (VWO)",
+   "group": "ETFs",
+   "yahoo": "VWO"
+  },
+  {
+   "id": "IEMG",
+   "name": "Emergentes Core iShares (IEMG)",
+   "group": "ETFs",
+   "yahoo": "IEMG"
+  },
+  {
+   "id": "EFA",
+   "name": "Desarrollados ex EE.UU. iShares (EFA)",
+   "group": "ETFs",
+   "yahoo": "EFA"
+  },
+  {
+   "id": "VEA",
+   "name": "Desarrollados ex EE.UU. Vanguard (VEA)",
+   "group": "ETFs",
+   "yahoo": "VEA"
+  },
+  {
+   "id": "VXUS",
+   "name": "Mundo ex EE.UU. Vanguard (VXUS)",
+   "group": "ETFs",
+   "yahoo": "VXUS"
+  },
+  {
+   "id": "ACWI",
+   "name": "Mundo iShares (ACWI)",
+   "group": "ETFs",
+   "yahoo": "ACWI"
+  },
+  {
+   "id": "VT",
+   "name": "Mundo Vanguard (VT)",
+   "group": "ETFs",
+   "yahoo": "VT"
+  },
+  {
+   "id": "BIL",
+   "name": "Letras del Tesoro 1-3 meses (BIL)",
+   "group": "ETFs",
+   "yahoo": "BIL"
+  },
+  {
+   "id": "SGOV",
+   "name": "Letras del Tesoro 0-3 meses (SGOV)",
+   "group": "ETFs",
+   "yahoo": "SGOV"
+  },
+  {
+   "id": "SHY",
+   "name": "Tesoro 1-3 años (SHY)",
+   "group": "ETFs",
+   "yahoo": "SHY"
+  },
+  {
+   "id": "IEF",
+   "name": "Tesoro 7-10 años (IEF)",
+   "group": "ETFs",
+   "yahoo": "IEF"
+  },
+  {
+   "id": "TLT",
+   "name": "Tesoro 20+ años (TLT)",
+   "group": "ETFs",
+   "yahoo": "TLT"
+  },
+  {
+   "id": "TIP",
+   "name": "Tesoro ajustado por inflación (TIP)",
+   "group": "ETFs",
+   "yahoo": "TIP"
+  },
+  {
+   "id": "BND",
+   "name": "Bonos EE.UU. total Vanguard (BND)",
+   "group": "ETFs",
+   "yahoo": "BND"
+  },
+  {
+   "id": "AGG",
+   "name": "Bonos EE.UU. total iShares (AGG)",
+   "group": "ETFs",
+   "yahoo": "AGG"
+  },
+  {
+   "id": "LQD",
+   "name": "Bonos corporativos grado inversión (LQD)",
+   "group": "ETFs",
+   "yahoo": "LQD"
+  },
+  {
+   "id": "HYG",
+   "name": "Bonos high yield (HYG)",
+   "group": "ETFs",
+   "yahoo": "HYG"
+  },
+  {
+   "id": "EMB",
+   "name": "Bonos emergentes en dólares (EMB)",
+   "group": "ETFs",
+   "yahoo": "EMB"
+  },
+  {
    "id": "GLD",
-   "name": "Oro (GLD)",
-   "group": "Índices y ETFs",
+   "name": "Oro SPDR (GLD)",
+   "group": "ETFs",
    "yahoo": "GLD"
+  },
+  {
+   "id": "IAU",
+   "name": "Oro iShares (IAU)",
+   "group": "ETFs",
+   "yahoo": "IAU"
   },
   {
    "id": "SLV",
    "name": "Plata (SLV)",
-   "group": "Índices y ETFs",
+   "group": "ETFs",
    "yahoo": "SLV"
+  },
+  {
+   "id": "GDX",
+   "name": "Mineras de oro (GDX)",
+   "group": "ETFs",
+   "yahoo": "GDX"
+  },
+  {
+   "id": "GDXJ",
+   "name": "Mineras de oro junior (GDXJ)",
+   "group": "ETFs",
+   "yahoo": "GDXJ"
+  },
+  {
+   "id": "COPX",
+   "name": "Mineras de cobre (COPX)",
+   "group": "ETFs",
+   "yahoo": "COPX"
+  },
+  {
+   "id": "USO",
+   "name": "Petróleo (USO)",
+   "group": "ETFs",
+   "yahoo": "USO"
+  },
+  {
+   "id": "UNG",
+   "name": "Gas natural (UNG)",
+   "group": "ETFs",
+   "yahoo": "UNG"
+  },
+  {
+   "id": "DBC",
+   "name": "Materias primas canasta (DBC)",
+   "group": "ETFs",
+   "yahoo": "DBC"
+  },
+  {
+   "id": "TQQQ",
+   "name": "Nasdaq 100 x3 (TQQQ)",
+   "group": "ETFs",
+   "yahoo": "TQQQ"
+  },
+  {
+   "id": "SQQQ",
+   "name": "Nasdaq 100 x3 inverso (SQQQ)",
+   "group": "ETFs",
+   "yahoo": "SQQQ"
+  },
+  {
+   "id": "SPXL",
+   "name": "S&P 500 x3 (SPXL)",
+   "group": "ETFs",
+   "yahoo": "SPXL"
+  },
+  {
+   "id": "SOXL",
+   "name": "Semiconductores x3 (SOXL)",
+   "group": "ETFs",
+   "yahoo": "SOXL"
   },
   {
    "id": "GGAL",
@@ -3393,6 +3969,12 @@
    "yahoo": "AVAX-USD"
   },
   {
+   "id": "SUI",
+   "name": "Sui (SUI)",
+   "group": "Cripto",
+   "yahoo": "SUI20947-USD"
+  },
+  {
    "id": "CC",
    "name": "Canton (CC)",
    "group": "Cripto",
@@ -3483,16 +4065,16 @@
    "yahoo": "DOT-USD"
   },
   {
-   "id": "PEPE",
-   "name": "Pepe (PEPE)",
-   "group": "Cripto",
-   "yahoo": "PEPE24478-USD"
-  },
-  {
    "id": "ASTER",
    "name": "Aster (ASTER)",
    "group": "Cripto",
    "yahoo": "ASTER36341-USD"
+  },
+  {
+   "id": "PEPE",
+   "name": "Pepe (PEPE)",
+   "group": "Cripto",
+   "yahoo": "PEPE24478-USD"
   },
   {
    "id": "SKY",
@@ -3507,16 +4089,16 @@
    "yahoo": "MNT-USD"
   },
   {
-   "id": "WLFI",
-   "name": "World Liberty Financial (WLFI)",
-   "group": "Cripto",
-   "yahoo": "WLFI-USD"
-  },
-  {
    "id": "M",
    "name": "MemeCore (M)",
    "group": "Cripto",
    "yahoo": "M-USD"
+  },
+  {
+   "id": "WLFI",
+   "name": "World Liberty Financial (WLFI)",
+   "group": "Cripto",
+   "yahoo": "WLFI-USD"
   },
   {
    "id": "MORPHO",
@@ -3579,6 +4161,12 @@
    "yahoo": "JUP-USD"
   },
   {
+   "id": "ALGO",
+   "name": "Algorand (ALGO)",
+   "group": "Cripto",
+   "yahoo": "ALGO-USD"
+  },
+  {
    "id": "KAS",
    "name": "Kaspa (KAS)",
    "group": "Cripto",
@@ -3589,12 +4177,6 @@
    "name": "KuCoin (KCS)",
    "group": "Cripto",
    "yahoo": "KCS-USD"
-  },
-  {
-   "id": "ALGO",
-   "name": "Algorand (ALGO)",
-   "group": "Cripto",
-   "yahoo": "ALGO-USD"
   },
   {
    "id": "RENDER",
@@ -3609,6 +4191,12 @@
    "yahoo": "ATOM-USD"
   },
   {
+   "id": "FIL",
+   "name": "Filecoin (FIL)",
+   "group": "Cripto",
+   "yahoo": "FIL-USD"
+  },
+  {
    "id": "INJ",
    "name": "Injective (INJ)",
    "group": "Cripto",
@@ -3621,16 +4209,16 @@
    "yahoo": "AERO-USD"
   },
   {
+   "id": "LIT-USD",
+   "name": "Lighter (LIT)",
+   "group": "Cripto",
+   "yahoo": "LIT39125-USD"
+  },
+  {
    "id": "NEXO",
    "name": "NEXO (NEXO)",
    "group": "Cripto",
    "yahoo": "NEXO-USD"
-  },
-  {
-   "id": "LIT",
-   "name": "Lighter (LIT)",
-   "group": "Cripto",
-   "yahoo": "LIT39125-USD"
   },
   {
    "id": "ZRO",
@@ -3639,28 +4227,28 @@
    "yahoo": "ZRO26997-USD"
   },
   {
-   "id": "PEARL",
-   "name": "Pearl (PEARL)",
-   "group": "Cripto",
-   "yahoo": "PEARL41876-USD"
-  },
-  {
    "id": "APT",
    "name": "Aptos (APT)",
    "group": "Cripto",
    "yahoo": "APT21794-USD"
   },
   {
-   "id": "CAKE",
-   "name": "PancakeSwap (CAKE)",
+   "id": "PEARL",
+   "name": "Pearl (PEARL)",
    "group": "Cripto",
-   "yahoo": "CAKE-USD"
+   "yahoo": "PEARL41876-USD"
   },
   {
    "id": "AKE",
    "name": "Akedo (AKE)",
    "group": "Cripto",
    "yahoo": "AKE-USD"
+  },
+  {
+   "id": "CAKE",
+   "name": "PancakeSwap (CAKE)",
+   "group": "Cripto",
+   "yahoo": "CAKE-USD"
   },
   {
    "id": "ETHFI",
@@ -3681,16 +4269,16 @@
    "yahoo": "NIGHT-USD"
   },
   {
-   "id": "XDC",
-   "name": "XDC Network (XDC)",
-   "group": "Cripto",
-   "yahoo": "XDC-USD"
-  },
-  {
    "id": "DASH-USD",
    "name": "Dash (DASH)",
    "group": "Cripto",
    "yahoo": "DASH-USD"
+  },
+  {
+   "id": "XDC",
+   "name": "XDC Network (XDC)",
+   "group": "Cripto",
+   "yahoo": "XDC-USD"
   },
   {
    "id": "PYTH",
@@ -3711,16 +4299,16 @@
    "yahoo": "VET-USD"
   },
   {
-   "id": "Q-USD",
-   "name": "Quack AI (Q)",
-   "group": "Cripto",
-   "yahoo": "Q38236-USD"
-  },
-  {
    "id": "CRV",
    "name": "Curve DAO (CRV)",
    "group": "Cripto",
    "yahoo": "CRV-USD"
+  },
+  {
+   "id": "Q-USD",
+   "name": "Quack AI (Q)",
+   "group": "Cripto",
+   "yahoo": "Q38236-USD"
   },
   {
    "id": "BDX-USD",
@@ -3741,16 +4329,16 @@
    "yahoo": "RAY-USD"
   },
   {
-   "id": "PENGU",
-   "name": "Pudgy Penguins (PENGU)",
-   "group": "Cripto",
-   "yahoo": "PENGU34466-USD"
-  },
-  {
    "id": "TRUMP",
    "name": "Official Trump (TRUMP)",
    "group": "Cripto",
    "yahoo": "TRUMP35336-USD"
+  },
+  {
+   "id": "PENGU",
+   "name": "Pudgy Penguins (PENGU)",
+   "group": "Cripto",
+   "yahoo": "PENGU34466-USD"
   },
   {
    "id": "A7A5",
@@ -3786,7 +4374,7 @@
    "id": "GRASS",
    "name": "Grass (GRASS)",
    "group": "Cripto",
-   "yahoo": "GRASS32956-USD"
+   "yahoo": "GRASS32276-USD"
   },
   {
    "id": "SEI",
@@ -3825,22 +4413,16 @@
    "yahoo": "SPX28081-USD"
   },
   {
-   "id": "BTT",
-   "name": "BitTorrent (BTT)",
-   "group": "Cripto",
-   "yahoo": "BTT-USD"
-  },
-  {
    "id": "XPL",
    "name": "Plasma (XPL)",
    "group": "Cripto",
    "yahoo": "XPL-USD"
   },
   {
-   "id": "LDO",
-   "name": "Lido DAO (LDO)",
+   "id": "BTT",
+   "name": "BitTorrent (BTT)",
    "group": "Cripto",
-   "yahoo": "LDO-USD"
+   "yahoo": "BTT-USD"
   },
   {
    "id": "XTZ",
@@ -3849,10 +4431,10 @@
    "yahoo": "XTZ-USD"
   },
   {
-   "id": "SUN",
-   "name": "Sun Token (SUN)",
+   "id": "LDO",
+   "name": "Lido DAO (LDO)",
    "group": "Cripto",
-   "yahoo": "SUN-USD"
+   "yahoo": "LDO-USD"
   },
   {
    "id": "CARDS",
@@ -3861,16 +4443,10 @@
    "yahoo": "CARDS38283-USD"
   },
   {
-   "id": "BAT",
-   "name": "Basic Attention (BAT)",
+   "id": "SUN",
+   "name": "Sun Token (SUN)",
    "group": "Cripto",
-   "yahoo": "BAT-USD"
-  },
-  {
-   "id": "UB",
-   "name": "Unibase (UB)",
-   "group": "Cripto",
-   "yahoo": "UB38339-USD"
+   "yahoo": "SUN-USD"
   }
  ]
 }
