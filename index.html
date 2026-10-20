@@ -1132,7 +1132,7 @@ function wrapText(ctx, text, x, y, maxW, lh) {
   return y + lines.length * lh;
 }
 async function buildImage() {
-  try { await document.fonts.ready; } catch (e) { /* sin API de fuentes */ }
+  try { await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 1500))]); } catch (e) { /* sin API de fuentes */ }
   const W = 1080, P = 64, cw = W - 2 * P;
   const C = { void: cssVar("--void"), panel: cssVar("--panel"), line: cssVar("--line"), text: cssVar("--text"), muted: cssVar("--muted"),
               cyan: cssVar("--cyan"), violet: cssVar("--violet"), gain: cssVar("--mint"), loss: cssVar("--coral") };
@@ -1157,7 +1157,7 @@ async function buildImage() {
     y = wrapText(ctx, q, P, y, cw, 54) + 30;
     // el resultado
     ctx.fillStyle = C.muted; ctx.font = `400 28px ${F.b}`; ctx.fillText($("when").innerText.replace(/\s+/g, " "), P, y); y += 96;
-    ctx.font = `700 96px ${F.n}`; const big = $("num").textContent;
+    ctx.font = `700 96px ${F.n}`; const big = short(D.timeline[cursor].value);   // el valor final, no el de la animación
     const bg = ctx.createLinearGradient(P, 0, P + 600, 0); bg.addColorStop(0, C.cyan); bg.addColorStop(1, C.violet);
     ctx.fillStyle = C.muted; ctx.font = `600 32px ${F.n}`; ctx.fillText("USD", P, y);
     const ux = P + ctx.measureText("USD ").width + 6;
