@@ -5,7 +5,8 @@ Arma scripts/config.json: la lista de activos que baja fetch_data.py.
   - ETFs: una lista fija de ~100 de los más usados (abajo): índices, sectores, países, bonos, materias primas.
   - Acciones EE.UU.: las del S&P 500 y el Nasdaq-100, desde las tablas de Wikipedia.
   - Argentina (ADRs): una lista fija de empresas argentinas que cotizan en EE.UU.
-  - Cripto: las 100 más grandes por capitalización según CoinGecko, sin stablecoins
+  - Cripto: las 100 más grandes por capitalización según CoinMarketCap (o CoinGecko si no
+    hay clave de CoinMarketCap en la variable CMC_API_KEY), sin stablecoins
     ni versiones "envueltas" o "en staking" de otras monedas. Los precios salen de
     Coin Metrics (historia larga: Bitcoin desde 2010); si Coin Metrics no la tiene, de Yahoo.
     Cada moneda se confirma comparando su precio de hoy con el de CoinGecko, así no se
@@ -26,6 +27,7 @@ import pathlib
 import re
 import sys
 import time
+import os
 import urllib.request
 
 CONFIG = pathlib.Path(__file__).resolve().parent / "config.json"
@@ -207,7 +209,44 @@ def close_to(a: float | None, b: float) -> bool:
     return bool(a) and b > 0 and abs(a / b - 1) <= PRICE_TOL
 
 
+CMC_SKIP_TAGS = re.compile(r"stablecoin|tokenized-gold|tokenized-silver|tokenized-commodit|wrapped|liquid-staking|liquid-restaking", re.I)
+
+
+def cmc_coins() -> list[dict] | None:
+    """Top de CoinMarketCap (plan gratis: 1 crédito cada 200 monedas). None si no hay clave o falla."""
+    key = os.environ.get("CMC_API_KEY", "").strip()
+    if not key:
+        return None
+    try:
+        req = urllib.request.Request(
+            "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=250&convert=USD",
+            headers={"X-CMC_PRO_API_KEY": key, "Accept": "application/json", "User-Agent": UA})
+        with urllib.request.urlopen(req, timeout=60) as r:
+            rows = json.loads(r.read().decode("utf-8"))["data"]
+    except Exception as e:  # noqa: BLE001
+        log(f"⚠ CoinMarketCap: {e}. Uso CoinGecko.")
+        return None
+    out = []
+    for c in rows:
+        tags = " ".join(c.get("tags") or [])
+        if CMC_SKIP_TAGS.search(tags):
+            continue
+        out.append({"id": c["slug"], "name": c["name"], "symbol": c["symbol"],
+                    "current_price": (c.get("quote") or {}).get("USD", {}).get("price")})
+    log(f"CoinMarketCap: {len(rows)} monedas, {len(out)} después de sacar stablecoins, oro y envueltas")
+    return out
+
+
 def add_crypto(assets: list[dict], seen: set[str]) -> None:
+    cmc = cmc_coins()
+    coins = [c for c in (cmc or []) if c.get("current_price")
+             and c["symbol"].upper() not in SKIP_SYMBOLS and not SKIP_CRYPTO.search(f"{c['id']} {c['name']} {c['symbol']}")]
+    if not coins:
+        coins = coingecko_coins()
+    add_priced(assets, seen, coins)
+
+
+def coingecko_coins() -> list[dict]:
     cg = []
     for page in (1, 2):
         cg += json.loads(get(f"{CG}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=125&page={page}"))
@@ -218,6 +257,12 @@ def add_crypto(assets: list[dict], seen: set[str]) -> None:
                 or bool(SKIP_CRYPTO.search(f"{c['id']} {c['name']} {c['symbol']}")))
     coins = [c for c in cg if not skipped(c) and c.get("current_price")]
     log(f"CoinGecko: {len(cg)} monedas, {len(coins)} después de sacar stablecoins, oro y envueltas")
+    return coins
+
+
+def add_priced(assets: list[dict], seen: set[str], coins: list[dict]) -> None:
+    """Agrega hasta N_CRYPTO monedas en el orden dado, con precios de Coin Metrics o Yahoo
+    confirmados contra el precio de hoy del ranking."""
 
     catalog = json.loads(get(f"{CM}/catalog-v2/asset-metrics?metrics=PriceUSD&page_size=10000")).get("data", [])
     cm_assets = {r["asset"] for r in catalog}

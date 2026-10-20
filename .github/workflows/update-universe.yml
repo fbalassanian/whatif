@@ -1,6 +1,6 @@
 name: Actualizar lista de activos
 
-# Arma scripts/config.json (S&P 500, Nasdaq-100, ADRs argentinos, ETFs y top 100 cripto)
+# Arma scripts/config.json (S&P 500, Nasdaq-100, ADRs argentinos, ETFs y top 100 cripto de CoinMarketCap)
 # y después dispara "Actualizar datos" para bajar los activos nuevos.
 
 on:
@@ -34,6 +34,8 @@ jobs:
       - run: pip install -r requirements.txt
 
       - name: Armar la lista
+        env:
+          CMC_API_KEY: ${{ secrets.CMC_API_KEY }}   # top de CoinMarketCap; sin clave usa CoinGecko
         run: python scripts/build_universe.py
 
       - name: Guardar si cambió
