@@ -42,6 +42,8 @@ ADRS = [
 ]
 # monedas atadas al dólar u otros activos, y versiones envueltas / en staking: no tienen sentido acá
 SKIP_CRYPTO = re.compile(r"usd|eur|wrapped|staked|bridged|restak|liquid|tether gold|pax gold|\bbuidl\b|binance-peg", re.I)
+# stablecoins sin "usd" en el nombre y monedas respaldadas por oro o plata
+SKIP_SYMBOLS = {"DAI", "USDS", "GHO", "FRAX", "LUSD", "CRVUSD", "EURC", "XAUT", "PAXG", "KAU", "KAG", "BUIDL", "USDTB", "USYC", "STABLE"}
 NAME_SUFFIX = re.compile(r",?\s+(Inc\.?|Incorporated|Corporation|Corp\.?|Company|Co\.?|plc|N\.V\.|S\.A\.|Ltd\.?|Limited|Holdings?|Group)$", re.I)
 
 
@@ -143,7 +145,12 @@ def main() -> int:
         add(y, y, clean_name(n), "Acciones EE.UU.")
 
     cg = json.loads(get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=200&page=1"))
-    coins = [c for c in cg if not SKIP_CRYPTO.search(f"{c['id']} {c['name']} {c['symbol']}")]
+    def is_skipped(c: dict) -> bool:
+        if SKIP_CRYPTO.search(f"{c['id']} {c['name']} {c['symbol']}") or c["symbol"].upper() in SKIP_SYMBOLS:
+            return True
+        price = c.get("current_price") or 0
+        return 0.97 <= price <= 1.03                     # vale ~1 dólar: es una stablecoin
+    coins = [c for c in cg if not is_skipped(c)]
     log(f"CoinGecko: {len(cg)} monedas, {len(coins)} después de sacar stablecoins y envueltas")
 
     # validar acciones y ETFs contra Yahoo
@@ -167,7 +174,7 @@ def main() -> int:
             if not y or not yahoo_ok([y]):
                 log(f"  cripto sin datos en Yahoo: {c['name']} ({sym})")
                 continue
-        id_ = sym if sym not in seen else y              # si choca con una acción, se usa el símbolo completo
+        id_ = sym if sym not in seen else f"{sym}-USD"   # si choca con una acción (STX, DASH…), queda STX-USD
         if id_ in seen:
             continue
         seen.add(id_)
