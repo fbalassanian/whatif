@@ -3339,16 +3339,16 @@
    "yahoo": "LINK-USD"
   },
   {
-   "id": "LEO",
-   "name": "LEO Token (LEO)",
-   "group": "Cripto",
-   "yahoo": "LEO-USD"
-  },
-  {
    "id": "ADA",
    "name": "Cardano (ADA)",
    "group": "Cripto",
    "yahoo": "ADA-USD"
+  },
+  {
+   "id": "LEO",
+   "name": "LEO Token (LEO)",
+   "group": "Cripto",
+   "yahoo": "LEO-USD"
   },
   {
    "id": "RAIN",
@@ -3387,12 +3387,6 @@
    "yahoo": "UNI7083-USD"
   },
   {
-   "id": "DAI",
-   "name": "Dai (DAI)",
-   "group": "Cripto",
-   "yahoo": "DAI-USD"
-  },
-  {
    "id": "AVAX",
    "name": "Avalanche (AVAX)",
    "group": "Cripto",
@@ -3403,12 +3397,6 @@
    "name": "Canton (CC)",
    "group": "Cripto",
    "yahoo": "CC37263-USD"
-  },
-  {
-   "id": "SUI",
-   "name": "Sui (SUI)",
-   "group": "Cripto",
-   "yahoo": "SUI20947-USD"
   },
   {
    "id": "GRAM",
@@ -3543,12 +3531,6 @@
    "yahoo": "ICP-USD"
   },
   {
-   "id": "U",
-   "name": "United Stables (U)",
-   "group": "Cripto",
-   "yahoo": "U39120-USD"
-  },
-  {
    "id": "HTX",
    "name": "HTX DAO (HTX)",
    "group": "Cripto",
@@ -3627,12 +3609,6 @@
    "yahoo": "ATOM-USD"
   },
   {
-   "id": "FIL",
-   "name": "Filecoin (FIL)",
-   "group": "Cripto",
-   "yahoo": "FIL-USD"
-  },
-  {
    "id": "INJ",
    "name": "Injective (INJ)",
    "group": "Cripto",
@@ -3681,12 +3657,6 @@
    "yahoo": "CAKE-USD"
   },
   {
-   "id": "GHO",
-   "name": "GHO (GHO)",
-   "group": "Cripto",
-   "yahoo": "GHO-USD"
-  },
-  {
    "id": "AKE",
    "name": "Akedo (AKE)",
    "group": "Cripto",
@@ -3699,7 +3669,7 @@
    "yahoo": "ETHFI-USD"
   },
   {
-   "id": "STX4847-USD",
+   "id": "STX-USD",
    "name": "Stacks (STX)",
    "group": "Cripto",
    "yahoo": "STX4847-USD"
@@ -3741,7 +3711,7 @@
    "yahoo": "VET-USD"
   },
   {
-   "id": "Q38236-USD",
+   "id": "Q-USD",
    "name": "Quack AI (Q)",
    "group": "Cripto",
    "yahoo": "Q38236-USD"
@@ -3771,34 +3741,16 @@
    "yahoo": "RAY-USD"
   },
   {
-   "id": "KAU",
-   "name": "Kinesis Gold (KAU)",
-   "group": "Cripto",
-   "yahoo": "KAU24382-USD"
-  },
-  {
    "id": "PENGU",
    "name": "Pudgy Penguins (PENGU)",
    "group": "Cripto",
    "yahoo": "PENGU34466-USD"
   },
   {
-   "id": "YLDS",
-   "name": "YLDS (YLDS)",
-   "group": "Cripto",
-   "yahoo": "YLDS-USD"
-  },
-  {
    "id": "TRUMP",
    "name": "Official Trump (TRUMP)",
    "group": "Cripto",
    "yahoo": "TRUMP35336-USD"
-  },
-  {
-   "id": "STABLE",
-   "name": "​​Stable (STABLE)",
-   "group": "Cripto",
-   "yahoo": "STABLE38892-USD"
   },
   {
    "id": "A7A5",
@@ -3813,16 +3765,16 @@
    "yahoo": "FET-USD"
   },
   {
-   "id": "HASH",
-   "name": "Provenance Blockchain (HASH)",
-   "group": "Cripto",
-   "yahoo": "HASH19960-USD"
-  },
-  {
    "id": "VIRTUAL",
    "name": "Virtuals Protocol (VIRTUAL)",
    "group": "Cripto",
    "yahoo": "VIRTUAL-USD"
+  },
+  {
+   "id": "HASH",
+   "name": "Provenance Blockchain (HASH)",
+   "group": "Cripto",
+   "yahoo": "HASH19960-USD"
   },
   {
    "id": "STRK",
@@ -3871,6 +3823,54 @@
    "name": "SPX6900 (SPX)",
    "group": "Cripto",
    "yahoo": "SPX28081-USD"
+  },
+  {
+   "id": "BTT",
+   "name": "BitTorrent (BTT)",
+   "group": "Cripto",
+   "yahoo": "BTT-USD"
+  },
+  {
+   "id": "XPL",
+   "name": "Plasma (XPL)",
+   "group": "Cripto",
+   "yahoo": "XPL-USD"
+  },
+  {
+   "id": "LDO",
+   "name": "Lido DAO (LDO)",
+   "group": "Cripto",
+   "yahoo": "LDO-USD"
+  },
+  {
+   "id": "XTZ",
+   "name": "Tezos (XTZ)",
+   "group": "Cripto",
+   "yahoo": "XTZ-USD"
+  },
+  {
+   "id": "SUN",
+   "name": "Sun Token (SUN)",
+   "group": "Cripto",
+   "yahoo": "SUN-USD"
+  },
+  {
+   "id": "CARDS",
+   "name": "Collector Crypt (CARDS)",
+   "group": "Cripto",
+   "yahoo": "CARDS38283-USD"
+  },
+  {
+   "id": "BAT",
+   "name": "Basic Attention (BAT)",
+   "group": "Cripto",
+   "yahoo": "BAT-USD"
+  },
+  {
+   "id": "UB",
+   "name": "Unibase (UB)",
+   "group": "Cripto",
+   "yahoo": "UB38339-USD"
   }
  ]
 }
