@@ -66,7 +66,12 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .mark { font-family: var(--display); font-weight: 800; font-size: 20px; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
 .mark svg { width: 26px; height: 26px; }
 .mark small { font: 400 12px var(--body); color: var(--muted); letter-spacing: 0; }
-.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.langs { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 999px; background: rgba(18,15,46,.7); }
+.langs button { display: grid; place-items: center; width: 32px; height: 26px; border: 0; border-radius: 999px; background: none; cursor: pointer; opacity: .45; filter: saturate(.6); transition: opacity .15s, background .15s, filter .15s; }
+.langs button:hover { opacity: .85; }
+.langs button[aria-pressed="true"] { opacity: 1; filter: none; background: rgba(155,123,255,.22); }
+.langs svg { width: 21px; height: 14px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(255,255,255,.18); }
 .btn {
   display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
   border: 1px solid var(--line); background: rgba(18,15,46,.7); border-radius: 999px;
@@ -277,27 +282,31 @@ footer a { color: var(--cyan); }
     <div class="mark">
       <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13" fill="none" stroke="#3fe0ff" stroke-width="2"/><path d="M16 8v8l6 4" fill="none" stroke="#9b7bff" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="16" r="2" fill="#ece9ff"/></svg>
       <span>Portfolito</span>
-      <small id="status">Máquina del tiempo para tu plata</small>
+      <small id="status" data-i18n="tagline">Máquina del tiempo para tu plata</small>
     </div>
     <div class="actions">
-      <button type="button" class="btn" id="dice"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="3" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="5" cy="5" r="1.2" fill="currentColor"/><circle cx="11" cy="11" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/></svg>Sorpréndeme</button>
-      <button type="button" class="btn" id="share"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 9.5l3-3M5 11a2.5 2.5 0 0 1 0-3.5l1.5-1.5M11 5a2.5 2.5 0 0 1 0 3.5L9.5 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Copiar link</button>
+      <div class="langs" role="group" aria-label="Idioma / Language">
+        <button type="button" data-lang="es" aria-pressed="true" aria-label="Español" title="Español"><svg viewBox="0 0 18 12" aria-hidden="true" preserveAspectRatio="none"><rect width="18" height="12" fill="#74acdf"/><rect y="4" width="18" height="4" fill="#fff"/><circle cx="9" cy="6" r="1.35" fill="#f6b40e" stroke="#85340a" stroke-width=".2"/></svg></button>
+        <button type="button" data-lang="en" aria-pressed="false" aria-label="English" title="English"><svg viewBox="0 0 19 10" aria-hidden="true" preserveAspectRatio="none"><rect width="19" height="10" fill="#b22234"/><path d="M0 1.15h19M0 2.69h19M0 4.23h19M0 5.77h19M0 7.31h19M0 8.85h19" stroke="#fff" stroke-width=".77"/><rect width="7.6" height="5.38" fill="#3c3b6e"/><g fill="#fff"><circle cx="1.3" cy="1" r=".3"/><circle cx="3.8" cy="1" r=".3"/><circle cx="6.3" cy="1" r=".3"/><circle cx="2.55" cy="2.2" r=".3"/><circle cx="5.05" cy="2.2" r=".3"/><circle cx="1.3" cy="3.4" r=".3"/><circle cx="3.8" cy="3.4" r=".3"/><circle cx="6.3" cy="3.4" r=".3"/><circle cx="2.55" cy="4.6" r=".3"/><circle cx="5.05" cy="4.6" r=".3"/></g></svg></button>
+      </div>
+      <button type="button" class="btn" id="dice"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="3" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="5" cy="5" r="1.2" fill="currentColor"/><circle cx="11" cy="11" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/></svg><span data-i18n="dice">Sorpréndeme</span></button>
+      <button type="button" class="btn" id="share"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 9.5l3-3M5 11a2.5 2.5 0 0 1 0-3.5l1.5-1.5M11 5a2.5 2.5 0 0 1 0 3.5L9.5 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="share">Copiar link</span></button>
     </div>
   </header>
 
-  <input id="share-box" type="text" readonly hidden aria-label="Link para compartir">
+  <input id="share-box" type="text" readonly hidden aria-label="Link para compartir" data-i18n-aria="shareBox">
 
   <p class="question">
-    Si <span id="s-prep">en</span>
-    <select id="s-month" aria-label="Mes en que invertís"></select>
-    <select id="s-year" aria-label="Año en que invertís"></select>
-    hubieras puesto USD
-    <input id="amount" type="text" inputmode="numeric" value="1.000" aria-label="Monto en dólares">
-    <select id="freq" aria-label="Frecuencia"><option value="once">una vez</option><option value="monthly">todos los meses</option></select>
-    en <span class="nw"><button type="button" class="pick" id="ticker-btn" aria-haspopup="dialog" aria-label="Elegir acción, ETF o cripto">…</button><input type="hidden" id="ticker"><span class="soft">,</span></span>
-    <span class="soft">¿cuánto tendrías en</span>
-    <select id="e-month" aria-label="Mes del resultado"></select>
-    <span class="nw"><select id="e-year" aria-label="Año del resultado"></select><span class="soft">?</span></span>
+    <span data-i18n="qIf">Si</span> <span id="s-prep" data-i18n="qIn">en</span>
+    <select id="s-month" aria-label="Mes en que invertís" data-i18n-aria="sMonth"></select>
+    <select id="s-year" aria-label="Año en que invertís" data-i18n-aria="sYear"></select>
+    <span data-i18n="qPut">hubieras puesto</span> USD
+    <input id="amount" type="text" inputmode="numeric" value="1.000" aria-label="Monto en dólares" data-i18n-aria="amount">
+    <select id="freq" aria-label="Frecuencia" data-i18n-aria="freq"><option value="once" data-i18n="once">una vez</option><option value="monthly" data-i18n="monthly">todos los meses</option></select>
+    <span data-i18n="qInto">en</span> <span class="nw"><button type="button" class="pick" id="ticker-btn" aria-haspopup="dialog" aria-label="Elegir acción, ETF o cripto" data-i18n-aria="tickerBtn">…</button><input type="hidden" id="ticker"><span class="soft">,</span></span>
+    <span class="soft" data-i18n="qHow">¿cuánto tendrías en</span>
+    <select id="e-month" aria-label="Mes del resultado" data-i18n-aria="eMonth"></select>
+    <span class="nw"><select id="e-year" aria-label="Año del resultado" data-i18n-aria="eYear"></select><span class="soft">?</span></span>
   </p>
 
   <section class="readout" aria-live="polite">
@@ -308,11 +317,11 @@ footer a { color: var(--cyan); }
     <div class="facts" id="facts"></div>
   </section>
 
-  <section class="scope" aria-label="Recorrido en el tiempo">
+  <section class="scope" aria-label="Recorrido en el tiempo" data-i18n-aria="scope">
     <div class="scope-top">
       <label class="switch" id="reinvest-wrap">
         <input type="checkbox" id="reinvest" checked>
-        <span>Reinvertir dividendos <small id="reinvest-note"></small></span>
+        <span><span data-i18n="reinvest">Reinvertir dividendos</span> <small id="reinvest-note"></small></span>
       </label>
       <div class="keys" id="keys"></div>
     </div>
@@ -321,53 +330,53 @@ footer a { color: var(--cyan); }
       <button type="button" class="play" id="play" aria-label="Reproducir el recorrido">
         <svg viewBox="0 0 16 16" id="play-icon" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg>
       </button>
-      <input type="range" id="scrub" min="0" max="1" value="1" aria-label="Viajar en el tiempo">
+      <input type="range" id="scrub" min="0" max="1" value="1" aria-label="Viajar en el tiempo" data-i18n-aria="scrub">
       <span class="stamp" id="stamp"></span>
     </div>
   </section>
 
-  <section class="race" id="race" aria-label="Carrera contra otros activos"></section>
+  <section class="race" id="race" aria-label="Carrera contra otros activos" data-i18n-aria="raceAria"></section>
   <p class="verdict" id="verdict" hidden></p>
 
-  <section class="strip" id="strip" aria-label="Resumen"></section>
+  <section class="strip" id="strip" aria-label="Resumen" data-i18n-aria="summary"></section>
 
   <section class="future" aria-labelledby="future-title">
     <div class="future-head">
-      <h2 id="future-title">Hacia el futuro</h2>
+      <h2 id="future-title" data-i18n="future">Hacia el futuro</h2>
       <p id="future-hint"></p>
     </div>
     <fieldset class="knobs" id="knobs">
       <div class="field rate-field">
         <div class="rate-head">
-          <label for="rate" id="rate-label">Rendimiento anual que suponés</label>
-          <div class="ratemode" role="group" aria-label="Cómo suponer el rendimiento">
-            <button type="button" data-mode="same" aria-pressed="true">Igual todos los años</button>
-            <button type="button" data-mode="year" aria-pressed="false">Año por año</button>
+          <label for="rate" id="rate-label" data-i18n="rateLabel">Rendimiento anual que suponés</label>
+          <div class="ratemode" role="group" aria-label="Cómo suponer el rendimiento" data-i18n-aria="rateMode">
+            <button type="button" data-mode="same" aria-pressed="true" data-i18n="same">Igual todos los años</button>
+            <button type="button" data-mode="year" aria-pressed="false" data-i18n="byYear">Año por año</button>
           </div>
         </div>
         <div class="yr" id="rate-row"><div class="in"><input id="rate" type="number" inputmode="decimal" step="0.5" min="-90" max="300" value="8"><span>%</span></div></div>
         <div class="years" id="years" hidden></div>
       </div>
       <div class="field" id="contrib-field">
-        <label for="contrib">Aporte mensual desde hoy, en USD</label>
+        <label for="contrib" data-i18n="contrib">Aporte mensual desde hoy, en USD</label>
         <input id="contrib" type="number" min="0" step="50" value="0">
       </div>
     </fieldset>
   </section>
 
   <footer>
-    <span>Cada compra se hace al cierre del mes; con aportes mensuales, cada aporte entra al cierre de su mes, incluido el mes final, y el rendimiento anual es la TIR. Los dividendos se reinvierten al cierre del mes en que se pagan. No hay impuestos ni comisiones. La proyección usa el rendimiento que elegís. Nada de esto es una recomendación de inversión.</span>
-    <span>Acciones y ETFs: precios y dividendos de Yahoo Finance. Cripto: <a href="https://coinmetrics.io/community-network-data/" target="_blank" rel="noopener">Coin Metrics Community</a> (CC BY-NC 4.0) y Yahoo Finance. Gráfico hecho con <a href="https://www.tradingview.com/lightweight-charts/" target="_blank" rel="noopener">TradingView Lightweight Charts</a>.</span>
+    <span data-i18n="foot1">Cada compra se hace al cierre del mes; con aportes mensuales, cada aporte entra al cierre de su mes, incluido el mes final, y el rendimiento anual es la TIR. Los dividendos se reinvierten al cierre del mes en que se pagan. No hay impuestos ni comisiones. La proyección usa el rendimiento que elegís. Nada de esto es una recomendación de inversión.</span>
+    <span data-i18n-html="foot2">Acciones y ETFs: precios y dividendos de Yahoo Finance. Cripto: <a href="https://coinmetrics.io/community-network-data/" target="_blank" rel="noopener">Coin Metrics Community</a> (CC BY-NC 4.0) y Yahoo Finance. Gráfico hecho con <a href="https://www.tradingview.com/lightweight-charts/" target="_blank" rel="noopener">TradingView Lightweight Charts</a>.</span>
   </footer>
 </div>
 <div class="toast" id="toast" role="status" hidden></div>
 <div class="picker" id="picker" hidden>
   <div class="picker-box" role="dialog" aria-modal="true" aria-labelledby="picker-title">
-    <div class="picker-head"><span id="picker-title">Elegí un activo</span><button type="button" class="x" id="picker-close" aria-label="Cerrar">×</button></div>
-    <input id="picker-q" type="search" autocomplete="off" spellcheck="false" placeholder="Buscá por nombre o símbolo: Apple, NVDA, bitcoin…"
+    <div class="picker-head"><span id="picker-title">Elegí un activo</span><button type="button" class="x" id="picker-close" aria-label="Cerrar" data-i18n-aria="close">×</button></div>
+    <input id="picker-q" type="search" autocomplete="off" spellcheck="false" placeholder="Buscá por nombre o símbolo: Apple, NVDA, bitcoin…" data-i18n-ph="searchPh"
            role="combobox" aria-expanded="true" aria-controls="picker-list" aria-autocomplete="list">
-    <div class="picker-groups" id="picker-groups" role="group" aria-label="Filtrar por tipo"></div>
-    <ul id="picker-list" role="listbox" aria-label="Resultados"></ul>
+    <div class="picker-groups" id="picker-groups" role="group" aria-label="Filtrar por tipo" data-i18n-aria="filter"></div>
+    <ul id="picker-list" role="listbox" aria-label="Resultados" data-i18n-aria="results"></ul>
   </div>
 </div>
 
@@ -409,19 +418,133 @@ const SAMPLE = (() => {
   return { manifest: { updated: null, assets: list }, assets };
 })();
 
+
+// ================================================================ idiomas (español / inglés)
+const I18N = {
+  es: {
+    loc: "es-AR", months: ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"], billion: " mil M",
+    tagline: "Máquina del tiempo para tu plata", dice: "Sorpréndeme", share: "Copiar link", shareBox: "Link para compartir",
+    qIf: "Si", qIn: "en", qPut: "hubieras puesto", once: "una vez", monthly: "todos los meses", qInto: "en", qHow: "¿cuánto tendrías en",
+    sMonth: "Mes en que invertís", sYear: "Año en que invertís", amount: "Monto en dólares", freq: "Frecuencia",
+    tickerBtn: "Elegir acción, ETF o cripto", eMonth: "Mes del resultado", eYear: "Año del resultado",
+    scope: "Recorrido en el tiempo", reinvest: "Reinvertir dividendos", scrub: "Viajar en el tiempo",
+    raceAria: "Carrera contra otros activos", summary: "Resumen", future: "Hacia el futuro",
+    rateLabel: "Rendimiento anual que suponés", rateMode: "Cómo suponer el rendimiento", same: "Igual todos los años", byYear: "Año por año",
+    contrib: "Aporte mensual desde hoy, en USD",
+    foot1: "Cada compra se hace al cierre del mes; con aportes mensuales, cada aporte entra al cierre de su mes, incluido el mes final, y el rendimiento anual es la TIR. Los dividendos se reinvierten al cierre del mes en que se pagan. No hay impuestos ni comisiones. La proyección usa el rendimiento que elegís. Nada de esto es una recomendación de inversión.",
+    foot2: 'Acciones y ETFs: precios y dividendos de Yahoo Finance. Cripto: <a href="https://coinmetrics.io/community-network-data/" target="_blank" rel="noopener">Coin Metrics Community</a> (CC BY-NC 4.0) y Yahoo Finance. Gráfico hecho con <a href="https://www.tradingview.com/lightweight-charts/" target="_blank" rel="noopener">TradingView Lightweight Charts</a>.',
+    close: "Cerrar", searchPh: "Buscá por nombre o símbolo: Apple, NVDA, bitcoin…", filter: "Filtrar por tipo", results: "Resultados",
+    pickMain: "Elegí un activo", pickRace: "Sumá un activo a la carrera", all: "Todos",
+    notFound: q => `No encontré "${q}". Probá con el símbolo (por ejemplo AAPL) o el nombre en inglés.`,
+    groups: {},
+    whenProj: w => `En ${w} podrías tener`, whenToday: d => `Hoy tendrías <span class="asof">(cierre del <b>${d}</b>)</span>`,
+    whenEnd: w => `En ${w} hubieras tenido`, whenPast: w => `En ${w} tenías`,
+    put: (v, n) => `Pusiste <b>${v}</b>${n ? ` en ${n} aportes` : ""}`, gain: "Ganancia", loss: "Pérdida",
+    play: "Reproducir el recorrido", pause: "Pausar",
+    cryptoNoPay: "(las cripto no pagan)", noPay: "(este activo no paga)", youPut: "Lo que pusiste", projection: "Proyección",
+    putK: "Pusiste", contribs: (n, v, m) => `${n} aportes de ${v} desde ${m}`, inMonth: m => `en ${m}`, valueIn: m => `Valor en ${m}`,
+    units: "unidades", shares: "acciones", annual: "Rendimiento anual", lessYear: "menos de un año de datos",
+    irr: "TIR de tus aportes", compounded: m => `compuesto desde ${m}`,
+    futHint: (d, m, y, add) => `De hoy (${d}) a ${m}: ${y} años${add ? `, sumando ${add} por mes` : ""}.`,
+    futPick: m => `Elegí un mes posterior a ${m} como fecha final, o <button type="button" class="linkbtn" id="go10">mirá 10 años para adelante</button>.`,
+    race: "Carrera", noDataTo: m => `sin datos hasta ${m}`, remove: n => `Quitar ${n}`, since: m => `desde ${m}`, findOther: "Buscar otro…",
+    verdict: (m, w, v, x, d, s) => `En ${m} va primero <b>${w}</b>, con ${v} (${x}). Le saca ${d} a ${s}.`,
+    copyBox: "Copiá el link de la caja", copied: "Link copiado", loadFail: "No pude cargar ese activo", loadFailLong: "No pude cargar ese activo. Probá con otro.",
+    amountZero: "Escribí un monto mayor a cero.", fake: "Datos simulados de prueba",
+    asofClose: (y, m, d) => `Datos al cierre del ${d}/${m}/${y}`, asofDay: d => `Datos al ${d}`,
+    day: (d, m, y) => `${d} ${m} ${y}`,
+  },
+  en: {
+    loc: "en-US", months: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"], billion: " B",
+    tagline: "A time machine for your money", dice: "Surprise me", share: "Copy link", shareBox: "Link to share",
+    qIf: "If", qIn: "in", qPut: "you had put", once: "once", monthly: "every month", qInto: "into", qHow: "how much would you have in",
+    sMonth: "Month you invest", sYear: "Year you invest", amount: "Amount in dollars", freq: "Frequency",
+    tickerBtn: "Choose a stock, ETF or crypto", eMonth: "Result month", eYear: "Result year",
+    scope: "Journey through time", reinvest: "Reinvest dividends", scrub: "Travel through time",
+    raceAria: "Race against other assets", summary: "Summary", future: "Into the future",
+    rateLabel: "Assumed annual return", rateMode: "How to assume the return", same: "Same every year", byYear: "Year by year",
+    contrib: "Monthly contribution from today, in USD",
+    foot1: "Every purchase happens at the month's close; with monthly contributions, each one goes in at the close of its month, including the final month, and the annual return is the IRR. Dividends are reinvested at the close of the month they are paid. No taxes or fees. The projection uses the return you choose. None of this is investment advice.",
+    foot2: 'Stocks and ETFs: prices and dividends from Yahoo Finance. Crypto: <a href="https://coinmetrics.io/community-network-data/" target="_blank" rel="noopener">Coin Metrics Community</a> (CC BY-NC 4.0) and Yahoo Finance. Chart made with <a href="https://www.tradingview.com/lightweight-charts/" target="_blank" rel="noopener">TradingView Lightweight Charts</a>.',
+    close: "Close", searchPh: "Search by name or ticker: Apple, NVDA, bitcoin…", filter: "Filter by type", results: "Results",
+    pickMain: "Pick an asset", pickRace: "Add an asset to the race", all: "All",
+    notFound: q => `Nothing found for "${q}". Try the ticker (for example AAPL) or the company name.`,
+    groups: { "Acciones EE.UU.": "US stocks", "Cripto": "Crypto", "Argentina (ADRs)": "Argentina (ADRs)", "ETFs": "ETFs" },
+    whenProj: w => `In ${w} you could have`, whenToday: d => `Today you'd have <span class="asof">(close of <b>${d}</b>)</span>`,
+    whenEnd: w => `In ${w} you'd have had`, whenPast: w => `In ${w} you had`,
+    put: (v, n) => `You put in <b>${v}</b>${n ? ` over ${n} contributions` : ""}`, gain: "Gain", loss: "Loss",
+    play: "Play the journey", pause: "Pause",
+    cryptoNoPay: "(crypto doesn't pay)", noPay: "(this asset doesn't pay)", youPut: "What you put in", projection: "Projection",
+    putK: "You put in", contribs: (n, v, m) => `${n} contributions of ${v} since ${m}`, inMonth: m => `in ${m}`, valueIn: m => `Value in ${m}`,
+    units: "units", shares: "shares", annual: "Annual return", lessYear: "less than a year of data",
+    irr: "IRR of your contributions", compounded: m => `compounded since ${m}`,
+    futHint: (d, m, y, add) => `From today (${d}) to ${m}: ${y} years${add ? `, adding ${add} a month` : ""}.`,
+    futPick: m => `Pick an end month after ${m}, or <button type="button" class="linkbtn" id="go10">look 10 years ahead</button>.`,
+    race: "Race", noDataTo: m => `no data through ${m}`, remove: n => `Remove ${n}`, since: m => `since ${m}`, findOther: "Find another…",
+    verdict: (m, w, v, x, d, s) => `In ${m}, <b>${w}</b> leads with ${v} (${x}), ${d} ahead of ${s}.`,
+    copyBox: "Copy the link from the box", copied: "Link copied", loadFail: "Couldn't load that asset", loadFailLong: "Couldn't load that asset. Try another one.",
+    amountZero: "Enter an amount greater than zero.", fake: "Simulated test data",
+    asofClose: (y, m, d) => `Data as of ${I18N.en.months[m - 1]} ${d}, ${y} close`, asofDay: d => `Data as of ${d}`,
+    day: (d, m, y) => `${m} ${d}, ${y}`,
+  },
+};
+// nombres de los ETFs en inglés (en los datos están en español)
+const ETF_EN = {
+  SPY: "S&P 500 SPDR", VOO: "S&P 500 Vanguard", IVV: "S&P 500 iShares", SPLG: "S&P 500 SPDR Portfolio", RSP: "S&P 500 Equal Weight",
+  QQQ: "Nasdaq 100 Invesco", QQQM: "Nasdaq 100 Invesco Mini", DIA: "Dow Jones", IWM: "Russell 2000", VTI: "US Total Market",
+  MDY: "S&P MidCap 400", IJH: "S&P MidCap 400 iShares", IJR: "S&P SmallCap 600", VUG: "US Growth Vanguard", VTV: "US Value Vanguard",
+  IWF: "Russell 1000 Growth", IWD: "Russell 1000 Value", MTUM: "US Momentum", USMV: "US Min Volatility",
+  SCHD: "US Dividend Schwab", VIG: "Dividend Appreciation Vanguard", VYM: "High Dividend Vanguard", DGRO: "Dividend Growth iShares",
+  HDV: "High Dividend iShares", NOBL: "Dividend Aristocrats", JEPI: "S&P 500 Premium Income JPMorgan", JEPQ: "Nasdaq Premium Income JPMorgan",
+  XLK: "Technology Sector", XLF: "Financial Sector", XLE: "Energy Sector", XLV: "Health Care Sector", XLY: "Consumer Discretionary Sector",
+  XLP: "Consumer Staples Sector", XLI: "Industrial Sector", XLU: "Utilities Sector", XLB: "Materials Sector", XLRE: "Real Estate Sector",
+  XLC: "Communication Services Sector", VGT: "Technology Vanguard", SMH: "Semiconductors VanEck", SOXX: "Semiconductors iShares",
+  IBB: "Biotech iShares", XBI: "Biotech SPDR", KRE: "Regional Banks", ITA: "Aerospace & Defense", XHB: "Homebuilders", JETS: "Airlines",
+  ARKK: "Innovation ARK", ICLN: "Clean Energy", TAN: "Solar", LIT: "Lithium & Battery", URA: "Uranium", BOTZ: "Robotics & AI",
+  CIBR: "Cybersecurity", IGV: "Software", IBIT: "Bitcoin iShares", FBTC: "Bitcoin Fidelity", ETHA: "Ethereum iShares",
+  ARGT: "Argentina Global X", EWZ: "Brazil", ILF: "Latin America 40", EWW: "Mexico", ECH: "Chile", FXI: "China Large-Cap",
+  MCHI: "China MSCI", KWEB: "China Internet", EWJ: "Japan", INDA: "India", EWY: "South Korea", EWT: "Taiwan", EWG: "Germany",
+  EWU: "United Kingdom", EZU: "Eurozone", VGK: "Europe Vanguard", EEM: "Emerging Markets iShares", VWO: "Emerging Markets Vanguard",
+  IEMG: "Emerging Markets Core iShares", EFA: "Developed ex-US iShares", VEA: "Developed ex-US Vanguard", VXUS: "World ex-US Vanguard",
+  ACWI: "World iShares", VT: "World Vanguard", BIL: "T-Bills 1-3 Months", SGOV: "T-Bills 0-3 Months", SHY: "Treasuries 1-3 Years",
+  IEF: "Treasuries 7-10 Years", TLT: "Treasuries 20+ Years", TIP: "Inflation-Protected Treasuries", BND: "US Total Bond Vanguard",
+  AGG: "US Aggregate Bond iShares", LQD: "Investment Grade Corporate Bonds", HYG: "High Yield Bonds", EMB: "Emerging Markets USD Bonds",
+  GLD: "Gold SPDR", IAU: "Gold iShares", SLV: "Silver", GDX: "Gold Miners", GDXJ: "Junior Gold Miners", COPX: "Copper Miners",
+  USO: "Oil", UNG: "Natural Gas", DBC: "Commodities Basket", TQQQ: "Nasdaq 100 3x", SQQQ: "Nasdaq 100 3x Inverse",
+  SPXL: "S&P 500 3x", SOXL: "Semiconductors 3x",
+};
+let LANG = "es", T = I18N.es;
+try {
+  const saved = localStorage.getItem("pf-lang");
+  LANG = saved === "en" || saved === "es" ? saved : (navigator.language || "es").toLowerCase().startsWith("es") ? "es" : "en";
+} catch (e) { LANG = (navigator.language || "es").toLowerCase().startsWith("es") ? "es" : "en"; }
+T = I18N[LANG];
+// nombre para mostrar: "Oro SPDR (GLD)" o, en inglés, "Gold SPDR (GLD)"
+const nameOf = a => LANG === "en" && a.group === "ETFs" && ETF_EN[a.id] ? `${ETF_EN[a.id]} (${a.id})` : a.name;
+const shortOf = a => nameOf(a).split(" (")[0];
+const groupOf = g => T.groups[g] || g;
+function applyStatic() {
+  document.documentElement.lang = LANG;
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = T[el.dataset.i18n]; });
+  document.querySelectorAll("[data-i18n-html]").forEach(el => { el.innerHTML = T[el.dataset.i18nHtml]; });
+  document.querySelectorAll("[data-i18n-aria]").forEach(el => el.setAttribute("aria-label", T[el.dataset.i18nAria]));
+  document.querySelectorAll("[data-i18n-ph]").forEach(el => el.setAttribute("placeholder", T[el.dataset.i18nPh]));
+  document.querySelectorAll(".langs button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === LANG)));
+}
+
 // ================================================================ utilidades
 const $ = id => document.getElementById(id);
-const MESES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+let MESES = T.months;
 const mIdx = k => { const [y, m] = k.split("-").map(Number); return y * 12 + m - 1; };
 const mKey = i => `${Math.floor(i / 12)}-${String(i % 12 + 1).padStart(2, "0")}`;
 const mLabel = k => `${MESES[Number(k.slice(5)) - 1]} ${k.slice(0, 4)}`;
-const fmtNum = (n, d = 0) => n.toLocaleString("es-AR", { maximumFractionDigits: d, minimumFractionDigits: d });
+const fmtNum = (n, d = 0) => n.toLocaleString(T.loc, { maximumFractionDigits: d, minimumFractionDigits: d });
 function short(n) {   // número para la lectura y los chips, sin "USD"
   const a = Math.abs(n);
-  return a >= 1e9 ? fmtNum(n / 1e9, 2) + " mil M" : a >= 1e6 ? fmtNum(n / 1e6, a >= 1e8 ? 0 : 2) + " M" : fmtNum(n, a < 100 ? 2 : 0);
+  return a >= 1e9 ? fmtNum(n / 1e9, 2) + T.billion : a >= 1e6 ? fmtNum(n / 1e6, a >= 1e8 ? 0 : 2) + " M" : fmtNum(n, a < 100 ? 2 : 0);
 }
 const usd = n => "USD " + short(n);
-const pct = r => (r * 100).toLocaleString("es-AR", { maximumFractionDigits: 1, signDisplay: "exceptZero" }) + "%";
+const pct = r => (r * 100).toLocaleString(T.loc, { maximumFractionDigits: 1, signDisplay: "exceptZero" }) + "%";
 const multTxt = m => (m >= 1 ? "×" : "÷") + fmtNum(m >= 1 ? m : 1 / m, m >= 10 || m <= 0.1 ? 0 : 1);
 const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 function hexA(hex, a) { const n = parseInt(hex.replace("#", ""), 16); return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${a})`; }
@@ -460,7 +583,7 @@ async function getAsset(id) {
   const raw = store.sample ? SAMPLE.assets[id] : await getJSON(`${store.base}assets/${encodeURIComponent(id)}.json`);
   const a = { ...raw, keys: raw.m.map(p => p[0]), price: new Map(raw.m), divs: new Map(raw.d || []) };
   a.first = a.keys[0]; a.last = a.keys[a.keys.length - 1]; a.hasDiv = a.divs.size > 0;
-  a.short = a.name.split(" (")[0];
+  Object.defineProperty(a, "short", { get: () => shortOf(a) });   // cambia con el idioma
   a.asof = raw.asof || null;   // fecha del último cierre (el mes en curso usa ese precio)
   store.cache.set(id, a);
   return a;
@@ -486,7 +609,7 @@ function searchAssets(q) {
   }
   const hits = [];
   for (const a of pool) {
-    const id = norm(a.id), nm = norm(a.name);
+    const id = norm(a.id), nm = norm(a.name + " " + nameOf(a));   // busca en los dos idiomas
     const s = id === nq ? 0 : id.startsWith(nq) ? 1 : nm.startsWith(nq) ? 2
             : nm.split(/[\s(.,&-]+/).some(w => w.startsWith(nq)) ? 3 : (nm.includes(nq) || id.includes(nq)) ? 4 : -1;
     if (s >= 0) hits.push([s, a]);
@@ -499,11 +622,11 @@ function renderPicker() {
   pickerActive = Math.min(pickerActive, Math.max(0, pickerHits.length - 1));
   const list = $("picker-list");
   list.innerHTML = pickerHits.length
-    ? pickerHits.map((a, i) => `<li role="option" id="opt-${i}" data-id="${a.id}" aria-selected="${i === pickerActive}"><span class="n">${a.name.split(" (")[0]}</span><span class="t">${a.id}</span><span class="g">${a.group}</span></li>`).join("")
-    : `<li class="empty" role="option" aria-disabled="true">No encontré "${q.replace(/[<>&"]/g, "")}". Probá con el símbolo (por ejemplo AAPL) o el nombre en inglés.</li>`;
+    ? pickerHits.map((a, i) => `<li role="option" id="opt-${i}" data-id="${a.id}" aria-selected="${i === pickerActive}"><span class="n">${shortOf(a)}</span><span class="t">${a.id}</span><span class="g">${groupOf(a.group)}</span></li>`).join("")
+    : `<li class="empty" role="option" aria-disabled="true">${T.notFound(q.replace(/[<>&"]/g, ""))}</li>`;
   $("picker-q").setAttribute("aria-activedescendant", pickerHits.length ? `opt-${pickerActive}` : "");
   const groups = [...new Set(store.manifest.assets.map(a => a.group))];
-  $("picker-groups").innerHTML = [["", "Todos"], ...groups.map(g => [g, g])].map(([g, label]) =>
+  $("picker-groups").innerHTML = [["", T.all], ...groups.map(g => [g, groupOf(g)])].map(([g, label]) =>
     `<button type="button" data-group="${g}" aria-pressed="${g === pickerGroup}">${label}${g ? ` <small>${store.manifest.assets.filter(a => a.group === g).length}</small>` : ""}</button>`).join("");
 }
 function moveActive(delta) {
@@ -516,7 +639,7 @@ function moveActive(delta) {
 function openPicker(mode, opener) {
   stopPlay();
   pickerMode = mode; pickerGroup = ""; pickerActive = 0; pickerOpener = opener || null;
-  $("picker-title").textContent = mode === "race" ? "Sumá un activo a la carrera" : "Elegí un activo";
+  $("picker-title").textContent = mode === "race" ? T.pickRace : T.pickMain;
   $("picker-q").value = "";
   renderPicker();
   $("picker").hidden = false;
@@ -585,7 +708,8 @@ function fillEndMonth(keepMonth) {
   setOptions($("e-month"), endMonths().filter(k => k.startsWith(y + "-")).map(k => [k.slice(5), MESES[Number(k.slice(5)) - 1]]), keepMonth);
 }
 function parseAmount() {
-  const n = Number(String($("amount").value).replace(/\./g, "").replace(",", "."));
+  const raw = String($("amount").value);
+  const n = Number(LANG === "en" ? raw.replace(/,/g, "") : raw.replace(/\./g, "").replace(",", "."));
   return isFinite(n) && n > 0 ? n : 0;
 }
 
@@ -694,8 +818,8 @@ function initChart() {
       horzLine: { color: hexA(cssVar("--cyan"), .25), width: 1, style: 2, labelBackgroundColor: cssVar("--panel") }
     },
     handleScroll: false, handleScale: false,
-    localization: { locale: "es-AR",
-      priceFormatter: v => { const a = Math.abs(v); return a >= 1e9 ? fmtNum(v / 1e9, 1) + " mil M" : a >= 1e6 ? fmtNum(v / 1e6, 1) + " M" : a >= 1e4 ? fmtNum(v / 1e3, 0) + " k" : fmtNum(v, a < 100 ? 2 : 0); },
+    localization: { locale: T.loc,
+      priceFormatter: v => { const a = Math.abs(v); return a >= 1e9 ? fmtNum(v / 1e9, 1) + T.billion : a >= 1e6 ? fmtNum(v / 1e6, 1) + " M" : a >= 1e4 ? fmtNum(v / 1e3, 0) + " k" : fmtNum(v, a < 100 ? 2 : 0); },
       timeFormatter: t => mLabel(keyFromTime(t)) },
     timeScale: { borderColor: "rgba(0,0,0,0)", fixLeftEdge: true, fixRightEdge: true,
       tickMarkFormatter: (time, type) => { const k = keyFromTime(time); return type === 0 ? k.slice(0, 4) : `${MESES[Number(k.slice(5)) - 1]} ${k.slice(2, 4)}`; } }
@@ -734,7 +858,7 @@ function fitChart() { if (!chart) return; chart.timeScale().fitContent(); reques
 function render() {
   if (!asset) return;
   stopPlay();
-  if (!parseAmount()) { $("when").textContent = "Escribí un monto mayor a cero."; return; }
+  if (!parseAmount()) { $("when").textContent = T.amountZero; return; }
   D = compute();
   D.index = new Map(D.timeline.map((t, i) => [t.key, i]));
   const vals = D.timeline.flatMap(t => [t.value, t.invested]);
@@ -753,7 +877,7 @@ function render() {
   drawToCursor(true);
   fitChart();
 
-  $("ticker-btn").textContent = asset.name;
+  $("ticker-btn").textContent = nameOf(asset);
   renderSwitch(); renderKeys(); renderStrip(); renderFuture(); renderRace(); writeHash(); sizeControls();
 }
 
@@ -799,22 +923,22 @@ let shown = 0, tween = null;
 function lastLabel() {
   if (!asset.asof) return mLabel(asset.last);
   const [y, m, d] = asset.asof.split("-").map(Number);
-  return `${d} ${MESES[m - 1]} ${y}`;
+  return T.day(d, MESES[m - 1], y);
 }
 function showReadout(i, animate) {
   const t = D.timeline[i];
   const mult = t.value / t.invested, gain = t.value - t.invested;
   const when = `<b>${mLabel(t.key)}</b>`;
-  $("when").innerHTML = t.proj ? `En ${when} podrías tener`
-    : t.key === asset.last ? `Hoy tendrías <span class="asof">(cierre del <b>${lastLabel()}</b>)</span>`
-    : t.key === D.end ? `En ${when} hubieras tenido`
-    : `En ${when} tenías`;
+  $("when").innerHTML = t.proj ? T.whenProj(when)
+    : t.key === asset.last ? T.whenToday(lastLabel())
+    : t.key === D.end ? T.whenEnd(when)
+    : T.whenPast(when);
   $("est").hidden = !t.proj;
   const m = $("mult"); m.className = "mult " + (mult >= 1 ? "up" : "down"); m.textContent = multTxt(mult);
   // ganancia total de la opción elegida en el toggle (sin reinvertir, ya incluye los dividendos cobrados)
   const facts = [
-    `Pusiste <b>${usd(t.invested)}</b>${D.dca ? ` en ${D.timeline.slice(0, i + 1).filter((p, j, arr) => j === 0 || p.invested !== arr[j - 1].invested).length} aportes` : ""}`,
-    `${gain >= 0 ? "Ganancia" : "Pérdida"} <b class="${gain >= 0 ? "gain" : "loss"}">${usd(Math.abs(gain))}</b>`,
+    T.put(usd(t.invested), D.dca ? D.timeline.slice(0, i + 1).filter((p, j, arr) => j === 0 || p.invested !== arr[j - 1].invested).length : 0),
+    `${gain >= 0 ? T.gain : T.loss} <b class="${gain >= 0 ? "gain" : "loss"}">${usd(Math.abs(gain))}</b>`,
   ];
   $("facts").innerHTML = facts.map(f => `<span>${f}</span>`).join("");
   setNumber(t.value, animate && !reduceMotion);
@@ -836,7 +960,7 @@ let playing = false, playRaf = null;
 function setPlayIcon() {
   $("play-icon").innerHTML = playing ? '<rect x="3.5" y="2.5" width="3" height="11" fill="currentColor"/><rect x="9.5" y="2.5" width="3" height="11" fill="currentColor"/>'
                                      : '<path d="M4 2.5v11l9-5.5z" fill="currentColor"/>';
-  $("play").setAttribute("aria-label", playing ? "Pausar" : "Reproducir el recorrido");
+  $("play").setAttribute("aria-label", playing ? T.pause : T.play);
 }
 function stopPlay() { playing = false; cancelAnimationFrame(playRaf); setPlayIcon(); }
 function play() {
@@ -863,20 +987,20 @@ function renderSwitch() {
   const any = asset.hasDiv || race.some(r => r.asset.hasDiv);
   $("reinvest").disabled = !any;
   rw.classList.toggle("off", !any);
-  $("reinvest-note").textContent = asset.hasDiv ? "" : asset.group === "Cripto" ? "(las cripto no pagan)" : "(este activo no paga)";
+  $("reinvest-note").textContent = asset.hasDiv ? "" : asset.group === "Cripto" ? T.cryptoNoPay : T.noPay;
 }
 function renderKeys() {
-  const k = [[cssVar("--cyan"), asset.short], [cssVar("--muted"), "Lo que pusiste"]];
-  if (D.future) k.push([cssVar("--violet"), "Proyección"]);
+  const k = [[cssVar("--cyan"), asset.short], [cssVar("--muted"), T.youPut]];
+  if (D.future) k.push([cssVar("--violet"), T.projection]);
   $("keys").innerHTML = k.map(([c, l]) => `<span><i style="background:${c}"></i>${l}</span>`).join("");
 }
 function renderStrip() {
   const d = D, h = d.h;
   const cells = [
-    ["Pusiste", usd(h.invested), d.dca ? `${h.n} aportes de ${usd(d.amount)} desde ${mLabel(d.start)}` : `en ${mLabel(d.start)}`, ""],
-    [`Valor en ${mLabel(d.histEnd)}`, usd(h.value), `${fmtNum(h.units, h.units < 1 ? 6 : h.units < 10 ? 3 : 1)} ${asset.group === "Cripto" ? "unidades" : "acciones"}`, ""],
-    ["Rendimiento anual", d.years >= 1 && isFinite(d.annual) ? pct(d.annual) : "—",
-      d.years < 1 ? "menos de un año de datos" : d.dca ? "TIR de tus aportes" : `compuesto desde ${mLabel(d.start)}`, d.annual >= 0 ? "gain" : "loss"],
+    [T.putK, usd(h.invested), d.dca ? T.contribs(h.n, usd(d.amount), mLabel(d.start)) : T.inMonth(mLabel(d.start)), ""],
+    [T.valueIn(mLabel(d.histEnd)), usd(h.value), `${fmtNum(h.units, h.units < 1 ? 6 : h.units < 10 ? 3 : 1)} ${asset.group === "Cripto" ? T.units : T.shares}`, ""],
+    [T.annual, d.years >= 1 && isFinite(d.annual) ? pct(d.annual) : "—",
+      d.years < 1 ? T.lessYear : d.dca ? T.irr : T.compounded(mLabel(d.start)), d.annual >= 0 ? "gain" : "loss"],
   ];
   $("strip").innerHTML = cells.map(([k, v, s, c]) => `<div class="cell"><span class="k">${k}</span><span class="v ${v === "—" ? "" : c}">${v}</span><span class="s">${s}</span></div>`).join("");
 }
@@ -884,8 +1008,8 @@ function renderFuture() {
   $("knobs").disabled = !D.future;
   $("contrib-field").hidden = D.dca;
   $("future-hint").innerHTML = D.future
-    ? `De hoy (${lastLabel()}) a ${mLabel(D.end)}: ${fmtNum(D.months / 12, D.months % 12 ? 1 : 0)} años${D.dca ? `, sumando ${usd(D.amount)} por mes` : ""}.`
-    : `Elegí un mes posterior a ${mLabel(asset.last)} como fecha final, o <button type="button" class="linkbtn" id="go10">mirá 10 años para adelante</button>.`;
+    ? T.futHint(lastLabel(), mLabel(D.end), fmtNum(D.months / 12, D.months % 12 ? 1 : 0), D.dca ? usd(D.amount) : "")
+    : T.futPick(mLabel(asset.last));
   $("go10")?.addEventListener("click", () => { fillEnd(mKey(mIdx(asset.last) + 120)); render(); });
   renderRates();
 }
@@ -917,18 +1041,18 @@ function renderRates() {
 }
 function renderRace() {
   const box = $("race");
-  const parts = [`<span>Carrera</span>`, `<span class="chip me" style="color:${cssVar("--cyan")}"><i style="background:${cssVar("--cyan")}"></i>${asset.short} <b data-race="me"></b></span>`];
+  const parts = [`<span>${T.race}</span>`, `<span class="chip me" style="color:${cssVar("--cyan")}"><i style="background:${cssVar("--cyan")}"></i>${asset.short} <b data-race="me"></b></span>`];
   D.race.forEach((r, i) => {
     const col = cssVar(r.color);
     parts.push(r.na
-      ? `<span class="chip na"><i style="background:${col}"></i>${r.a.short}: sin datos hasta ${mLabel(D.histEnd)}<button type="button" class="x" data-remove="${i}" aria-label="Quitar ${r.a.short}">×</button></span>`
-      : `<span class="chip" style="color:${col}"><i style="background:${col}"></i><span style="color:var(--text)">${r.a.short}</span>${r.late ? ` <small class="since">desde ${mLabel(r.start)}</small>` : ""} <b data-race="${i}"></b><button type="button" class="x" data-remove="${i}" aria-label="Quitar ${r.a.short}">×</button></span>`);
+      ? `<span class="chip na"><i style="background:${col}"></i>${r.a.short}: ${T.noDataTo(mLabel(D.histEnd))}<button type="button" class="x" data-remove="${i}" aria-label="${T.remove(r.a.short)}">×</button></span>`
+      : `<span class="chip" style="color:${col}"><i style="background:${col}"></i><span style="color:var(--text)">${r.a.short}</span>${r.late ? ` <small class="since">${T.since(mLabel(r.start))}</small>` : ""} <b data-race="${i}"></b><button type="button" class="x" data-remove="${i}" aria-label="${T.remove(r.a.short)}">×</button></span>`);
   });
   if (race.length < MAX_RACE) {
     const used = new Set([asset.id, ...race.map(r => r.id)]);
     SUGGEST.filter(id => !used.has(id) && metaOf(id)).slice(0, 3)
-      .forEach(id => parts.push(`<button type="button" class="chip suggest" data-add="${id}">+ ${metaOf(id).name.split(" (")[0]}</button>`));
-    parts.push(`<button type="button" class="addsel" data-pick="race" aria-haspopup="dialog">Buscar otro…</button>`);
+      .forEach(id => parts.push(`<button type="button" class="chip suggest" data-add="${id}">+ ${shortOf(metaOf(id))}</button>`));
+    parts.push(`<button type="button" class="addsel" data-pick="race" aria-haspopup="dialog">${T.findOther}</button>`);
   }
   box.innerHTML = parts.join("");
   updateRaceValues(D.timeline[cursor].key);
@@ -954,7 +1078,7 @@ function updateRaceValues(key) {
   valid.sort((a, b) => b.v - a.v);
   const [w, second] = valid;
   vd.hidden = false;
-  vd.innerHTML = `En ${mLabel(at)} va primero <b>${w.name}</b>, con ${usd(w.v)} (${multTxt(w.v / w.inv)}). Le saca ${usd(w.v - second.v)} a ${second.name}.`;
+  vd.innerHTML = T.verdict(mLabel(at), w.name, usd(w.v), multTxt(w.v / w.inv), usd(w.v - second.v), second.name);
 }
 
 // ================================================================ compartir (estado en el #)
@@ -993,21 +1117,21 @@ function toast(msg) {
 $("share").addEventListener("click", () => {
   writeHash();
   const url = location.href;
-  const fallback = () => { const b = $("share-box"); b.hidden = false; b.value = url; b.focus(); b.select(); toast("Copiá el link de la caja"); };
-  try { navigator.clipboard.writeText(url).then(() => toast("Link copiado"), fallback); } catch (e) { fallback(); }
+  const fallback = () => { const b = $("share-box"); b.hidden = false; b.value = url; b.focus(); b.select(); toast(T.copyBox); };
+  try { navigator.clipboard.writeText(url).then(() => toast(T.copied), fallback); } catch (e) { fallback(); }
 });
 
 // ================================================================ cambios de escenario
 async function selectAsset(keepS, keepE) {
   try { asset = await getAsset($("ticker").value); }
-  catch (e) { $("when").textContent = "No pude cargar ese activo. Probá con otro."; return; }
+  catch (e) { $("when").textContent = T.loadFailLong; return; }
   fillStart(keepS);
   fillEnd(keepE);
   render();
 }
 async function addRace(id) {
   if (!id || race.length >= MAX_RACE || race.some(r => r.id === id) || id === asset.id) return;
-  try { race.push({ id, asset: await getAsset(id) }); } catch (e) { toast("No pude cargar ese activo"); return; }
+  try { race.push({ id, asset: await getAsset(id) }); } catch (e) { toast(T.loadFail); return; }
   render();
   if (!reduceMotion) { cursor = 0; play(); }     // arranca la carrera
 }
@@ -1069,15 +1193,44 @@ $("dice").addEventListener("click", async () => {
   if (!reduceMotion) { cursor = 0; play(); }
 });
 
+// encabezado: fecha del último cierre con datos (o de la última actualización, si no hay)
+function renderStatus() {
+  if (!store.manifest) { $("status").textContent = T.tagline; return; }
+  const asofs = store.manifest.assets.map(a => a.asof).filter(Boolean).sort();
+  if (store.manifest.fake) $("status").textContent = T.fake;
+  else if (asofs.length) { const [y, m, d] = asofs.at(-1).split("-").map(Number); $("status").textContent = T.asofClose(y, m, d); }
+  else if (store.manifest.updated) $("status").textContent = T.asofDay(new Date(store.manifest.updated).toLocaleDateString(T.loc));
+  else $("status").textContent = T.tagline;
+}
+// cambiar de idioma: textos fijos, meses de los selectores, formato del monto y todo lo calculado
+function setLang(l) {
+  if (!I18N[l] || l === LANG) return;
+  const amount = parseAmount();
+  LANG = l; T = I18N[l]; MESES = T.months;
+  try { localStorage.setItem("pf-lang", l); } catch (e) { /* sin almacenamiento */ }
+  applyStatic();
+  if (amount) $("amount").value = fmtNum(amount);
+  chart?.applyOptions({ localization: { locale: T.loc } });
+  renderStatus();
+  if (!$("picker").hidden) { $("picker-title").textContent = pickerMode === "race" ? T.pickRace : T.pickMain; renderPicker(); }
+  if (asset) {
+    const s = startKey(), e = endKey();
+    fillStartMonth(s.slice(5)); fillEndMonth(e.slice(5));
+    yearsKey = "";
+    render();
+  }
+  setPlayIcon();
+}
+document.querySelectorAll(".langs button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
+
 // ================================================================ arranque
+applyStatic();
+if (LANG === "en") $("amount").value = fmtNum(1000);
 (async () => {
   initChart();
   await loadData();
   // encabezado: fecha del último cierre con datos (o de la última actualización, si no hay)
-  const asofs = store.manifest.assets.map(a => a.asof).filter(Boolean).sort();
-  if (store.manifest.fake) $("status").textContent = "Datos simulados de prueba";
-  else if (asofs.length) { const [y, m, d] = asofs.at(-1).split("-"); $("status").textContent = `Datos al cierre del ${Number(d)}/${Number(m)}/${y}`; }
-  else if (store.manifest.updated) $("status").textContent = `Datos al ${new Date(store.manifest.updated).toLocaleDateString("es-AR")}`;
+  renderStatus();
   const st = readHash();
   if (st) {
     $("ticker").value = st.id;
