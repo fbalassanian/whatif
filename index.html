@@ -485,7 +485,7 @@ function parseAmount() {
 // se reinvierte al cierre o se acumula como efectivo; el aporte de ese mes se compra después.
 function simulate(a, start, end, amount, reinvest, monthly) {
   let units = 0, cash = 0, divTotal = 0, invested = 0;
-  const pts = [], flows = [], inv = new Map(), val = new Map();
+  const pts = [], flows = [], inv = new Map(), val = new Map(), cashAt = new Map();
   const s = mIdx(start), e = mIdx(end);
   for (const k of a.keys) {
     const i = mIdx(k);
@@ -498,9 +498,9 @@ function simulate(a, start, end, amount, reinvest, monthly) {
     if (i === s || monthly) { units += amount / p; invested += amount; flows.push(i - s); }
     const v = units * p + cash;
     pts.push({ time: k + "-01", value: v });
-    inv.set(k, invested); val.set(k, v);
+    inv.set(k, invested); val.set(k, v); cashAt.set(k, cash);
   }
-  return { pts, inv, val, units, cash, divTotal, invested, flows, n: flows.length,
+  return { pts, inv, val, cashAt, units, cash, divTotal, invested, flows, n: flows.length,
            value: units * a.price.get(end) + cash };
 }
 // TIR anual por bisección: tasa mensual que iguala los aportes capitalizados al valor final.
@@ -536,6 +536,8 @@ function compute() {
   const annual = dca ? irrAnnual(h.flows, amount, T, h.value) : Math.pow(h.value / amount, 1 / years) - 1;
   const d = { start, end, histEnd, future, amount, dca, reinvest, h, annual, years,
               final: h.value, invested: h.invested, contribTotal: 0, months: 0 };
+  // el mismo escenario con la opción de dividendos contraria, para mostrar la diferencia
+  d.alt = asset.hasDiv ? simulate(asset, start, histEnd, amount, !reinvest, dca) : null;
 
   // línea de tiempo: un punto por mes, con valor y lo puesto hasta ahí
   d.timeline = h.pts.map(p => { const k = p.time.slice(0, 7); return { key: k, time: p.time, value: p.value, invested: h.inv.get(k), proj: false }; });
@@ -701,7 +703,18 @@ function showReadout(i, animate) {
     `${gain >= 0 ? "Ganancia" : "Pérdida"} <b class="${gain >= 0 ? "gain" : "loss"}">${usd(Math.abs(gain))}</b>`,
   ];
   if (t.proj) facts.push(`Rango estimado <b>${usd(t.lo)}</b> a <b>${usd(t.hi)}</b>`);
-  else if (asset.hasDiv) facts.push(D.reinvest ? "Con dividendos reinvertidos" : `Con ${usd(D.h.cash)} de dividendos en efectivo`);
+  else if (D.alt) {
+    // sin reinvertir, el valor ya incluye el efectivo cobrado: se muestra el desglose para no sumarlo dos veces
+    const cash = D.h.cashAt.get(t.key) || 0;
+    if (!D.reinvest && cash > 0) facts.push(`Acciones <b>${usd(t.value - cash)}</b> + efectivo <b>${usd(cash)}</b>`);
+    const other = D.alt.val.get(t.key), diff = t.value - other;
+    if (other != null && Math.abs(diff) >= 0.5) {
+      const better = D.reinvest ? diff >= 0 : diff < 0;   // ¿reinvertir rinde más acá?
+      facts.push(D.reinvest
+        ? `Sin reinvertir tendrías <b>${usd(other)}</b>, ${usd(Math.abs(diff))} ${diff >= 0 ? "menos" : "más"}`
+        : `Reinvirtiendo tendrías <b class="${better ? "gain" : ""}">${usd(other)}</b>, ${usd(Math.abs(diff))} ${diff < 0 ? "más" : "menos"}`);
+    }
+  }
   $("facts").innerHTML = facts.map(f => `<span>${f}</span>`).join("");
   setNumber(t.value, animate && !reduceMotion);
 }
@@ -764,7 +777,7 @@ function renderStrip() {
     ["Rendimiento anual", d.years >= 1 && isFinite(d.annual) ? pct(d.annual) : "—",
       d.years < 1 ? "menos de un año de datos" : d.dca ? "TIR de tus aportes" : `compuesto desde ${mLabel(d.start)}`, d.annual >= 0 ? "gain" : "loss"],
   ];
-  if (asset.hasDiv) cells.push(["Dividendos", usd(h.divTotal), d.reinvest ? "cobrados y reinvertidos" : "cobrados en efectivo", ""]);
+  if (asset.hasDiv) cells.push(["Dividendos", usd(h.divTotal), d.reinvest ? "cobrados y reinvertidos en más acciones" : "cobrados en efectivo, ya incluidos en el valor", ""]);
   $("strip").innerHTML = cells.map(([k, v, s, c]) => `<div class="cell"><span class="k">${k}</span><span class="v ${v === "—" ? "" : c}">${v}</span><span class="s">${s}</span></div>`).join("");
 }
 function renderFuture() {
