@@ -285,12 +285,6 @@
    "yahoo": "ARKK"
   },
   {
-   "id": "ICLN",
-   "name": "Energía limpia (ICLN)",
-   "group": "ETFs",
-   "yahoo": "ICLN"
-  },
-  {
    "id": "TAN",
    "name": "Energía solar (TAN)",
    "group": "ETFs",
@@ -3969,12 +3963,6 @@
    "yahoo": "AVAX-USD"
   },
   {
-   "id": "SUI",
-   "name": "Sui (SUI)",
-   "group": "Cripto",
-   "yahoo": "SUI20947-USD"
-  },
-  {
    "id": "CC",
    "name": "Canton (CC)",
    "group": "Cripto",
@@ -4017,16 +4005,16 @@
    "yahoo": "QNT-USD"
   },
   {
-   "id": "ENA",
-   "name": "Ethena (ENA)",
-   "group": "Cripto",
-   "yahoo": "ENA-USD"
-  },
-  {
    "id": "BTW",
    "name": "Bitway (BTW)",
    "group": "Cripto",
    "yahoo": "BTW39158-USD"
+  },
+  {
+   "id": "ENA",
+   "name": "Ethena (ENA)",
+   "group": "Cripto",
+   "yahoo": "ENA-USD"
   },
   {
    "id": "OKB",
@@ -4161,6 +4149,12 @@
    "yahoo": "JUP-USD"
   },
   {
+   "id": "KCS",
+   "name": "KuCoin (KCS)",
+   "group": "Cripto",
+   "yahoo": "KCS-USD"
+  },
+  {
    "id": "ALGO",
    "name": "Algorand (ALGO)",
    "group": "Cripto",
@@ -4171,12 +4165,6 @@
    "name": "Kaspa (KAS)",
    "group": "Cripto",
    "yahoo": "KAS-USD"
-  },
-  {
-   "id": "KCS",
-   "name": "KuCoin (KCS)",
-   "group": "Cripto",
-   "yahoo": "KCS-USD"
   },
   {
    "id": "RENDER",
@@ -4191,16 +4179,16 @@
    "yahoo": "ATOM-USD"
   },
   {
-   "id": "FIL",
-   "name": "Filecoin (FIL)",
-   "group": "Cripto",
-   "yahoo": "FIL-USD"
-  },
-  {
    "id": "INJ",
    "name": "Injective (INJ)",
    "group": "Cripto",
    "yahoo": "INJ-USD"
+  },
+  {
+   "id": "FIL",
+   "name": "Filecoin (FIL)",
+   "group": "Cripto",
+   "yahoo": "FIL-USD"
   },
   {
    "id": "AERO",
@@ -4227,16 +4215,16 @@
    "yahoo": "ZRO26997-USD"
   },
   {
-   "id": "APT",
-   "name": "Aptos (APT)",
-   "group": "Cripto",
-   "yahoo": "APT21794-USD"
-  },
-  {
    "id": "PEARL",
    "name": "Pearl (PEARL)",
    "group": "Cripto",
    "yahoo": "PEARL41876-USD"
+  },
+  {
+   "id": "APT",
+   "name": "Aptos (APT)",
+   "group": "Cripto",
+   "yahoo": "APT21794-USD"
   },
   {
    "id": "AKE",
@@ -4257,16 +4245,16 @@
    "yahoo": "ETHFI-USD"
   },
   {
-   "id": "STX-USD",
-   "name": "Stacks (STX)",
-   "group": "Cripto",
-   "yahoo": "STX4847-USD"
-  },
-  {
    "id": "NIGHT",
    "name": "Midnight (NIGHT)",
    "group": "Cripto",
    "yahoo": "NIGHT-USD"
+  },
+  {
+   "id": "STX-USD",
+   "name": "Stacks (STX)",
+   "group": "Cripto",
+   "yahoo": "STX4847-USD"
   },
   {
    "id": "DASH-USD",
@@ -4374,7 +4362,7 @@
    "id": "GRASS",
    "name": "Grass (GRASS)",
    "group": "Cripto",
-   "yahoo": "GRASS32276-USD"
+   "yahoo": "GRASS32956-USD"
   },
   {
    "id": "SEI",
@@ -4447,6 +4435,12 @@
    "name": "Sun Token (SUN)",
    "group": "Cripto",
    "yahoo": "SUN-USD"
+  },
+  {
+   "id": "UB",
+   "name": "Unibase (UB)",
+   "group": "Cripto",
+   "yahoo": "UB38339-USD"
   }
  ]
 }
