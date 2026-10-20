@@ -35,7 +35,7 @@ UA = "Mozilla/5.0 (compatible; portfolito-universe/1.0; +https://github.com/fbal
 N_CRYPTO = 100
 CG = "https://api.coingecko.com/api/v3"
 CM = "https://community-api.coinmetrics.io/v4"
-PRICE_TOL = 0.15        # el precio de la fuente tiene que estar a ±15% del de CoinGecko
+PRICE_TOL = 0.15        # tolerancia: el precio de la fuente tiene que estar a ±15% del de CoinGecko
 
 ETFS = [
     # índices de EE.UU.
