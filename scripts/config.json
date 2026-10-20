@@ -4221,16 +4221,16 @@
    "yahoo": "LIT39125-USD"
   },
   {
-   "id": "NEXO",
-   "name": "NEXO (NEXO)",
-   "group": "Cripto",
-   "cm": "nexo"
-  },
-  {
    "id": "ZRO",
    "name": "LayerZero (ZRO)",
    "group": "Cripto",
    "cm": "zro"
+  },
+  {
+   "id": "NEXO",
+   "name": "NEXO (NEXO)",
+   "group": "Cripto",
+   "cm": "nexo"
   },
   {
    "id": "PEARL",
@@ -4335,16 +4335,16 @@
    "cm": "ray"
   },
   {
-   "id": "PENGU",
-   "name": "Pudgy Penguins (PENGU)",
-   "group": "Cripto",
-   "cm": "pengu"
-  },
-  {
    "id": "TRUMP",
    "name": "Official Trump (TRUMP)",
    "group": "Cripto",
    "cm": "trump"
+  },
+  {
+   "id": "PENGU",
+   "name": "Pudgy Penguins (PENGU)",
+   "group": "Cripto",
+   "cm": "pengu"
   },
   {
    "id": "FET",
@@ -4359,16 +4359,16 @@
    "cm": "virtual"
   },
   {
-   "id": "STRK",
-   "name": "Starknet (STRK)",
-   "group": "Cripto",
-   "cm": "strk"
-  },
-  {
    "id": "GRASS",
    "name": "Grass (GRASS)",
    "group": "Cripto",
    "cm": "grass"
+  },
+  {
+   "id": "STRK",
+   "name": "Starknet (STRK)",
+   "group": "Cripto",
+   "cm": "strk"
   },
   {
    "id": "SEI",
@@ -4437,16 +4437,16 @@
    "cm": "sun"
   },
   {
-   "id": "CARDS",
-   "name": "Collector Crypt (CARDS)",
-   "group": "Cripto",
-   "yahoo": "CARDS38283-USD"
-  },
-  {
    "id": "UB",
    "name": "Unibase (UB)",
    "group": "Cripto",
    "cm": "ub"
+  },
+  {
+   "id": "CARDS",
+   "name": "Collector Crypt (CARDS)",
+   "group": "Cripto",
+   "yahoo": "CARDS38283-USD"
   }
  ]
 }
