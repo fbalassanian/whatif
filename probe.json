@@ -1,0 +1,169 @@
+{
+ "cryptocompare_BTC": "ERROR <HTTPError 401: 'Unauthorized'>",
+ "cryptocompare_HYPE": "ERROR <HTTPError 401: 'Unauthorized'>",
+ "cryptocompare_SUI": "ERROR <HTTPError 401: 'Unauthorized'>",
+ "cryptocompare_ETH": "ERROR <HTTPError 401: 'Unauthorized'>",
+ "coinmetrics_btc": [
+  {
+   "asset": "btc",
+   "time": "2026-10-17T00:00:00.000000000Z",
+   "PriceUSD": "81268.9431190474"
+  },
+  {
+   "asset": "btc",
+   "time": "2026-10-18T00:00:00.000000000Z",
+   "PriceUSD": "81935.1692647925"
+  },
+  {
+   "asset": "btc",
+   "time": "2026-10-19T00:00:00.000000000Z",
+   "PriceUSD": "81918.1984864816"
+  }
+ ],
+ "coinmetrics_hype": [
+  {
+   "asset": "hype",
+   "time": "2026-10-17T00:00:00.000000000Z",
+   "PriceUSD": "77.887702063948"
+  },
+  {
+   "asset": "hype",
+   "time": "2026-10-18T00:00:00.000000000Z",
+   "PriceUSD": "78.8584374716612"
+  },
+  {
+   "asset": "hype",
+   "time": "2026-10-19T00:00:00.000000000Z",
+   "PriceUSD": "79.228418628315"
+  }
+ ],
+ "coinmetrics_sui": [
+  {
+   "asset": "sui",
+   "time": "2026-10-17T00:00:00.000000000Z",
+   "PriceUSD": "0.974104653957174"
+  },
+  {
+   "asset": "sui",
+   "time": "2026-10-18T00:00:00.000000000Z",
+   "PriceUSD": "0.993311453591982"
+  },
+  {
+   "asset": "sui",
+   "time": "2026-10-19T00:00:00.000000000Z",
+   "PriceUSD": "0.998355945342176"
+  }
+ ],
+ "coinmetrics_catalog_n": 1144,
+ "coingecko_bitcoin_max": "ERROR <HTTPError 401: 'Unauthorized'>",
+ "coingecko_hyperliquid_max": "ERROR <HTTPError 401: 'Unauthorized'>",
+ "coingecko_top40": [
+  "1 bitcoin btc 82800",
+  "2 ethereum eth 2449.55",
+  "3 tether usdt 0.999202",
+  "4 binancecoin bnb 739.49",
+  "5 ripple xrp 1.33",
+  "6 usd-coin usdc 0.99974",
+  "7 solana sol 106.52",
+  "8 tron trx 0.330951",
+  "9 figure-heloc figr_heloc 1.027",
+  "10 zcash zec 1244.9",
+  "11 hyperliquid hype 81.39",
+  "12 dogecoin doge 0.081625",
+  "13 monero xmr 620.78",
+  "14 usds usds 0.999941",
+  "15 whitebit wbt 80.99",
+  "16 chainlink link 12.27",
+  "17 cardano ada 0.22321",
+  "18 leo-token leo 9.04",
+  "19 rain rain 0.00921622",
+  "20 near near 4.95",
+  "21 stellar xlm 0.181351",
+  "22 bitcoin-cash bch 281.01",
+  "23 litecoin ltc 60.85",
+  "24 ethena-usde usde 0.99957",
+  "25 uniswap uni 7.46",
+  "26 dai dai 0.999966",
+  "27 avalanche-2 avax 9.78",
+  "28 sui sui 1.029",
+  "29 canton-network cc 0.105036",
+  "30 usd1-wlfi usd1 0.998905",
+  "31 the-open-network gram 1.34",
+  "32 hedera-hashgraph hbar 0.083828",
+  "33 tether-gold xaut 4123.73",
+  "34 global-dollar usdg 1.0",
+  "35 bittensor tao 275.68",
+  "36 shiba-inu shib 5.12e-06",
+  "37 crypto-com-chain cro 0.057714",
+  "38 paypal-usd pyusd 1.0",
+  "39 quant-network qnt 196.88",
+  "40 bitway btw 1.78"
+ ],
+ "coinpaprika_btc": "ERROR <HTTPError 402: 'Payment Required'>",
+ "yahoo": {
+  "HYPE-USD": null,
+  "HYPE32196-USD": 81.26000213623047,
+  "SUI-USD": null,
+  "SUI20947-USD": 1.0283000469207764,
+  "search_hyperliquid": [
+   [
+    "HYPE32196-USD",
+    "Hyperliquid USD"
+   ],
+   [
+    "QQQ39623-USD",
+    "Invesco QQQ Trust Tokenized ETF (Hyperliquid) USD"
+   ],
+   [
+    "AAPL39624-USD",
+    "Apple Tokenized Stock (Hyperliquid) USD"
+   ],
+   [
+    "SPY39621-USD",
+    "SPDR S&P 500 ETF Trust Tokenized ETF (Hyperliquid) USD"
+   ],
+   [
+    "AMZN39619-USD",
+    "Amazon Tokenized Stock (Hyperliquid) USD"
+   ],
+   [
+    "TSLA39618-USD",
+    "Tesla Tokenized Stock (Hyperliquid) USD"
+   ],
+   [
+    "PIP34625-USD",
+    "PiP (Hyperliquid) USD"
+   ]
+  ],
+  "search_sui": [
+   [
+    "SUI20947-USD",
+    "Sui USD"
+   ],
+   [
+    "VSUI-USD",
+    "Volo Staked SUI USD"
+   ],
+   [
+    "HASUI-USD",
+    "Haedal Staked SUI USD"
+   ],
+   [
+    "PEPE34519-USD",
+    "Pepe on Sui USD"
+   ],
+   [
+    "SUIP-USD",
+    "SuiPad USD"
+   ],
+   [
+    "SEND34611-USD",
+    "Suilend USD"
+   ],
+   [
+    "SUIMAN-USD",
+    "Suiman USD"
+   ]
+  ]
+ }
+}
