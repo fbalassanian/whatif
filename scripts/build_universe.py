@@ -26,7 +26,7 @@ import time
 import urllib.request
 
 CONFIG = pathlib.Path(__file__).resolve().parent / "config.json"
-UA = "Mozilla/5.0 (compatible; ojala-universe/1.0; +https://github.com/fbalassanian/whatif)"
+UA = "Mozilla/5.0 (compatible; portfolito-universe/1.0; +https://github.com/fbalassanian/whatif)"
 N_CRYPTO = 100
 
 ETFS = [

@@ -1,6 +1,6 @@
-# Ojalá
+# Portfolito
 
-Sitio: https://ojalainvertia.vercel.app
+Sitio: https://miportfolito.vercel.app (antes ojalainvertia.vercel.app, que redirige acá)
 
 "Si en marzo de 2016 hubieras puesto USD 1.000 en Apple, ¿cuánto tendrías en tal mes?" Todo en dólares, con la opción de reinvertir dividendos, para acciones, ETFs y cripto. Se puede invertir una sola vez o todos los meses; en ese caso el rendimiento anual se muestra como TIR.
 
