@@ -66,3 +66,5 @@ jobs:
           # Se reemplaza la rama entera: no guarda historial, así el repo no crece todos los días.
           git push -qf "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" data
           echo "Publicados $(ls assets | wc -l) activos."
+          # jsDelivr guarda copias hasta 12 h: se le pide que renueve la lista de activos
+          curl -s "https://purge.jsdelivr.net/gh/${GITHUB_REPOSITORY}@data/manifest.json" || true

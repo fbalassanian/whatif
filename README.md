@@ -74,7 +74,7 @@ En `localhost` la página busca primero la carpeta `data/` local, así probás t
 Desde ahí:
 
 - Los datos se actualizan de lunes a sábado a las 19:17 hora argentina, sin deploys en Netlify.
-- jsDelivr guarda en caché los archivos de una rama hasta 12 horas, así que un dato nuevo puede tardar hasta la mañana siguiente en verse. Para esta herramienta alcanza.
+- jsDelivr guarda en caché los archivos de una rama hasta 12 horas. El workflow le pide que renueve la lista de activos al terminar; los precios de cada activo pueden tardar unas horas más en verse actualizados.
 - Si Yahoo falla con un activo, se conserva el dato anterior y queda marcado `"stale": true` en el manifest. El sitio sigue andando.
 - Si jsDelivr no responde, la página muestra los datos de ejemplo con el aviso, en vez de romperse.
 
