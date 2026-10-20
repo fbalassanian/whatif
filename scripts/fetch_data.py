@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Baja los datos que usa What if? y los deja como JSON estáticos en data/.
+Baja los datos que usa Ojalá y los deja como JSON estáticos en data/.
 
 Para cada activo de scripts/config.json, desde Yahoo Finance (yfinance):
   - "m": precio de cierre del último día de cada mes, en USD, ajustado
