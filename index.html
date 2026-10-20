@@ -6,7 +6,7 @@
 <title>Portfolito</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <!-- De dónde lee los datos: la rama "data" del repo público fbalassanian/whatif, vía jsDelivr. -->
-<meta name="whatif-data" content="https://cdn.jsdelivr.net/gh/fbalassanian/whatif@data/">
+<meta name="whatif-data" content="https://raw.githubusercontent.com/fbalassanian/whatif/data/ https://cdn.jsdelivr.net/gh/fbalassanian/whatif@data/">
 <meta name="description" content="Una máquina del tiempo para tu plata: ¿cuánto tendrías si hubieras invertido en una acción, ETF o cripto? En dólares, con dividendos, aportes mensuales y proyección.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -431,13 +431,13 @@ const RACE_COLORS = ["--coral", "--amber", "--mint"];
 const SUGGEST = ["SPY", "BTC", "NVDA", "GLD", "QQQ", "AAPL"];
 
 // ================================================================ carga de datos
-// Primero la rama "data" del repo vía jsDelivr (ver <meta name="whatif-data">), si no la carpeta data/.
+// Primero la rama "data" del repo: GitHub directo (caché de 5 min) y, si falla, jsDelivr
+// (ver <meta name="whatif-data">); si no, la carpeta data/.
 const store = { sample: true, base: "data/", manifest: null, cache: new Map() };
 function dataBases() {
-  const remote = (document.querySelector('meta[name="whatif-data"]')?.content || "").trim();
-  if (!remote || remote.includes("USUARIO")) return ["data/"];   // todavía sin configurar
+  const remote = (document.querySelector('meta[name="whatif-data"]')?.content || "").split(/\s+/).filter(u => u && !u.includes("USUARIO"));
   const local = ["localhost", "127.0.0.1", ""].includes(location.hostname);
-  return local ? ["data/", remote] : [remote, "data/"];
+  return local ? ["data/", ...remote] : [...remote, "data/"];
 }
 async function getJSON(url) {
   const r = await fetch(url, { cache: "no-cache" });

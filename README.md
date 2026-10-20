@@ -18,7 +18,7 @@ Es un sitio estático: no tiene servidor ni base de datos. Un script baja los da
 ```
 main (rama)     → el sitio: lo publica Netlify. Solo cambia cuando tocás el código.
 data (rama)     → los datos: los escribe GitHub Actions todos los días.
-                  La página los lee desde jsDelivr: cdn.jsdelivr.net/gh/USUARIO/REPO@data/
+                  La página los lee de raw.githubusercontent.com/USUARIO/REPO/data/ (y de jsDelivr si falla)
 ```
 
 ```
@@ -65,8 +65,8 @@ En `localhost` la página busca primero la carpeta `data/` local, así probás t
 
 ## Publicarlo en Netlify (gratis)
 
-1. **Subí la carpeta a un repo público de GitHub.** Tiene que ser público para que jsDelivr pueda servir los datos.
-2. **Poné tu repo en `index.html`.** En la línea `<meta name="whatif-data" ...>`, reemplazá `USUARIO/REPO` por el tuyo, por ejemplo `cdn.jsdelivr.net/gh/fede/whatif@data/`.
+1. **Subí la carpeta a un repo público de GitHub.** Tiene que ser público para que la página pueda leer los datos.
+2. **Poné tu repo en `index.html`.** En la línea `<meta name="whatif-data" ...>`, reemplazá `fbalassanian/whatif` por tu repo en las dos direcciones.
 3. **Dale permiso de escritura al workflow:** Settings → Actions → General → Workflow permissions → **Read and write**.
 4. **Generá los datos por primera vez:** Actions → **Actualizar datos** → **Run workflow**. Al terminar vas a ver la rama `data`.
 5. **Conectá Netlify:** Add new site → Import from Git → elegí el repo, rama `main`. No hace falta configurar nada más; `netlify.toml` ya dice que no hay build.
@@ -74,9 +74,9 @@ En `localhost` la página busca primero la carpeta `data/` local, así probás t
 Desde ahí:
 
 - Los datos se actualizan de lunes a sábado a las 19:17 hora argentina, sin deploys en Netlify.
-- jsDelivr guarda en caché los archivos de una rama hasta 12 horas. El workflow le pide que renueve la lista de activos al terminar; los precios de cada activo pueden tardar unas horas más en verse actualizados.
+- GitHub sirve los datos con un caché de 5 minutos, así que una actualización se ve enseguida. jsDelivr queda de respaldo: guarda los archivos hasta 12 horas, así que si la página tiene que usarlo puede mostrar datos de ayer.
 - Si Yahoo falla con un activo, se conserva el dato anterior y queda marcado `"stale": true` en el manifest. El sitio sigue andando.
-- Si jsDelivr no responde, la página muestra los datos de ejemplo con el aviso, en vez de romperse.
+- Si ni GitHub ni jsDelivr responden, la página muestra los datos de ejemplo con el aviso, en vez de romperse.
 
 **Consumo estimado de créditos en Netlify:** solo se sirve `index.html` (unos 25 KB por visita); fuentes, librería del gráfico y datos vienen de otros servidores. Netlify cobra 2 créditos cada 10.000 pedidos y 20 créditos por GB transferido, así que 10.000 visitas cuestan unos 9 créditos. Con 300 créditos al mes hay margen para decenas de miles de visitas más un puñado de deploys cuando cambies el diseño.
 
