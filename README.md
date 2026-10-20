@@ -94,7 +94,7 @@ El mismo repo también funciona en Cloudflare Pages o GitHub Pages: conectás la
 
 `scripts/build_universe.py` arma `scripts/config.json` con:
 
-- **Índices y ETFs:** SPY, QQQ, DIA, IWM, VTI, EEM, EWZ, GLD, SLV.
+- **ETFs:** unos 100 de los más usados, en una lista fija dentro del script: índices de EE.UU. (SPY, VOO, QQQ…), dividendos, sectores, temáticos, ETFs de Bitcoin y Ethereum, países (incluido ARGT, Argentina), bonos del Tesoro y corporativos, materias primas y algunos apalancados (TQQQ, SOXL…).
 - **Acciones EE.UU.:** todas las del S&P 500 y el Nasdaq-100, desde las tablas de Wikipedia.
 - **Argentina (ADRs):** Galicia, Macro, BBVA, Supervielle, YPF, Pampa, Central Puerto, TGS, Edenor, Telecom, Loma Negra, Cresud, IRSA, Vista, MercadoLibre, Globant, Despegar, Bioceres, Corporación América y Adecoagro.
 - **Cripto:** las 100 más grandes según CoinGecko, sin stablecoins ni versiones envueltas o en staking.

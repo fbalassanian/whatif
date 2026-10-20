@@ -2,7 +2,7 @@
 """
 Arma scripts/config.json: la lista de activos que baja fetch_data.py.
 
-  - Índices y ETFs: una lista fija (abajo).
+  - ETFs: una lista fija de ~100 de los más usados (abajo): índices, sectores, países, bonos, materias primas.
   - Acciones EE.UU.: las del S&P 500 y el Nasdaq-100, desde las tablas de Wikipedia.
   - Argentina (ADRs): una lista fija de empresas argentinas que cotizan en EE.UU.
   - Cripto: las 100 más grandes por capitalización según CoinGecko, sin stablecoins
@@ -30,8 +30,46 @@ UA = "Mozilla/5.0 (compatible; ojala-universe/1.0; +https://github.com/fbalassan
 N_CRYPTO = 100
 
 ETFS = [
-    ("SPY", "S&P 500"), ("QQQ", "Nasdaq 100"), ("DIA", "Dow Jones"), ("IWM", "Russell 2000"),
-    ("VTI", "Mercado total EE.UU."), ("EEM", "Emergentes"), ("EWZ", "Brasil"), ("GLD", "Oro"), ("SLV", "Plata"),
+    # índices de EE.UU.
+    ("SPY", "S&P 500 (SPDR)"), ("VOO", "S&P 500 (Vanguard)"), ("IVV", "S&P 500 (iShares)"), ("SPLG", "S&P 500 (SPDR Portfolio)"),
+    ("RSP", "S&P 500 equiponderado"), ("QQQ", "Nasdaq 100 (Invesco)"), ("QQQM", "Nasdaq 100 (Invesco, mini)"),
+    ("DIA", "Dow Jones"), ("IWM", "Russell 2000"), ("VTI", "Mercado total EE.UU."), ("MDY", "S&P MidCap 400"),
+    ("IJH", "S&P MidCap 400 (iShares)"), ("IJR", "S&P SmallCap 600"), ("VUG", "Crecimiento EE.UU. (Vanguard)"),
+    ("VTV", "Valor EE.UU. (Vanguard)"), ("IWF", "Russell 1000 Crecimiento"), ("IWD", "Russell 1000 Valor"),
+    ("MTUM", "Momentum EE.UU."), ("USMV", "Baja volatilidad EE.UU."),
+    # dividendos
+    ("SCHD", "Dividendos EE.UU. (Schwab)"), ("VIG", "Dividendos crecientes (Vanguard)"), ("VYM", "Alto dividendo (Vanguard)"),
+    ("DGRO", "Crecimiento de dividendos (iShares)"), ("HDV", "Alto dividendo (iShares)"), ("NOBL", "Aristócratas del dividendo"),
+    ("JEPI", "Ingreso premium S&P 500 (JPMorgan)"), ("JEPQ", "Ingreso premium Nasdaq (JPMorgan)"),
+    # sectores
+    ("XLK", "Sector tecnología"), ("XLF", "Sector financiero"), ("XLE", "Sector energía"), ("XLV", "Sector salud"),
+    ("XLY", "Sector consumo discrecional"), ("XLP", "Sector consumo básico"), ("XLI", "Sector industrial"),
+    ("XLU", "Sector servicios públicos"), ("XLB", "Sector materiales"), ("XLRE", "Sector inmobiliario"),
+    ("XLC", "Sector comunicaciones"), ("VGT", "Tecnología (Vanguard)"), ("SMH", "Semiconductores (VanEck)"),
+    ("SOXX", "Semiconductores (iShares)"), ("IBB", "Biotecnología (iShares)"), ("XBI", "Biotecnología (SPDR)"),
+    ("KRE", "Bancos regionales"), ("ITA", "Aeroespacial y defensa"), ("XHB", "Construcción de viviendas"), ("JETS", "Aerolíneas"),
+    # temáticos
+    ("ARKK", "Innovación (ARK)"), ("ICLN", "Energía limpia"), ("TAN", "Energía solar"), ("LIT", "Litio y baterías"),
+    ("URA", "Uranio"), ("BOTZ", "Robótica e IA"), ("CIBR", "Ciberseguridad"), ("IGV", "Software"),
+    # cripto en ETF
+    ("IBIT", "Bitcoin (iShares)"), ("FBTC", "Bitcoin (Fidelity)"), ("ETHA", "Ethereum (iShares)"),
+    # países y regiones
+    ("ARGT", "Argentina (Global X)"), ("EWZ", "Brasil"), ("ILF", "Latinoamérica 40"), ("EWW", "México"), ("ECH", "Chile"),
+    ("FXI", "China grandes empresas"), ("MCHI", "China (MSCI)"), ("KWEB", "Internet China"), ("EWJ", "Japón"),
+    ("INDA", "India"), ("EWY", "Corea del Sur"), ("EWT", "Taiwán"), ("EWG", "Alemania"), ("EWU", "Reino Unido"),
+    ("EZU", "Eurozona"), ("VGK", "Europa (Vanguard)"), ("EEM", "Emergentes (iShares)"), ("VWO", "Emergentes (Vanguard)"),
+    ("IEMG", "Emergentes Core (iShares)"), ("EFA", "Desarrollados ex EE.UU. (iShares)"), ("VEA", "Desarrollados ex EE.UU. (Vanguard)"),
+    ("VXUS", "Mundo ex EE.UU. (Vanguard)"), ("ACWI", "Mundo (iShares)"), ("VT", "Mundo (Vanguard)"),
+    # bonos
+    ("BIL", "Letras del Tesoro 1-3 meses"), ("SGOV", "Letras del Tesoro 0-3 meses"), ("SHY", "Tesoro 1-3 años"),
+    ("IEF", "Tesoro 7-10 años"), ("TLT", "Tesoro 20+ años"), ("TIP", "Tesoro ajustado por inflación"),
+    ("BND", "Bonos EE.UU. total (Vanguard)"), ("AGG", "Bonos EE.UU. total (iShares)"), ("LQD", "Bonos corporativos grado inversión"),
+    ("HYG", "Bonos high yield"), ("EMB", "Bonos emergentes en dólares"),
+    # materias primas
+    ("GLD", "Oro (SPDR)"), ("IAU", "Oro (iShares)"), ("SLV", "Plata"), ("GDX", "Mineras de oro"), ("GDXJ", "Mineras de oro junior"),
+    ("COPX", "Mineras de cobre"), ("USO", "Petróleo"), ("UNG", "Gas natural"), ("DBC", "Materias primas (canasta)"),
+    # apalancados más usados
+    ("TQQQ", "Nasdaq 100 x3"), ("SQQQ", "Nasdaq 100 x3 inverso"), ("SPXL", "S&P 500 x3"), ("SOXL", "Semiconductores x3"),
 ]
 ADRS = [
     ("GGAL", "Grupo Galicia"), ("BMA", "Banco Macro"), ("BBAR", "BBVA Argentina"), ("SUPV", "Supervielle"),
@@ -129,7 +167,7 @@ def main() -> int:
         assets.append({"id": id_, "name": f"{name} ({id_})", "group": group, "yahoo": yahoo})
 
     for s, n in ETFS:
-        add(s, s, n, "Índices y ETFs")
+        add(s, s, re.sub(r"\s*\((.*?)\)", r" \1", n), "ETFs")   # "S&P 500 (Vanguard)" -> "S&P 500 Vanguard"
     for s, n in ADRS:
         add(s, s, n, "Argentina (ADRs)")
 
