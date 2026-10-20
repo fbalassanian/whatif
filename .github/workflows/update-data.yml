@@ -15,7 +15,7 @@ on:
   # También cuando cambia el script, la lista de activos o este workflow (incluye la primera subida).
   push:
     branches: [main]
-    paths: ["scripts/**", "requirements.txt", ".github/workflows/update-data.yml"]
+    paths: ["scripts/fetch_data.py", "scripts/config.json", "requirements.txt", ".github/workflows/update-data.yml"]
 
 permissions:
   contents: write
@@ -27,7 +27,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 120   # la primera carga con cientos de activos baja la historia completa de cada uno
     steps:
       - uses: actions/checkout@v4
 

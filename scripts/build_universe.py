@@ -1,0 +1,181 @@
+#!/usr/bin/env python3
+"""
+Arma scripts/config.json: la lista de activos que baja fetch_data.py.
+
+  - Índices y ETFs: una lista fija (abajo).
+  - Acciones EE.UU.: las del S&P 500 y el Nasdaq-100, desde las tablas de Wikipedia.
+  - Argentina (ADRs): una lista fija de empresas argentinas que cotizan en EE.UU.
+  - Cripto: las 100 más grandes por capitalización según CoinGecko, sin stablecoins
+    ni versiones "envueltas" o "en staking" de otras monedas.
+
+Cada símbolo se valida contra Yahoo Finance; los que no tienen precios se descartan.
+Corre una vez por mes en GitHub Actions (workflow "Actualizar lista de activos").
+
+Uso:
+    python scripts/build_universe.py
+"""
+from __future__ import annotations
+
+import datetime as dt
+import io
+import json
+import pathlib
+import re
+import sys
+import time
+import urllib.request
+
+CONFIG = pathlib.Path(__file__).resolve().parent / "config.json"
+UA = "Mozilla/5.0 (compatible; ojala-universe/1.0; +https://github.com/fbalassanian/whatif)"
+N_CRYPTO = 100
+
+ETFS = [
+    ("SPY", "S&P 500"), ("QQQ", "Nasdaq 100"), ("DIA", "Dow Jones"), ("IWM", "Russell 2000"),
+    ("VTI", "Mercado total EE.UU."), ("EEM", "Emergentes"), ("EWZ", "Brasil"), ("GLD", "Oro"), ("SLV", "Plata"),
+]
+ADRS = [
+    ("GGAL", "Grupo Galicia"), ("BMA", "Banco Macro"), ("BBAR", "BBVA Argentina"), ("SUPV", "Supervielle"),
+    ("YPF", "YPF"), ("PAM", "Pampa Energía"), ("CEPU", "Central Puerto"), ("TGS", "Transportadora Gas del Sur"),
+    ("EDN", "Edenor"), ("TEO", "Telecom Argentina"), ("LOMA", "Loma Negra"), ("CRESY", "Cresud"),
+    ("IRS", "IRSA"), ("VIST", "Vista Energy"), ("MELI", "MercadoLibre"), ("GLOB", "Globant"),
+    ("DESP", "Despegar"), ("BIOX", "Bioceres"), ("CAAP", "Corporación América"), ("AGRO", "Adecoagro"),
+]
+# monedas atadas al dólar u otros activos, y versiones envueltas / en staking: no tienen sentido acá
+SKIP_CRYPTO = re.compile(r"usd|eur|wrapped|staked|bridged|restak|liquid|tether gold|pax gold|\bbuidl\b|binance-peg", re.I)
+NAME_SUFFIX = re.compile(r",?\s+(Inc\.?|Incorporated|Corporation|Corp\.?|Company|Co\.?|plc|N\.V\.|S\.A\.|Ltd\.?|Limited|Holdings?|Group)$", re.I)
+
+
+def log(msg: str) -> None:
+    print(msg, flush=True)
+
+
+def get(url: str) -> str:
+    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "*/*"})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        return r.read().decode("utf-8")
+
+
+def wiki_table(page: str, sym_cols: tuple[str, ...], name_cols: tuple[str, ...]) -> list[tuple[str, str]]:
+    import pandas as pd
+    html = get(f"https://en.wikipedia.org/wiki/{page}")
+    for t in pd.read_html(io.StringIO(html)):
+        cols = [str(c) for c in t.columns]
+        sc = next((c for c in cols if c in sym_cols), None)
+        nc = next((c for c in cols if c in name_cols), None)
+        if sc and nc and len(t) > 50:
+            return [(str(s).strip(), str(n).strip()) for s, n in zip(t[sc], t[nc]) if str(s).strip()]
+    raise RuntimeError(f"No encontré la tabla de símbolos en {page}")
+
+
+def clean_name(n: str) -> str:
+    n = re.sub(r"\s*\(.*?\)\s*$", "", n).strip()      # "(Class A)" y similares
+    for _ in range(2):
+        n = NAME_SUFFIX.sub("", n).strip()
+    return n or "?"
+
+
+def yahoo_ok(symbols: list[str]) -> set[str]:
+    """Símbolos que tienen precios en Yahoo (consulta en tandas)."""
+    import yfinance as yf
+    ok: set[str] = set()
+    for i in range(0, len(symbols), 50):
+        batch = symbols[i:i + 50]
+        df = yf.download(batch, period="1mo", interval="1d", group_by="ticker", progress=False, threads=True, auto_adjust=False)
+        for s in batch:
+            col = None
+            for pick in (lambda: df[s]["Close"], lambda: df["Close"][s], lambda: df["Close"]):   # según la versión de yfinance
+                try:
+                    col = pick()
+                    break
+                except Exception:  # noqa: BLE001
+                    continue
+            if col is not None and getattr(col, "ndim", 1) == 1 and col.dropna().size:
+                ok.add(s)
+        time.sleep(1)
+    return ok
+
+
+def crypto_symbol(sym: str, name: str) -> str | None:
+    """Símbolo de Yahoo para una cripto: SYM-USD, o el que devuelva la búsqueda (ej. SUI20947-USD)."""
+    import yfinance as yf
+    try:
+        for q in yf.Search(f"{name} USD", max_results=10).quotes:
+            s = q.get("symbol", "")
+            if q.get("quoteType") == "CRYPTOCURRENCY" and s.endswith("-USD") and s.split("-")[0].rstrip("0123456789") == sym:
+                return s
+    except Exception:  # noqa: BLE001
+        pass
+    return None
+
+
+def main() -> int:
+    assets: list[dict] = []
+    seen: set[str] = set()
+
+    def add(id_: str, yahoo: str, name: str, group: str) -> None:
+        if id_ in seen:
+            return
+        seen.add(id_)
+        assets.append({"id": id_, "name": f"{name} ({id_})", "group": group, "yahoo": yahoo})
+
+    for s, n in ETFS:
+        add(s, s, n, "Índices y ETFs")
+    for s, n in ADRS:
+        add(s, s, n, "Argentina (ADRs)")
+
+    sp = wiki_table("List_of_S%26P_500_companies", ("Symbol",), ("Security",))
+    nq = wiki_table("Nasdaq-100", ("Ticker", "Symbol"), ("Company", "Security"))
+    log(f"Wikipedia: {len(sp)} del S&P 500, {len(nq)} del Nasdaq-100")
+    for s, n in sp + nq:
+        y = s.replace(".", "-")                         # BRK.B -> BRK-B
+        add(y, y, clean_name(n), "Acciones EE.UU.")
+
+    cg = json.loads(get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=200&page=1"))
+    coins = [c for c in cg if not SKIP_CRYPTO.search(f"{c['id']} {c['name']} {c['symbol']}")]
+    log(f"CoinGecko: {len(cg)} monedas, {len(coins)} después de sacar stablecoins y envueltas")
+
+    # validar acciones y ETFs contra Yahoo
+    stocks = list(assets)
+    ok = yahoo_ok([a["yahoo"] for a in stocks])
+    dropped = [a["id"] for a in stocks if a["yahoo"] not in ok]
+    assets = [a for a in stocks if a["yahoo"] in ok]
+    if dropped:
+        log(f"Sin datos en Yahoo, se omiten: {', '.join(dropped)}")
+
+    # cripto: SYM-USD; si no existe, se busca el símbolo que usa Yahoo
+    ok_c = yahoo_ok([f"{c['symbol'].upper()}-USD" for c in coins])
+    n_c = 0
+    for c in coins:
+        if n_c >= N_CRYPTO:
+            break
+        sym = c["symbol"].upper()
+        y = f"{sym}-USD"
+        if y not in ok_c:
+            y = crypto_symbol(sym, c["name"])
+            if not y or not yahoo_ok([y]):
+                log(f"  cripto sin datos en Yahoo: {c['name']} ({sym})")
+                continue
+        id_ = sym if sym not in seen else y              # si choca con una acción, se usa el símbolo completo
+        if id_ in seen:
+            continue
+        seen.add(id_)
+        assets.append({"id": id_, "name": f"{c['name']} ({sym})", "group": "Cripto", "yahoo": y})
+        n_c += 1
+
+    if len(assets) < 300:
+        log(f"✗ Quedaron solo {len(assets)} activos: algo falló, no se toca config.json")
+        return 1
+    CONFIG.write_text(json.dumps({
+        "_comment": "Generado por scripts/build_universe.py. No editar a mano: los cambios se pisan en la próxima corrida.",
+        "generated": dt.date.today().isoformat(),
+        "assets": assets,
+    }, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    by = {}
+    for a in assets:
+        by[a["group"]] = by.get(a["group"], 0) + 1
+    log(f"✓ config.json: {len(assets)} activos — " + ", ".join(f"{g}: {n}" for g, n in by.items()))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -16,6 +16,11 @@ Uso:
     python scripts/fetch_data.py --only BTC SPY
     python scripts/fetch_data.py --fake       # datos simulados, sin internet (para probar)
 
+Actualización incremental: si un activo ya tiene archivo, se bajan solo los
+últimos meses y se pegan a la historia guardada. Si en los meses en común los
+precios no coinciden (por ejemplo, hubo un split y Yahoo reajustó la historia),
+se vuelve a bajar la historia completa. Los activos nuevos bajan todo.
+
 Si un activo falla, se conserva el archivo que ya había y queda marcado
 como "stale" en data/manifest.json. El sitio sigue funcionando con el dato anterior.
 """
@@ -34,8 +39,11 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 ASSETS_DIR = DATA / "assets"
 CONFIG = pathlib.Path(__file__).resolve().parent / "config.json"
-YAHOO_PAUSE_S = 1.5          # pausa entre activos para no gatillar el límite de Yahoo
+PAUSE_FULL_S = 1.0           # pausas entre activos para no gatillar el límite de Yahoo
+PAUSE_RECENT_S = 0.4
 YAHOO_RETRIES = 3
+RECENT_PERIOD = "6mo"        # ventana de la actualización incremental
+MATCH_TOL = 0.005            # 0,5%: diferencia máxima aceptada en los meses en común
 
 
 # ---------------------------------------------------------------- utilidades
@@ -89,15 +97,15 @@ def clean_dividends(series: list[list], prices: list[list], name: str) -> list[l
 
 
 # ---------------------------------------------------------------- fuente real
-def fetch_yahoo(symbol: str) -> tuple[list[list], list[list], str]:
-    """Historia diaria completa en una sola consulta; se agrupa por mes acá.
+def fetch_yahoo(symbol: str, period: str = "max") -> tuple[list[list], list[list], str]:
+    """Historia diaria en una sola consulta (completa o reciente); se agrupa por mes acá.
     El mes en curso queda con el último cierre disponible, y "asof" es la fecha de ese cierre."""
     import yfinance as yf
 
     last = None
     for attempt in range(YAHOO_RETRIES):
         try:
-            df = yf.Ticker(symbol).history(period="max", interval="1d",
+            df = yf.Ticker(symbol).history(period=period, interval="1d",
                                            auto_adjust=False, actions=True)
             break
         except Exception as e:  # noqa: BLE001
@@ -122,7 +130,7 @@ def fetch_yahoo(symbol: str) -> tuple[list[list], list[list], str]:
 
 
 # ---------------------------------------------------------------- fuente simulada (--fake)
-def fake_yahoo(symbol: str) -> tuple[list[list], list[list], str]:
+def fake_yahoo(symbol: str, period: str = "max") -> tuple[list[list], list[list], str]:
     rnd = random.Random(symbol)
     crypto = symbol.endswith("-USD")
     y, m = (2014, 9) if crypto else (2005, 1)
@@ -140,7 +148,35 @@ def fake_yahoo(symbol: str) -> tuple[list[list], list[list], str]:
         m += 1
         if m == 13:
             y, m = y + 1, 1
+    if period != "max":                                 # ventana reciente: últimos ~6 meses
+        cut = f"{today.year - (1 if today.month <= 6 else 0):04d}-{(today.month - 6 - 1) % 12 + 1:02d}"
+        prices = [x for x in prices if x[0] >= cut]
+        divs = [x for x in divs if x[0] >= cut]
     return prices, divs, today.isoformat()
+
+
+def merge_recent(old: dict, new_p: list[list], new_d: list[list]) -> tuple[list[list], list[list]] | None:
+    """Pega los meses recientes a la historia guardada.
+    Devuelve None si no se puede confiar en pegarlos (no hay meses en común, quedó un hueco,
+    o los precios en común no coinciden, típico después de un split): entonces se baja todo."""
+    if not old.get("m") or len(new_p) < 2:
+        return None
+    old_p = dict(old["m"])
+    first_new, old_last = new_p[0][0], old["m"][-1][0]
+    if old_last < first_new:                             # hueco entre lo guardado y lo nuevo
+        return None
+    # meses cerrados en los dos lados: sin el último guardado (era el mes en curso) ni el último nuevo
+    common = [m for m, _ in new_p[:-1] if m in old_p and m != old_last]
+    if not common:
+        return None
+    newd = dict(new_p)
+    for m in common:
+        if abs(newd[m] / old_p[m] - 1) > MATCH_TOL:
+            return None
+    prices = [x for x in old["m"] if x[0] < first_new] + new_p
+    # el primer mes de la ventana puede estar cortado: sus dividendos se toman de lo guardado
+    divs = [x for x in old.get("d", []) if x[0] <= first_new] + [x for x in new_d if x[0] > first_new]
+    return prices, divs
 
 
 # ---------------------------------------------------------------- armado
@@ -165,8 +201,9 @@ def main() -> int:
     get = fake_yahoo if args.fake else fetch_yahoo
     cfg = json.loads(CONFIG.read_text(encoding="utf-8"))["assets"]
     wanted = set(args.only or [])
-    errors = 0
+    errors = fulls = 0
     manifest_assets = []
+    t0 = time.time()
 
     for i, a in enumerate(cfg):
         path = ASSETS_DIR / f"{a['id']}.json"
@@ -176,15 +213,27 @@ def main() -> int:
             if old:
                 manifest_assets.append(old)
             continue
+        full = True
         try:
-            raw_p, raw_d, asof = get(a["yahoo"])
-            prices = clean_prices(raw_p, a["id"])
-            divs = clean_dividends(raw_d, prices, a["id"])
+            merged = None
+            if path.exists():                                # incremental
+                old = json.loads(path.read_text(encoding="utf-8"))
+                rp, rd, asof = get(a["yahoo"], RECENT_PERIOD)
+                merged = merge_recent(old, rp, rd)
+                full = merged is None
+            if merged is None:                               # nuevo, o no coincidía: historia completa
+                if path.exists():
+                    log(f"  ↻ {a['id']}: no coincide con lo guardado, bajo la historia completa")
+                rp, rd, asof = get(a["yahoo"])
+                merged = (rp, rd)
+            fulls += full
+            prices = clean_prices(merged[0], a["id"])
+            divs = clean_dividends(merged[1], prices, a["id"])
             write_json(path, {**entry,
                               "source": f"Yahoo Finance ({a['yahoo']}): cierre mensual en USD ajustado por splits; dividendos por acción",
                               "asof": asof, "m": prices, "d": divs})
             manifest_assets.append({**entry, "div": bool(divs), "first": prices[0][0], "last": prices[-1][0], "asof": asof})
-            log(f"✓ {a['id']:6} {prices[0][0]}→{asof} ({len(prices)} meses, {len(divs)} con dividendos)")
+            log(f"✓ {a['id']:8} {prices[0][0]}→{asof} ({len(prices)} meses, {len(divs)} con dividendos{', completo' if full else ''})")
         except Exception as e:  # noqa: BLE001
             errors += 1
             old = existing_entry(path, entry)
@@ -194,14 +243,22 @@ def main() -> int:
             else:
                 log(f"✗ {a['id']}: {e} (se omite)")
         if not args.fake and i < len(cfg) - 1:
-            time.sleep(YAHOO_PAUSE_S)
+            time.sleep(PAUSE_FULL_S if full else PAUSE_RECENT_S)
+
+    # borrar archivos de activos que ya no están en la lista (así la rama data no crece sin control)
+    if not wanted:
+        keep = {f"{a['id']}.json" for a in cfg}
+        for f in ASSETS_DIR.glob("*.json"):
+            if f.name not in keep:
+                f.unlink()
+                log(f"  − {f.stem}: ya no está en la lista, se borra")
 
     write_json(DATA / "manifest.json", {
         "updated": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "fake": bool(args.fake),
         "assets": manifest_assets,
     })
-    log(f"Listo: {len(manifest_assets)} activos, {errors} errores.")
+    log(f"Listo: {len(manifest_assets)} activos ({fulls} con historia completa), {errors} errores, {time.time() - t0:.0f} s.")
     # Falla solo si no quedó nada usable, así el workflow no se pone en rojo por un activo suelto.
     return 0 if manifest_assets else 1
 

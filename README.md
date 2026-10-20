@@ -90,15 +90,18 @@ El plan gratis de Vercel (Hobby) es solo para uso personal y no comercial. Si le
 
 El mismo repo también funciona en Cloudflare Pages o GitHub Pages: conectás la rama `main` y listo.
 
-## Agregar activos
+## Qué activos hay
 
-Sumá una línea en `scripts/config.json`:
+`scripts/build_universe.py` arma `scripts/config.json` con:
 
-```json
-{"id": "COST", "name": "Costco (COST)", "group": "Acciones EE.UU. / CEDEARs", "yahoo": "COST"}
-```
+- **Índices y ETFs:** SPY, QQQ, DIA, IWM, VTI, EEM, EWZ, GLD, SLV.
+- **Acciones EE.UU.:** todas las del S&P 500 y el Nasdaq-100, desde las tablas de Wikipedia.
+- **Argentina (ADRs):** Galicia, Macro, BBVA, Supervielle, YPF, Pampa, Central Puerto, TGS, Edenor, Telecom, Loma Negra, Cresud, IRSA, Vista, MercadoLibre, Globant, Despegar, Bioceres, Corporación América y Adecoagro.
+- **Cripto:** las 100 más grandes según CoinGecko, sin stablecoins ni versiones envueltas o en staking.
 
-`yahoo` es el símbolo tal como aparece en Yahoo Finance (para cripto, por ejemplo `LINK-USD`). Tiene que cotizar en dólares. Los grupos del selector salen del campo `group`.
+Cada símbolo se valida contra Yahoo; los que no tienen precios se descartan. El workflow **Actualizar lista de activos** lo corre el día 1 de cada mes (así entran y salen las empresas del S&P 500) y después dispara la actualización de datos. Para sumar ETFs o ADRs, editá las listas `ETFS` y `ADRS` al principio del script; `config.json` no se edita a mano.
+
+**Actualización diaria incremental:** para los activos que ya tienen datos se bajan solo los últimos 6 meses y se pegan a lo guardado. Si los meses en común no coinciden (por ejemplo, hubo un split y Yahoo reajustó la historia), se baja la historia completa de ese activo. La primera carga de un activo nuevo baja todo.
 
 ## Licencias y límites
 

@@ -81,20 +81,20 @@ header { display: flex; align-items: center; justify-content: space-between; gap
   font-family: var(--display); font-weight: 600; letter-spacing: -0.02em;
   font-size: clamp(1.25rem, 3.4vw, 2.05rem); line-height: 1.75; margin: 0; text-wrap: pretty; max-width: 30em;
 }
-.question select, .question input {
+.question select, .question input, .question .pick {
   font: inherit; font-weight: 600; color: var(--cyan);
   background-color: rgba(63,224,255,.07); border: 1px solid rgba(63,224,255,.32); border-radius: 10px;
   padding: 0 .3em; margin: 2px 0; cursor: pointer; max-width: 100%;
   transition: border-color .15s, box-shadow .15s, background-color .15s;
 }
-.question select {   /* flecha propia; el ancho lo ajusta el script a la opción elegida */
+.question select, .question .pick {   /* flecha propia; el ancho lo ajusta el script a la opción elegida */
   appearance: none; -webkit-appearance: none; padding-right: 1.05em;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%233fe0ff' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat; background-position: right .32em center; background-size: .42em auto;
 }
 .question .nw { white-space: nowrap; }
-.question select:hover, .question input:hover { border-color: var(--cyan); background-color: rgba(63,224,255,.12); }
-.question select:focus-visible, .question input:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(63,224,255,.35); border-color: var(--cyan); }
+.question select:hover, .question input:hover, .question .pick:hover { border-color: var(--cyan); background-color: rgba(63,224,255,.12); }
+.question select:focus-visible, .question input:focus-visible, .question .pick:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(63,224,255,.35); border-color: var(--cyan); }
 .question input { width: 6.2ch; min-width: 2.5ch; text-align: right; cursor: text; }
 .question option, .question optgroup { color: var(--text); background: var(--panel); }
 .question .soft { color: var(--muted); }
@@ -193,7 +193,31 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .suggest { border-style: dashed; color: var(--muted); cursor: pointer; padding-right: 12px; }
 .suggest:hover { color: var(--text); border-color: var(--violet); }
 .addsel { border: 1px dashed var(--line); background: transparent; border-radius: 999px; padding: 5px 10px; font-size: 13px; color: var(--muted); cursor: pointer; max-width: 100%; }
-.addsel option, .addsel optgroup { background: var(--panel); color: var(--text); }
+.addsel:hover { color: var(--text); border-color: var(--violet); }
+
+/* ---------- buscador de activos */
+.picker { position: fixed; inset: 0; z-index: 20; background: rgba(5,4,20,.72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  display: flex; justify-content: center; align-items: flex-start;
+  padding: calc(8vh + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) 16px max(16px, env(safe-area-inset-left, 0px)); }
+.picker-box { width: min(580px, 100%); max-height: 80vh; display: grid; grid-template-rows: auto auto auto minmax(0, 1fr); gap: 10px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 14px; box-shadow: 0 30px 80px -20px rgba(0,0,0,.6); }
+.picker-head { display: flex; align-items: center; justify-content: space-between; font-family: var(--display); font-weight: 600; font-size: 15px; }
+.picker-head .x { border: 0; background: none; color: var(--muted); font-size: 22px; line-height: 1; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; }
+.picker-head .x:hover { background: var(--line); color: var(--text); }
+#picker-q { width: 100%; padding: 11px 14px; border-radius: 12px; border: 1px solid rgba(63,224,255,.4); background: rgba(10,8,32,.9); font-size: 16px; }
+#picker-q:focus-visible { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(63,224,255,.25); }
+.picker-groups { display: flex; flex-wrap: wrap; gap: 6px; }
+.picker-groups button { border: 1px solid var(--line); background: transparent; color: var(--muted); border-radius: 999px; padding: 4px 11px; font-size: 12px; cursor: pointer; }
+.picker-groups button[aria-pressed="true"] { border-color: var(--cyan); color: var(--text); background: rgba(63,224,255,.1); }
+.picker-groups small { opacity: .7; }
+#picker-list { list-style: none; margin: 0; padding: 0; overflow-y: auto; min-height: 0; border-top: 1px solid var(--line); }
+#picker-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 9px 10px; border-radius: 10px; cursor: pointer; align-items: baseline; }
+#picker-list li .n { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#picker-list li .t { font-family: var(--digits); font-weight: 600; color: var(--cyan); font-size: 13px; }
+#picker-list li .g { grid-column: 1 / -1; font-size: 11px; color: var(--muted); }
+#picker-list li[aria-selected="true"], #picker-list li:hover { background: rgba(63,224,255,.1); }
+#picker-list .empty { color: var(--muted); cursor: default; display: block; }
+#picker-list .empty:hover { background: none; }
 .verdict { font-size: 14px; color: var(--muted); margin: 0; }
 .verdict b { color: var(--text); }
 
@@ -269,7 +293,7 @@ footer a { color: var(--cyan); }
     hubieras puesto USD
     <input id="amount" type="text" inputmode="numeric" value="1.000" aria-label="Monto en dólares">
     <select id="freq" aria-label="Frecuencia"><option value="once">una vez</option><option value="monthly">todos los meses</option></select>
-    en <span class="nw"><select id="ticker" aria-label="Acción, ETF o cripto"></select><span class="soft">,</span></span>
+    en <span class="nw"><button type="button" class="pick" id="ticker-btn" aria-haspopup="dialog" aria-label="Elegir acción, ETF o cripto">…</button><input type="hidden" id="ticker"><span class="soft">,</span></span>
     <span class="soft">¿cuánto tendrías en</span>
     <select id="e-month" aria-label="Mes del resultado"></select>
     <span class="nw"><select id="e-year" aria-label="Año del resultado"></select><span class="soft">?</span></span>
@@ -336,6 +360,15 @@ footer a { color: var(--cyan); }
   </footer>
 </div>
 <div class="toast" id="toast" role="status" hidden></div>
+<div class="picker" id="picker" hidden>
+  <div class="picker-box" role="dialog" aria-modal="true" aria-labelledby="picker-title">
+    <div class="picker-head"><span id="picker-title">Elegí un activo</span><button type="button" class="x" id="picker-close" aria-label="Cerrar">×</button></div>
+    <input id="picker-q" type="search" autocomplete="off" spellcheck="false" placeholder="Buscá por nombre o símbolo: Apple, NVDA, bitcoin…"
+           role="combobox" aria-expanded="true" aria-controls="picker-list" aria-autocomplete="list">
+    <div class="picker-groups" id="picker-groups" role="group" aria-label="Filtrar por tipo"></div>
+    <ul id="picker-list" role="listbox" aria-label="Resultados"></ul>
+  </div>
+</div>
 
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 <script>
@@ -436,14 +469,82 @@ const metaOf = id => store.manifest.assets.find(a => a.id === id);
 // ================================================================ selectores
 let asset = null;
 const race = [];   // [{id, asset}]
-function fillTickers() {
-  const sel = $("ticker"); sel.innerHTML = "";
-  const groups = new Map();
-  for (const a of store.manifest.assets) {
-    if (!groups.has(a.group)) { const g = document.createElement("optgroup"); g.label = a.group; groups.set(a.group, g); sel.append(g); }
-    groups.get(a.group).append(new Option(a.name, a.id));
-  }
+// ---------- buscador de activos (activo principal y carrera)
+const POPULAR = ["SPY", "QQQ", "AAPL", "NVDA", "MSFT", "AMZN", "GOOGL", "META", "TSLA", "BTC", "ETH", "MELI", "GGAL", "YPF", "GLD"];
+const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+let pickerMode = "main", pickerGroup = "", pickerHits = [], pickerActive = 0, pickerOpener = null;
+function pickerPool() {
+  const skip = pickerMode === "race" ? new Set([asset?.id, ...race.map(r => r.id)]) : new Set();
+  return store.manifest.assets.filter(a => !skip.has(a.id) && (!pickerGroup || a.group === pickerGroup));
 }
+function searchAssets(q) {
+  const pool = pickerPool(), nq = norm(q.trim());
+  if (!nq) {
+    const pop = POPULAR.map(id => pool.find(a => a.id === id)).filter(Boolean);
+    return pop.concat(pool.filter(a => !POPULAR.includes(a.id))).slice(0, 150);
+  }
+  const hits = [];
+  for (const a of pool) {
+    const id = norm(a.id), nm = norm(a.name);
+    const s = id === nq ? 0 : id.startsWith(nq) ? 1 : nm.startsWith(nq) ? 2
+            : nm.split(/[\s(.,&-]+/).some(w => w.startsWith(nq)) ? 3 : (nm.includes(nq) || id.includes(nq)) ? 4 : -1;
+    if (s >= 0) hits.push([s, a]);
+  }
+  return hits.sort((x, y) => x[0] - y[0] || x[1].name.localeCompare(y[1].name)).slice(0, 100).map(h => h[1]);
+}
+function renderPicker() {
+  const q = $("picker-q").value;
+  pickerHits = searchAssets(q);
+  pickerActive = Math.min(pickerActive, Math.max(0, pickerHits.length - 1));
+  const list = $("picker-list");
+  list.innerHTML = pickerHits.length
+    ? pickerHits.map((a, i) => `<li role="option" id="opt-${i}" data-id="${a.id}" aria-selected="${i === pickerActive}"><span class="n">${a.name.split(" (")[0]}</span><span class="t">${a.id}</span><span class="g">${a.group}</span></li>`).join("")
+    : `<li class="empty" role="option" aria-disabled="true">No encontré "${q.replace(/[<>&"]/g, "")}". Probá con el símbolo (por ejemplo AAPL) o el nombre en inglés.</li>`;
+  $("picker-q").setAttribute("aria-activedescendant", pickerHits.length ? `opt-${pickerActive}` : "");
+  const groups = [...new Set(store.manifest.assets.map(a => a.group))];
+  $("picker-groups").innerHTML = [["", "Todos"], ...groups.map(g => [g, g])].map(([g, label]) =>
+    `<button type="button" data-group="${g}" aria-pressed="${g === pickerGroup}">${label}${g ? ` <small>${store.manifest.assets.filter(a => a.group === g).length}</small>` : ""}</button>`).join("");
+}
+function moveActive(delta) {
+  if (!pickerHits.length) return;
+  pickerActive = (pickerActive + delta + pickerHits.length) % pickerHits.length;
+  document.querySelectorAll("#picker-list li").forEach((li, i) => li.setAttribute("aria-selected", String(i === pickerActive)));
+  $("picker-q").setAttribute("aria-activedescendant", `opt-${pickerActive}`);
+  $(`opt-${pickerActive}`)?.scrollIntoView({ block: "nearest" });
+}
+function openPicker(mode, opener) {
+  stopPlay();
+  pickerMode = mode; pickerGroup = ""; pickerActive = 0; pickerOpener = opener || null;
+  $("picker-title").textContent = mode === "race" ? "Sumá un activo a la carrera" : "Elegí un activo";
+  $("picker-q").value = "";
+  renderPicker();
+  $("picker").hidden = false;
+  $("picker-q").focus();
+}
+function closePicker() {
+  $("picker").hidden = true;
+  pickerOpener?.focus();
+}
+function choosePicked(id) {
+  closePicker();
+  if (pickerMode === "race") addRace(id); else chooseMain(id);
+}
+$("ticker-btn").addEventListener("click", e => openPicker("main", e.currentTarget));
+$("picker-close").addEventListener("click", closePicker);
+$("picker").addEventListener("click", e => { if (e.target === $("picker")) closePicker(); });
+$("picker-q").addEventListener("input", () => { pickerActive = 0; renderPicker(); $("picker-list").scrollTop = 0; });
+$("picker-q").addEventListener("keydown", e => {
+  if (e.key === "ArrowDown") { e.preventDefault(); moveActive(1); }
+  else if (e.key === "ArrowUp") { e.preventDefault(); moveActive(-1); }
+  else if (e.key === "Enter") { e.preventDefault(); if (pickerHits[pickerActive]) choosePicked(pickerHits[pickerActive].id); }
+  else if (e.key === "Escape") { e.preventDefault(); closePicker(); }
+});
+$("picker-list").addEventListener("click", e => { const li = e.target.closest("li[data-id]"); if (li) choosePicked(li.dataset.id); });
+$("picker-groups").addEventListener("click", e => {
+  const b = e.target.closest("[data-group]"); if (!b) return;
+  pickerGroup = b.dataset.group; pickerActive = 0; renderPicker(); $("picker-q").focus();
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("picker").hidden) closePicker(); });
 function setOptions(sel, items, keep, fallback) {
   sel.innerHTML = "";
   items.forEach(([v, label]) => sel.add(new Option(label, v)));
@@ -650,6 +751,7 @@ function render() {
   drawToCursor(true);
   fitChart();
 
+  $("ticker-btn").textContent = asset.name;
   renderSwitch(); renderKeys(); renderStrip(); renderFuture(); renderRace(); writeHash(); sizeControls();
 }
 
@@ -824,10 +926,7 @@ function renderRace() {
     const used = new Set([asset.id, ...race.map(r => r.id)]);
     SUGGEST.filter(id => !used.has(id) && metaOf(id)).slice(0, 3)
       .forEach(id => parts.push(`<button type="button" class="chip suggest" data-add="${id}">+ ${metaOf(id).name.split(" (")[0]}</button>`));
-    const opts = store.manifest.assets.filter(a => !used.has(a.id));
-    const groups = [...new Set(opts.map(a => a.group))];
-    parts.push(`<select class="addsel" id="addsel" aria-label="Sumar otro activo a la carrera"><option value="">Otro…</option>${
-      groups.map(g => `<optgroup label="${g}">${opts.filter(a => a.group === g).map(a => `<option value="${a.id}">${a.name}</option>`).join("")}</optgroup>`).join("")}</select>`);
+    parts.push(`<button type="button" class="addsel" data-pick="race" aria-haspopup="dialog">Buscar otro…</button>`);
   }
   box.innerHTML = parts.join("");
   updateRaceValues(D.timeline[cursor].key);
@@ -910,19 +1009,20 @@ async function addRace(id) {
   if (!reduceMotion) { cursor = 0; play(); }     // arranca la carrera
 }
 $("race").addEventListener("click", e => {
-  const add = e.target.closest("[data-add]"), rm = e.target.closest("[data-remove]");
+  const add = e.target.closest("[data-add]"), rm = e.target.closest("[data-remove]"), pick = e.target.closest("[data-pick]");
   if (add) addRace(add.dataset.add);
+  if (pick) openPicker("race", pick);
   if (rm) { race.splice(Number(rm.dataset.remove), 1); render(); }
 });
-$("race").addEventListener("change", e => { if (e.target.id === "addsel") addRace(e.target.value); });
 
-$("ticker").addEventListener("input", () => {
+function chooseMain(id) {
   const wasNow = asset && endKey() === asset.last;
   const s = startKey(), e = endKey();
-  const i = race.findIndex(r => r.id === $("ticker").value);   // si estaba en la carrera, sale de ahí
+  $("ticker").value = id;
+  const i = race.findIndex(r => r.id === id);   // si estaba en la carrera, sale de ahí
   if (i >= 0) race.splice(i, 1);
   selectAsset(s, wasNow ? null : e);
-});
+}
 $("s-year").addEventListener("input", () => { fillStartMonth($("s-month").value); fillEnd(endKey()); render(); });
 $("s-month").addEventListener("input", () => { fillEnd(endKey()); render(); });
 $("e-year").addEventListener("input", () => { fillEndMonth($("e-month").value); render(); });
@@ -975,7 +1075,6 @@ $("dice").addEventListener("click", async () => {
   if (store.manifest.fake) $("status").textContent = "Datos simulados de prueba";
   else if (asofs.length) { const [y, m, d] = asofs.at(-1).split("-"); $("status").textContent = `Datos al cierre del ${Number(d)}/${Number(m)}/${y}`; }
   else if (store.manifest.updated) $("status").textContent = `Datos al ${new Date(store.manifest.updated).toLocaleDateString("es-AR")}`;
-  fillTickers();
   const st = readHash();
   if (st) {
     $("ticker").value = st.id;
