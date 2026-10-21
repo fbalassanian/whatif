@@ -1124,6 +1124,7 @@ $("share").addEventListener("click", () => {
 
 
 // ================================================================ guardar imagen (resumen en PNG)
+const SITE = "miportfolito.vercel.app";   // siempre la dirección pública, aunque se abra desde otra
 function wrapText(ctx, text, x, y, maxW, lh) {
   const words = text.split(/\s+/); let line = "", lines = [];
   for (const w of words) { const t = line ? line + " " + w : w; if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t; }
@@ -1202,7 +1203,7 @@ async function buildImage() {
     if (!$("verdict").hidden) { ctx.fillStyle = C.text; ctx.font = `400 28px ${F.b}`; y = wrapText(ctx, $("verdict").innerText, P, y, cw, 40) + 24; }
     // pie
     ctx.strokeStyle = C.line; ctx.beginPath(); ctx.moveTo(P, y); ctx.lineTo(W - P, y); ctx.stroke(); y += 44;
-    ctx.fillStyle = C.cyan; ctx.font = `600 26px ${F.d}`; ctx.fillText(location.host, P, y);
+    ctx.fillStyle = C.cyan; ctx.font = `600 26px ${F.d}`; ctx.fillText(SITE, P, y);
     ctx.fillStyle = C.muted; ctx.font = `400 20px ${F.b}`; y = wrapText(ctx, T.notAdvice, P, y + 36, cw, 28) + P - 20;
     return y;
   };
