@@ -196,6 +196,7 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .chip.lead { box-shadow: 0 0 0 1px currentColor inset; }
 .chip.na { color: var(--muted); }
 .chip .since { color: var(--muted); font-size: .8em; }
+.chip .tk { color: var(--muted); font-size: .78em; font-family: var(--digits); letter-spacing: .02em; }
 .suggest { border-style: dashed; color: var(--muted); cursor: pointer; padding-right: 12px; }
 .suggest:hover { color: var(--text); border-color: var(--violet); }
 .addsel { border: 1px dashed var(--line); background: transparent; border-radius: 999px; padding: 5px 10px; font-size: 13px; color: var(--muted); cursor: pointer; max-width: 100%; }
@@ -991,7 +992,7 @@ function renderSwitch() {
   $("reinvest-note").textContent = asset.hasDiv ? "" : asset.group === "Cripto" ? T.cryptoNoPay : T.noPay;
 }
 function renderKeys() {
-  const k = [[cssVar("--cyan"), asset.short], [cssVar("--muted"), T.youPut]];
+  const k = [[cssVar("--cyan"), `${asset.short} (${asset.id})`], [cssVar("--muted"), T.youPut]];
   if (D.future) k.push([cssVar("--violet"), T.projection]);
   $("keys").innerHTML = k.map(([c, l]) => `<span><i style="background:${c}"></i>${l}</span>`).join("");
 }
@@ -1042,17 +1043,17 @@ function renderRates() {
 }
 function renderRace() {
   const box = $("race");
-  const parts = [`<span>${T.race}</span>`, `<span class="chip me" style="color:${cssVar("--cyan")}"><i style="background:${cssVar("--cyan")}"></i>${asset.short} <b data-race="me"></b></span>`];
+  const parts = [`<span>${T.race}</span>`, `<span class="chip me" style="color:${cssVar("--cyan")}"><i style="background:${cssVar("--cyan")}"></i><span style="color:var(--text)">${asset.short}</span> <small class="tk">${asset.id}</small> <b data-race="me"></b></span>`];
   D.race.forEach((r, i) => {
     const col = cssVar(r.color);
     parts.push(r.na
-      ? `<span class="chip na"><i style="background:${col}"></i>${r.a.short}: ${T.noDataTo(mLabel(D.histEnd))}<button type="button" class="x" data-remove="${i}" aria-label="${T.remove(r.a.short)}">×</button></span>`
-      : `<span class="chip" style="color:${col}"><i style="background:${col}"></i><span style="color:var(--text)">${r.a.short}</span>${r.late ? ` <small class="since">${T.since(mLabel(r.start))}</small>` : ""} <b data-race="${i}"></b><button type="button" class="x" data-remove="${i}" aria-label="${T.remove(r.a.short)}">×</button></span>`);
+      ? `<span class="chip na"><i style="background:${col}"></i>${r.a.short} <small class="tk">${r.id}</small>: ${T.noDataTo(mLabel(D.histEnd))}<button type="button" class="x" data-remove="${i}" aria-label="${T.remove(r.a.short)}">×</button></span>`
+      : `<span class="chip" style="color:${col}"><i style="background:${col}"></i><span style="color:var(--text)">${r.a.short}</span> <small class="tk">${r.id}</small>${r.late ? ` <small class="since">${T.since(mLabel(r.start))}</small>` : ""} <b data-race="${i}"></b><button type="button" class="x" data-remove="${i}" aria-label="${T.remove(r.a.short)}">×</button></span>`);
   });
   if (race.length < MAX_RACE) {
     const used = new Set([asset.id, ...race.map(r => r.id)]);
     SUGGEST.filter(id => !used.has(id) && metaOf(id)).slice(0, 3)
-      .forEach(id => parts.push(`<button type="button" class="chip suggest" data-add="${id}">+ ${shortOf(metaOf(id))}</button>`));
+      .forEach(id => parts.push(`<button type="button" class="chip suggest" data-add="${id}">+ ${shortOf(metaOf(id))} <small class="tk">${id}</small></button>`));
     parts.push(`<button type="button" class="addsel" data-pick="race" aria-haspopup="dialog">${T.findOther}</button>`);
   }
   box.innerHTML = parts.join("");
@@ -1179,7 +1180,7 @@ async function buildImage() {
     });
     y += 18;
     // el gráfico, con leyenda
-    const legend = [[C.cyan, asset.short], ...D.race.filter(r => r.sim).map(r => [cssVar(r.color), r.a.short]), [C.muted, T.youPut]];
+    const legend = [[C.cyan, `${asset.short} (${asset.id})`], ...D.race.filter(r => r.sim).map(r => [cssVar(r.color), `${r.a.short} (${r.id})`]), [C.muted, T.youPut]];
     if (D.future) legend.push([C.violet, T.projection]);
     ctx.font = `400 24px ${F.b}`; let lx = P;
     legend.forEach(([c, l]) => { const w = ctx.measureText(l).width + 56; if (lx + w > W - P) { lx = P; y += 36; }
