@@ -1354,7 +1354,7 @@ if (LANG === "en") $("amount").value = fmtNum(1000);
     await selectAsset(st.start, st.end);
   } else {
     $("ticker").value = metaOf("QQQ") ? "QQQ" : store.manifest.assets[0].id;
-    for (const id of ["SPY", "NVDA", "BTC"]) {      // carrera inicial
+    for (const id of ["SPY"]) {                     // carrera inicial
       if (id === $("ticker").value || !metaOf(id)) continue;
       try { race.push({ id, asset: await getAsset(id) }); } catch (e) { /* se omite */ }
     }
