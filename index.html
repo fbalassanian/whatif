@@ -383,6 +383,8 @@ footer a { color: var(--cyan); }
 </div>
 
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
 <script>
 // ================================================================ datos de ejemplo (fallback)
 // Se usan solo si no hay datos publicados (por ejemplo, en la vista previa).
@@ -547,7 +549,7 @@ function short(n) {   // número para la lectura y los chips, sin "USD"
 }
 const usd = n => "USD " + short(n);
 const pct = r => (r * 100).toLocaleString(T.loc, { maximumFractionDigits: 1, signDisplay: "exceptZero" }) + "%";
-const multTxt = m => (m >= 1 ? "×" : "÷") + fmtNum(m >= 1 ? m : 1 / m, m >= 10 || m <= 0.1 ? 0 : 1);
+const multTxt = m => "×" + fmtNum(m, m >= 10 ? 0 : m >= 1 ? 1 : m >= 0.1 ? 2 : 3);   // siempre multiplicador: ×0,75 si perdiste
 const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 function hexA(hex, a) { const n = parseInt(hex.replace("#", ""), 16); return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${a})`; }
 const reduceMotion = (() => { try { return matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; } })();
